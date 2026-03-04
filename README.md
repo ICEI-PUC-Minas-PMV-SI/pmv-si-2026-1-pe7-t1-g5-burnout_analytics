@@ -6,7 +6,7 @@
 
 `SEMESTRE: 7º`
 
-Descrever resumidamente, em um ou dois parágrafos, o projeto que está sendo desenvolvido.
+Este projeto tem como objetivo desenvolver um modelo preditivo para previsão de enchentes em municípios de Minas Gerais, a partir da integração de dados públicos meteorológicos, hidrológicos e históricos de desastres. Serão utilizados dados do Instituto Nacional de Meteorologia (INMET), da Agência Nacional de Águas e Saneamento Básico (ANA) e do Sistema Integrado de Informações sobre Desastres (S2ID).
 
 ## Integrantes
 
@@ -14,8 +14,6 @@ Descrever resumidamente, em um ou dois parágrafos, o projeto que está sendo de
 * Odair Cordeiro Marra
 * Patrick Magalhães Robaina
 * Victor Henrique Pereira
-* Nome completo do aluno 5
-* Nome completo do aluno 6
 
 ## Orientador
 
