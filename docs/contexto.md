@@ -1,325 +1,275 @@
 # Introdução
 
-Eventos hidrometeorológicos extremos têm se intensificado nas últimas décadas, especialmente na região Sudeste do Brasil, provocando impactos sociais, econômicos e ambientais significativos. No estado de Minas Gerais, municípios da Zona da Mata apresentam histórico recorrente de enchentes e alagamentos associados a episódios de precipitação intensa.
+Nas últimas décadas, transformações no ambiente de trabalho — intensificadas pela digitalização, pela hiperconectividade e pela expansão do trabalho remoto — têm impactado significativamente a saúde mental dos profissionais. O fenômeno do burnout foi reconhecido como fenômeno ocupacional pela World Health Organization, sendo caracterizado por exaustão emocional, redução da eficácia profissional e distanciamento mental do trabalho. 
 
-Diante desse cenário, este projeto propõe o desenvolvimento de um modelo preditivo baseado em técnicas de Machine Learning para estimar o risco de ocorrência de eventos de inundação em dez municípios da Zona da Mata Mineira com maior incidência histórica de enchentes.
+A crescente sobrecarga digital, o aumento das jornadas, o excesso de reuniões e a pressão por produtividade tornam o ambiente corporativo um espaço propício ao desenvolvimento de estresse crônico. Nesse contexto, técnicas de Machine Learning podem ser aplicadas para identificar padrões comportamentais e ocupacionais associados ao risco de burnout. 
 
-A modelagem será construída a partir da integração de dados meteorológicos do Instituto Nacional de Meteorologia (INMET), dados hidrológicos da Agência Nacional de Águas e Saneamento Básico (ANA) e registros oficiais de desastres do Sistema Integrado de Informações sobre Desastres (S2ID).
-
-A abordagem integrada permite modelar a cadeia causal do fenômeno:
-
-Precipitação intensa → Elevação do nível do rio → Registro oficial de desastre
-
+Diante desse cenário, o presente projeto propõe o desenvolvimento de um modelo preditivo supervisionado capaz de estimar o risco de burnout em profissionais, utilizando um dataset estruturado contendo variáveis demográficas, hábitos de trabalho e indicadores de saúde e estilo de vida. 
+ 
 ## Problema
 
-Municípios da Zona da Mata Mineira enfrentam recorrentes eventos de enchentes, gerando impactos à população, infraestrutura urbana e economia local. Embora existam dados meteorológicos e hidrológicos disponíveis, muitas prefeituras ainda não utilizam modelos preditivos integrados para antecipação do risco. 
+Empresas e organizações frequentemente identificam o burnout apenas quando seus efeitos já estão consolidados, como queda abrupta de produtividade, afastamentos médicos ou desligamentos. 
 
-O problema central consiste em verificar se é possível desenvolver um modelo de aprendizado de máquina capaz de prever a ocorrência de eventos de inundação a partir da integração de múltiplas bases de dados públicas. 
+Embora existam indicadores relacionados ao estresse e desempenho, muitas organizações não utilizam modelos preditivos baseados em dados para antecipar o risco. 
+
+O problema central consiste em verificar: 
+
+É possível desenvolver um modelo de aprendizado de máquina capaz de prever, com desempenho estatisticamente significativo, o risco de burnout ocupacional com base em características demográficas, hábitos de trabalho e indicadores de saúde?
 
 ## Questão de pesquisa
 
-É possível desenvolver um modelo de aprendizado de máquina capaz de antecipar, com desempenho estatisticamente significativo, a ocorrência de eventos de inundação em municípios da Zona da Mata Mineira, utilizando dados meteorológicos, hidrológicos e registros históricos de desastres?
-
+É possível prever o risco de burnout ocupacional utilizando variáveis relacionadas à jornada de trabalho, ambiente profissional, saúde e estilo de vida, por meio de modelos supervisionados de Machine Learning? 
+ 
 ## Objetivo Geral 
 
-Desenvolver e avaliar um modelo preditivo para estimativa do risco de enchentes em dez municípios da Zona da Mata Mineira, com horizonte de antecedência de 24h a 72h. 
+Desenvolver e avaliar um modelo preditivo de classificação binária para estimar o risco de burnout em profissionais, utilizando técnicas de aprendizado de máquina supervisionado. 
  
 ## Objetivos Específicos
-- Integrar bases de dados meteorológicas, hidrológicas e registros oficiais de desastres;
-- Realizar análise exploratória das séries temporais;
-- Tratar valores faltantes e inconsistências;
-- Construir variáveis derivadas (ex.: precipitação acumulada em 24h, 48h e 72h);
-- Definir a variável alvo com defasagem temporal (desastre em t+24h, t+48h e t+72h);
-- Aplicar algoritmos de Machine Learning supervisionado;
-- Avaliar desempenho por métricas como Accuracy, Precision, Recall, F1-Score e AUC-ROC;
-- Comparar resultados entre municípios e entre horizontes de predição.
+- Realizar análise exploratória do dataset; 
+- Avaliar qualidade e consistência dos dados; 
+- Codificar variáveis categóricas; 
+- Verificar correlação entre estresse, produtividade e burnout; 
+- Avaliar balanceamento da variável alvo; 
+- Aplicar algoritmos supervisionados (Regressão Logística, Random Forest, XGBoost); 
+- Avaliar desempenho por métricas como Accuracy, Precision, Recall, F1-Score e AUC-ROC; 
+- Analisar importância das variáveis (feature importance); 
+- Interpretar resultados sob perspectiva organizacional e social. 
 
 ## Justificativa
 
 O estudo se justifica sob três dimensões principais: 
  
 ### Científica 
-Ampliação da aplicação de técnicas de Machine Learning para previsão de eventos hidrológicos em escala municipal mineira, com abordagem comparativa regional. 
- 
+Ampliação da aplicação de técnicas de Machine Learning no contexto de saúde ocupacional e predição de risco psicossocial. 
+
 ### Social 
-Potencial contribuição para sistemas de alerta precoce e apoio à Defesa Civil municipal, auxiliando na redução de impactos sociais e econômicos. 
+Burnout impacta diretamente:
+- Saúde mental dos trabalhadores 
+- Qualidade de vida 
+- Produtividade organizacional 
+- Custos com afastamentos 
+
+Modelos preditivos podem apoiar políticas preventivas e estratégias de bem-estar corporativo. 
  
-### Metodológica 
-Integração simultânea de três bases públicas nacionais (INMET, ANA e S2ID), permitindo modelar a cadeia completa do fenômeno hidrológico.
-A ampliação para múltiplos municípios reduz o risco de viés associado a estudos isolados e aumenta a capacidade de generalização do modelo.
+### Organizacional
+Empresas podem utilizar modelos semelhantes para: 
+- Monitoramento preventivo 
+- Programas de qualidade de vida 
+- Gestão estratégica de equipes 
 
 ## Público-Alvo
 
-O projeto destina-se principalmente a:
+O público-alvo deste projeto compreende organizações, gestores de recursos humanos e equipes de saúde ocupacional interessados em identificar e prevenir o risco de burnout entre profissionais em ambiente de trabalho.
 
-- Defesa Civil munipal;
-- Secretarias de Meio Ambiente;
-- Gestores públicos responsáveis pelo planejamento urbano;
-- Órgãos estaduais de monitoramento ambiental;
-- Pesquisadores em hidrologia e ciência de dados.
+Os dados utilizados representam trabalhadores adultos (18+ anos) de diferentes países, setores profissionais e portes de empresas, incluindo variáveis relacionadas a:
+- características demográficas (idade, gênero, país);
+- perfil profissional (cargo, experiência e porte da empresa);
+- hábitos de trabalho (carga horária, reuniões e ambiente de trabalho);
+- estilo de vida e saúde (sono, exercício físico, tempo de tela e nível de estresse).
 
-Esses stakeholders podem utilizar os resultados do modelo para subsidiar decisões estratégicas e políticas públicas de mitigação de riscos.
+Dessa forma, o modelo desenvolvido poderá apoiar gestores organizacionais e profissionais de saúde ocupacional na identificação precoce de padrões associados ao risco de burnout, possibilitando a implementação de estratégias preventivas voltadas ao bem-estar e à produtividade no ambiente corporativo. 
 
 ## Estado da arte
 
 Nesta seção, descreva abordagens da literatura que tratam problemas semelhantes ao seu. Seu objetivo é documentar métodos, dados, métricas e resultados.
 
-### 1. Interpretable machine learning for flood susceptibility mapping in the metropolitan region of São Paulo, Southeast Brazil. Alcântara et al. (2025) [1]
+### 1. Predicting Workplace Hazard, Stress and Burnout Among Public Health Inspectors: An AI-Driven Analysis in the Context of Climate Change. Adamopoulos et al. (2025) [1] 
 
-* **Problema e contexto:** Mapeamento de suscetibilidade a enchentes na Região Metropolitana de São Paulo, com foco no apoio à gestão pública urbana.
-* **Dataset:** Dados ambientais, topográficos e hidrológicos da região metropolitana paulista.
-* **Abordagem:** Aplicação de Random Forest, XGBoost, LightGBM e Redes Neurais Artificiais, combinadas com técnicas de Explainable Artificial Intelligence (SHAP e LIME).
-* **Métricas:** F1-score e métricas clássicas de classificação, além de análise de importância das variáveis.
-* **Resultados:** Modelos apresentaram desempenho elevado, com destaque para ganhos interpretativos ao utilizar técnicas de XAI.
-* **Contribuição:** Evidencia a importância da interpretabilidade em modelos aplicados à gestão pública no contexto urbano brasileiro.
+- **Problema e contexto:** Predição de risco ocupacional, estresse e burnout em inspetores de saúde pública, considerando a influência de fatores ambientais e mudanças climáticas. 
+
+- **Dataset:** Dados ocupacionais e psicossociais de profissionais do setor público, incluindo variáveis de exposição a riscos e carga de trabalho. 
+
+- **Abordagem:** Aplicação de algoritmos supervisionados de Inteligência Artificial para classificação de risco.
+
+- **Métricas:** Acurácia, precisão, recall e validação cruzada. 
+
+- **Resultados:** Identificação de fatores ambientais e ocupacionais como variáveis preditoras relevantes. 
+
+- **Contribuição:** Demonstra a aplicabilidade de ML em contextos ocupacionais expostos a riscos externos, ampliando o escopo da predição de burnout. 
  
-### 2. ML4FF: A machine-learning framework for flash flood forecasting applied to a Brazilian watershed. Ali et al. (2025) [2] 
 
-* **Problema e contexto:** Previsão de enchentes rápidas (flash floods) em uma bacia hidrográfica brasileira.
-* **Dataset:** Dados hidrológicos e meteorológicos históricos da bacia analisada.
-* **Abordagem:** Desenvolvimento do framework ML4FF, comparando 34 algoritmos de Machine Learning com validação cruzada e otimização de hiperparâmetros.
-* **Métricas:** NSE (Nash-Sutcliffe Efficiency), RMSE e métricas comparativas de desempenho.
-* **Resultados:** Modelos híbridos e técnicas de aprendizado profundo apresentaram melhor desempenho preditivo.
-* **Contribuição:** Demonstra robustez metodológica e reforça a importância da seleção automatizada de modelos.
- 
-### 3. Review and intercomparison of machine learning applications for short-term flood forecasting. Asif et al. (2025) [3] 
+### 2. Machine-Learning-Based Model for Analysing and Accurately Predicting Factors Related to Burnout in Healthcare Workers. Liu et al. (2025) [2] 
 
-* **Problema e contexto:** Revisão sistemática sobre previsão de enchentes de curto prazo (1–48 horas).
-* **Dataset:** Análise comparativa de 94 estudos internacionais.
-* **Abordagem:** Avaliação de diferentes técnicas de Machine Learning, incluindo Random Forest, LSTM, ANN e SVM.
-* **Métricas:** Comparação de desempenho reportado na literatura (RMSE, NSE, Accuracy).
-* **Resultados:** Modelos híbridos e abordagens com adequada seleção de variáveis apresentam desempenho superior.
-* **Contribuição:** Fornece base teórica robusta para escolha metodológica no desenvolvimento de modelos preditivos.
+- **Problema e contexto:** Identificação e predição de fatores associados ao burnout em profissionais da saúde. 
 
-### 4. Artificial neural networks applied for flood forecasting in ungauged basin – the Paranaíba river study case. Brandão et al. (2024) [4] 
+- **Dataset:** Dados hospitalares com variáveis demográficas, carga horária, experiência profissional e indicadores psicossociais. 
 
-* **Problema e contexto:** Previsão de vazão em bacia não monitorada do Rio Paranaíba (MG), região com histórico de enchentes.
-* **Dataset:** Dados hidrológicos reais provenientes de estação fluviométrica.
-* **Abordagem:** Aplicação de Redes Neurais Artificiais para modelagem de vazão.
-* **Métricas:** NSE (Nash-Sutcliffe Efficiency).
-* **Resultados:** Desempenho satisfatório na previsão de vazões, demonstrando viabilidade da abordagem em contexto mineiro.
-* **Contribuição:** Aplicação prática em Minas Gerais com dados reais, reforçando a relevância regional da modelagem hidrológica baseado em ML.
- 
-### 5. Aplicação de técnicas de machine learning na previsão de eventos de alta pluviosidade e riscos de inundação e alagamentos: um estudo de caso em Teófilo Otoni-MG. Brandão, Loureiro e Luiz (2025) [5]
+- **Abordagem:** Comparação entre algoritmos supervisionados, com destaque para Random Forest. 
 
-* **Problema e contexto:** Previsão de precipitações severas associadas a riscos de inundação no município de Teófilo Otoni-MG.
-* **Dataset:** Dados meteorológicos históricos reais do município.
-* **Abordagem:** Modelos supervisionados de Machine Learning aplicados à classificação de eventos extremos.
-* **Métricas:** Métricas de classificação e avaliação de desempenho preditivo.
-* **Resultados:** Capacidade satisfatória de antecipação de eventos severos.
-* **Contribuição:** Evidencia viabilidade prática municipal em Minas Gerais, servindo como referência regional.
- 
-### 6. Machine learning-based hydrological models for flash floods: a systematic literature. Santos et al. (2025) [6]
+- **Métricas:** Acurácia (~80%), AUC-ROC, precisão e recall. 
 
-* **Problema e contexto:** Revisão sistemática sobre aplicação de modelos hidrológicos baseados em Machine Learning para previsão de flash floods.
-* **Dataset:** Estudos internacionais focados em eventos hidrológicos extremos.
-* **Abordagem:** Análise comparativa de técnicas como Random Forest, SVM, ANN e modelos híbridos.
-* **Métricas:** Síntese das métricas de desempenho reportadas nos estudos analisados.
-* **Resultados:** Identificação de tendências metodológicas e lacunas científicas.
-* **Contribuição:** Aponta necessidade de integração entre variáveis meteorológicas e hidrológicas, além de maior padronização metodológica.
- 
-### 7. Deep learning of flood forecasting by considering interpretability and physical constraints. Zhang et al. (2025) [7]
+- **Resultados:** Experiência profissional e carga de trabalho apresentaram alta relevância preditiva. 
 
-* **Problema e contexto:** Previsão de enchentes em bacia hidrográfica chinesa com horizonte de 1 a 6 horas.
-* **Dataset:** Dados hidrometeorológicos históricos.
-* **Abordagem:** Modelo LSTM com mecanismo de atenção e incorporação de restrições físicas hidrológicas.
-* **Métricas:** NSE superior a 0.90.
-* **Resultados:** Alta precisão preditiva aliada a maior coerência física do modelo.
-* **Contribuição:** Integração entre Deep Learning e conhecimento físico, ampliando confiabilidade científica.
+- **Contribuição:** Reforça a eficácia de modelos supervisionados na identificação de fatores críticos de burnout. 
+
+
+### 3. Machine Learning for Predicting Burnout Among Healthcare Workers: A Systematic Review and Meta-Analysis. Shi et al. (2025) [3] 
+
+- **Problema e contexto:** Avaliação sistemática do uso de Machine Learning na predição de burnout em profissionais da saúde. 
+
+- **Dataset:** Revisão e meta-análise de múltiplos estudos empíricos internacionais. 
+
+- **Abordagem:** Comparação metodológica entre Random Forest, SVM, Gradient Boosting e Redes Neurais. 
+
+- **Métricas:** AUC-ROC, F1-score e robustez metodológica. 
+
+- **Resultados:** Modelos ensemble e Random Forest apresentaram desempenho consistentemente superior. 
+
+- **Contribuição:** Consolida evidências científicas sobre a eficácia de ML para predição de burnout e aponta lacunas quanto à generalização e interpretabilidade. 
+
+### 4. Burnout Protective Patterns Among Oncology Nurses: A Cross-Sectional Study Using Machine Learning Analysis. Rocha et al. (2025) [4] 
+
+- **Problema e contexto:** Identificação de padrões protetivos contra burnout em enfermeiros oncológicos. 
+
+- **Dataset:** Dados psicossociais e organizacionais coletados em estudo transversal. 
+
+- **Abordagem:** Técnicas de Machine Learning para identificação de padrões e fatores protetivos. 
+
+- **Métricas:** Métricas de classificação e análise de importância das variáveis. 
+
+- **Resultados:** Suporte organizacional e fatores psicossociais mostraram-se determinantes na redução do risco. 
+
+- **Contribuição:** Amplia a aplicação de ML ao identificar não apenas fatores de risco, mas também fatores de proteção. 
+
+### 5. A Machine Learning Model to Predict the Risk Factors Causing Feelings of Burnout and Emotional Exhaustion Amongst Nursing Staff in South Africa. Van Zyl-Cillié et al. (2024) [5] 
+
+- **Problema e contexto:** Predição de fatores associados à exaustão emocional em profissionais de enfermagem. 
+
+- **Dataset:** Dados hospitalares com variáveis de carga horária, ambiente de trabalho e suporte institucional. 
+
+- **Abordagem:** Modelo supervisionado para classificação de risco. 
+
+- **Métricas:** Acurácia, sensibilidade e especificidade. 
+
+- **Resultados:** Sobrecarga de trabalho e suporte organizacional foram variáveis críticas. 
+
+- **Contribuição:** Evidencia a importância do contexto organizacional na modelagem preditiva de burnout. 
+
+### 6. Prediction of Job Burnout in Nurses Based on the Job Demands-Resources Model: An Explainable Machine Learning Approach. Zeng et al. (2025) [6] 
+
+- **Problema e contexto:** Predição de burnout em enfermeiros com base no modelo teórico Job Demands–Resources (JD-R). 
+
+- **Dataset:** 3.449 profissionais de enfermagem com dados ocupacionais e psicossociais. 
+
+- **Abordagem:** Modelos supervisionados combinados com técnicas de Explainable Artificial Intelligence (SHAP). 
+
+- **Métricas:** AUC-ROC, F1-score e análise interpretativa das variáveis. 
+
+- **Resultados:** Altas demandas e baixos recursos organizacionais foram determinantes para o risco. 
+
+- **Contribuição:** Integra teoria organizacional e interpretabilidade em ML, reforçando transparência e confiabilidade dos modelos. 
 
 ## Síntese Crítica 
-Os trabalhos analisados demonstram consenso quanto à eficácia de técnicas de Machine Learning na previsão de eventos hidrológicos extremos, especialmente Random Forest, Redes Neurais Artificiais e LSTM. Observa-se evolução recente na incorporação de técnicas de interpretabilidade (Explainable AI) e na integração de restrições físicas aos modelos, aumentando a confiabilidade e aplicabilidade prática.
+A literatura recente (2024–2025) evidencia consolidação do uso de **Machine Learning para predição de burnout**, com predominância de: 
 
-Entretanto, identificam-se lacunas relevantes:
+- Modelos supervisionados (Random Forest, SVM, Gradient Boosting); 
+- Métodos ensemble com desempenho superior; 
+- Ênfase crescente em interpretabilidade (SHAP e XAI); 
+- Relevância recorrente de variáveis como carga horária, estresse e suporte organizacional.
 
-- Pouca aplicação comparativa em múltiplos municípios de uma mesma região;
-- Escassez de integração simultânea entre variáveis meteorológicas, hidrológicas e registros oficiais de desastres;
-- Necessidade de validação regional específica para Minas Gerais, especialmente na Zona da Mata Mineira.
+Entretanto, observa-se forte concentração dos estudos no setor da saúde, especialmente na enfermagem, o que limita a generalização para outros contextos organizacionais. 
 
-O presente projeto diferencia-se ao propor:
+O projeto proposto com o dataset **Work Productivity & Burnout Risk Dataset** diferencia-se por:
+- Abranger múltiplos setores profissionais; 
+- Incluir variáveis comportamentais e de estilo de vida (sono, exercício, tempo de tela); 
+- Permitir comparação entre modelos clássicos e técnicas de interpretabilidade; 
+- Possuir base estruturada com 30.000 registros, ampliando robustez estatística. 
 
-- Integração das bases INMET, ANA e S2ID;
-- Uso de rótulos oficiais de desastre como variável alvo;
-- Aplicação comparativa em dez municípios da Zona da Mata Mineira com maior incidência de enchentes;
-- Avaliação de generalização regional do modelo preditivo.
-
-Dessa forma, o projeto preenche as lacunas identificadas ao propor uma abordagem integrada, multirrisco e comparativa, contribuindo metodologicamente para o avanço da predição de enchentes com uso de Machine Learning no contexto brasileiro e, especialmente, mineiro.
+Dessa forma, o trabalho alinha-se às tendências metodológicas recentes, ao mesmo tempo em que amplia o escopo empírico da literatura, contribuindo para a predição de burnout em contextos organizacionais mais amplos. 
 
 # Descrição do _dataset_ selecionado
 
-## Municípios Analisados
-
-Os dez municípios selecionados da Zona da Mata Mineira são:
-- Juiz de Fora (MG)
-- Ubá (MG)
-- Muriaé (MG)
-- Cataguases (MG)
-- Leopoldina (MG)
-- Viçosa (MG)
-- Manhuaçu (MG)
-- Ponte Nova (MG)
-- Além Paraíba (MG)
-- Carangola (MG)
-
-## Bases Utilizadas    
-
-O dataset será construído a partir da integração de três bases oficiais:    
-
-### INMET
-- Variáveis Meteorológicas
-- Precipitação
-- Temperatura
-- Umidade
-- Pressão atmosférica
-- Velocidade do vento
-
-Representa o fator desencadeador primário das enchentes.
-
-### ANA
-- Variáveis Hidrológicas
-- Nível de rios
-- Vazão
-- Séries históricas fluviométricas
-
-Permite avaliar a resposta do sistema hídrico à precipitação.
-
-### S2ID
-- Registro Oficial de Desastres
-- Registros de eventos reconhecidos oficialmente
-- Datas de ocorrência
-- Tipo de evento (inundação, enxurrada, alagamento)
-- Município afetado    
+Dataset: **Work Productivity & Burnout Risk Dataset (Kaggle)**
+- 30.000 registros
+- 17 colunas
+- Sem valores ausentes 
 
 # Estrutura, Qualidade e Tratamento dos Dados
-A integração das três bases resultará em um *dataset* consolidado com a estrutura prevista na Tabela 1, contemplando variáveis preditoras (meteorológicas e hidrológicas) e a variável alvo construída com defasagem temporal para diferentes horizontes de predição.    
 
 ## Estrutura do Dataset
 
-| Variável | Fonte | Descrição | Tipo | Tratamento de Faltantes |
-|:---|:---|:---|:---|:---|
-| `data` | - | Data da observação (dia/mês/ano) | Data | Remoção de registros sem data válida |
-| `municipio` | - | Nome do município | Categórico | - |
-| `precipitacao_total_diaria_mm` | INMET | Precipitação acumulada nas últimas 24h | Numérico | Interpolação linear para lacunas ≤ 3 dias; remoção se falha superior | 
-| `temp_media_compensada_c` | INMET | Temperatura média diária | Numérico | Preenchimento com média histórica do mês | 
-| `umidade_relativa_media_pct` | INMET | Umidade relativa do ar média | Numérico | Interpolação linear |  
-| `pressao_atmosferica_hPa` | INMET | Pressão atmosférica média | Numérico | Interpolação linear | 
-| `velocidade_vento_m_s` | INMET | Velocidade do vento média | Numérico | Interpolação linear |  
-| `nivel_rio_cota_cm` | ANA | Nível do rio (cota) no horário de referência | Numérico | Para falhas, utiliza-se o dado da estação mais próxima ou remoção |  
-| `vazao_m3_s` | ANA | Vazão do rio | Numérico | Mesmo critério do nível do rio |  
-| `precipitacao_acumulada_48h_mm` | INMET (derivada) | Precipitação acumulada nas últimas 48h | Numérico | Calculada apenas se os dias anteriores estiverem disponíveis | 
-| `precipitacao_acumulada_72h_mm` | INMET (derivada) | Precipitação acumulada nas últimas 72h | Numérico | Calculada apenas se os dias anteriores estiverem disponíveis | 
-| `desastre_em_24h` | S2ID (derivada) | 1 se houve desastre em t+1; 0 caso contrário | Binário | Construída a partir dos registros oficiais | 
-| `desastre_em_48h` | S2ID (derivada) | 1 se houve desastre em t+1 ou t+2; 0 caso contrário | Binário | Construída a partir dos registros oficiais | 
-| `desastre_em_72h` | S2ID (derivada) | 1 se houve desastre em t+1, t+2 ou t+3; 0 caso contrário | Binário | Construída a partir dos registros oficiais |      
+| Variável | Tipo | Descrição |
+|----------|------|-----------|
+| ``Employee_ID`` | Identificador | Código único do funcionário |
+| ``Age`` | Numérico | Idade |
+| ``Gender`` | Categórico | Gênero |
+| ``Country`` | Categórico | País |
+| ``Job_Role`` | Categórico | Cargo |
+| ``Experience_Years`` | Numérico | Anos de experiência |
+| ``Company_Size`` | Categórico | Porte da empresa |
+| ``Work_Hours_Per_Day`` | Numérico | Horas trabalhadas por dia |
+| ``Meetings_Per_Day`` | Numérico | Reuniões diárias |
+| ``Internet_Speed_Mbps`` | Numérico | Velocidade da internet |
+| ``Work_Environment`` | Categórico | Remoto, Híbrido ou Presencial |
+| ``Sleep_Hours`` | Numérico | Horas de sono |
+| ``Exercise_Hours_Per_Week`` | Numérico | Exercício semanal |
+| ``Screen_Time_Hours`` | Numérico | Tempo de tela |
+| ``Stress_Level`` | Numérico | Escala de estresse |
+| ``Productivity_Score`` | Numérico | Escala de 1–100 |
+| ``Burnout_Risk`` | Binário | Yes/No |
 
-*Tabela 1 – Estrutura prevista do dataset consolidado para predição de enchentes*   
+## Variável Alvo
 
-## Volume Estimado    
-Considerando um recorte histórico de 10 anos (2015–2025) para os 10 municípios selecionados, estima-se um total aproximado de **36.500 registros diários** (10 municípios × 365 dias × 10 anos). Este volume é adequado para a aplicação de técnicas de aprendizado de máquina e permite a divisão entre conjuntos de treino, validação e teste, respeitando a ordenação temporal das séries.    
+### Burnout_Risk
+Problema de classificação binária:
+Yes → 1
+No → 0
 
-## Construção da Variável Alvo (Target)   
+## Volume Estimado
+O dataset contém 30.000 registros, que são suficientes para: 
+- Divisão treino/validação/teste
+- Aplicação de modelos robustos
+- Análise de generalização 
 
-Para que o modelo atenda ao objetivo de **antecipação do risco de enchentes**, a variável alvo foi construída com defasagem temporal, permitindo diferentes horizontes de predição alinhados às necessidades da Defesa Civil municipal:
+## ESTRUTURA E TRATAMENTO DOS DADOS
 
-| Horizonte | Variável Alvo | Descrição | Aplicação Prática |
-|:---|:---|:---|:---|
-| 24 horas | `desastre_em_24h` | 1 se houve registro de desastre no dia seguinte (t+1); 0 caso contrário | Alerta com 1 dia de antecedência |  
-| 48 horas | `desastre_em_48h` | 1 se houve registro de desastre em t+1 ou t+2; 0 caso contrário | Alerta com até 2 dias de antecedência | 
-| 72 horas | `desastre_em_72h` | 1 se houve registro de desastre em t+1, t+2 ou t+3; 0 caso contrário | Alerta com até 3 dias de antecedência |    
+- Dataset não apresenta valores faltantes.
+- Variáveis categóricas serão codificadas via One-Hot Encoding.
+- Verificação de outliers em variáveis contínuas.
+- Avaliação de balanceamento da classe alvo.
+- Análise de correlação para evitar multicolinearidade excessiva. 
 
-**Construção a partir do S2ID:**
-A partir dos registros oficiais do Sistema Integrado de Informações sobre Desastres (S2ID), serão considerados exclusivamente os eventos classificados como:
-- Inundação;
-- Enxurrada;
-- Alagamento.
+## DESBALANCEAMENTO 
 
-Para cada município e data de referência `t`, verifica-se a ocorrência de desastres nos dias subsequentes conforme os horizontes definidos. A ausência de registro é interpretada como "não desastre" para o período analisado.
+Caso a classe "Yes" seja minoritária:
+- Ajuste de pesos das classes
+- SMOTE
+- Avaliação por Recall e F1 
+ 
+# Aspectos Éticos e Conformidade com a LGPD 
 
-**Justificativa metodológica:**
-A escolha por testar múltiplos horizontes alinha-se às recomendações da literatura ([3], [7]) e permite identificar o melhor equilíbrio entre:
+O dataset não contém informações pessoais identificáveis, estando em conformidade com a Lei Geral de Proteção de Dados (LGPD – Lei nº 13.709/2018). 
 
-- **Antecedência:** quanto maior, mais útil para a Defesa Civil no acionamento de protocolos preventivos;
-- **Acurácia:** quanto maior o horizonte, maior a incerteza e a complexidade da predição.    
-
-Os resultados comparativos entre os diferentes horizontes serão analisados para determinar a janela temporal mais adequada ao contexto dos municípios da Zona da Mata Mineira.
-
-### Qualidade dos Dados e Tratamento de Valores Faltantes
-As bases do INMET e da ANA são conhecidas por apresentarem falhas de medição e séries com dados ausentes, seja por problemas operacionais nas estações, seja por interrupções no registro histórico. Para assegurar a robustez da modelagem, as seguintes estratégias serão adotadas:
-
-1. **Remoção criteriosa:** dias em que as principais variáveis preditoras (`precipitacao_total_diaria_mm` e `nivel_rio_cota_cm`) estiverem completamente ausentes serão excluídos da amostra, evitando a inserção de ruído no modelo.    
-
-2. **Interpolação temporal:** para lacunas curtas (até 3 dias consecutivos) em variáveis contínuas, será aplicada interpolação linear, considerando a tendência local da série. Esta abordagem é adequada para variáveis climáticas e hidrológicas com forte correlação temporal.
-
-3. **Médias históricas:** para falhas pontuais em variáveis secundárias (`temp_media_compensada_c`, `umidade_relativa_media_pct`, `pressao_atmosferica_hPa`, `velocidade_vento_m_s`), poderá ser utilizado o valor médio histórico do mesmo mês, calculado a partir dos anos disponíveis na própria estação.
-
-4. **Estações de referência:** em casos de falhas prolongadas em estações específicas da ANA, será avaliada a possibilidade de utilizar dados da estação fluviométrica mais próxima, desde que localizada no mesmo curso d'água e com correlação estatística comprovada (coeficiente de correlação ≥ 0,7 no período sobreposto).
-
-5. **Variáveis derivadas:** as acumulações de precipitação em 48h e 72h serão calculadas apenas quando os dias anteriores estiverem disponíveis. Caso haja falha em um dos dias, a variável correspondente será marcada como ausente para aquele registro, evitando a propagação de erros.
-
-6. **Tratamento da variável alvo:** as variáveis `desastre_em_24h`, `desastre_em_48h` e `desastre_em_72h` não apresentam valores faltantes por construção, uma vez que a ausência de registro no S2ID é codificada como 0 (não desastre). Para os dias no final da série em que não é possível verificar o horizonte completo (ex.: últimos 3 dias para `desastre_em_72h`), os registros serão excluídos da análise para aquele horizonte específico.
-
-7. **Rastreabilidade e reprodutibilidade:** todas as decisões de tratamento serão registradas em um *log* de transformações, e versões distintas do *dataset* (bruta, tratada, final) serão mantidas no repositório do projeto, garantindo aderência às boas práticas de ciência de dados e permitindo a replicação dos experimentos.
-
-### Desafio de Desbalanceamento das Classes
-Espera-se que a variável alvo apresente forte desbalanceamento, uma vez que eventos de desastre são raros em comparação com dias sem ocorrência. Este desafio será endereçado por meio de:
-
-- **Avaliação por métricas adequadas:** priorização de Precision, Recall, F1-Score e AUC-ROC em detrimento da acurácia;
-- **Técnicas de balanceamento:** avaliação da necessidade de aplicar SMOTE, undersampling ou ajuste de pesos das classes durante o treinamento;
-- **Validação temporal:** garantia de que a divisão treino-teste respeite a ordem cronológica, evitando vazamento de dados futuros.
-
-### Alinhamento com os Objetivos do Projeto    
-
-A estrutura aqui definida está em consonância com os objetivos específicos do projeto:
-- As variáveis derivadas `precipitacao_acumulada_48h_mm` e `precipitacao_acumulada_72h_mm` atendem ao objetivo de "construir variáveis derivadas";
-- As variáveis alvo com diferentes horizontes (`desastre_em_24h`, `desastre_em_48h`, `desastre_em_72h`) permitem avaliar a capacidade preditiva do modelo em diferentes janelas temporais;
-- O tratamento detalhado de valores faltantes garante a qualidade dos dados para as etapas subsequentes de modelagem.
-
-# Aspectos Éticos e Conformidade com a LGPD
-O presente projeto utiliza exclusivamente bases de dados públicas e agregadas em nível municipal (INMET, ANA e S2ID), não havendo coleta, armazenamento ou tratamento de dados pessoais, estando em conformidade com a Lei Geral de Proteção de Dados (LGPD – Lei nº 13.709/2018). Todos os dados são provenientes de fontes oficiais brasileiras e destinam-se exclusivamente a fins de pesquisa e planejamento público. 
-
-Do ponto de vista ético, duas dimensões adicionais foram consideradas:
-
-i) Viés e justiça algorítmica: a escolha dos dez municípios com maior incidência histórica de enchentes, embora metodologicamente adequada, pode introduzir viés de representação, uma vez que o modelo será otimizado para contextos de alta recorrência de desastres. Caso o modelo venha a ser generalizado para municípios vizinhos com menor incidência, seu desempenho poderá ser distinto. Essa limitação será explicitada na análise dos resultados.
-
-ii) Impacto social e sensibilidade dos erros de predição: Em cenários de alerta precoce, o custo de um falso negativo (deixar de prever um desastre que ocorre) é significativamente superior ao de um falso positivo (alertar para um evento não concretizado). Por essa razão, métricas como Recall e F1-Score serão priorizadas na avaliação do modelo, em detrimento da acurácia bruta, alinhando a modelagem à aplicação social pretendida. Tais preocupações estão alinhadas às boas práticas de pesquisa responsável em Inteligência Artificial e serão mantidas ao longo de todo o ciclo de desenvolvimento do projeto.
+Dimensões éticas consideradas:
+1. Viés algorítmico: Não há discriminação por gênero, país ou porte de empresa.
+2. Custo de erro: Falso negativo (não prever burnout) pode gerar impacto maior que falso positivo.
+3. Uso responsável: O modelo deve ser ferramenta de apoio e não instrumento punitivo organizacional.
 
 # Canvas Analítico
 
-**Problema:** Previsão supervisionada de eventos de inundação.
-
-**Stakeholders:** Defesa Civil, Prefeituras, órgãos ambientais.
-
-**Dados:** Séries meteorológicas + hidrológicas + registros de desastre.
-
-**Técnicas:** Random Forest, XGBoost, Regressão Logística e LSTM, aplicadas para predição com horizontes de 24h, 48h e 72h.
-
-**Métricas:** Accuracy, F1-Score, Recall e AUC-ROC.
-
-**Impacto Esperado:** Apoio à tomada de decisão e mitigação de riscos socioambientais.
+- **Problema:** Predição supervisionada de risco de burnout.
+- **Stakeholders:** RH, gestores organizacionais, equipes de saúde corporativa.
+- **Dados:** Demográficos + hábitos de trabalho + saúde + produtividade.
+- **Técnicas:** Regressão Logística, Random Forest, XGBoost, SVM.
+- **Métricas:** Accuracy, Precision, Recall, F1-Score, AUC-ROC.
+- **Impacto Esperado:** Apoio à prevenção de esgotamento profissional e promoção de bem-estar.
 
 # Considerações Finais
-O projeto propõe uma abordagem integrada para previsão de enchentes na Zona da Mata Mineira, utilizando dados oficiais e técnicas modernas de Machine Learning.
-Ao ampliar o escopo para dez municípios, busca-se aumentar a robustez estatística, a capacidade de generalização e o impacto social da pesquisa.
-A proposta apresenta viabilidade técnica, relevância científica e aplicabilidade prática, atendendo aos critérios estabelecidos para a Etapa 1.
+O projeto propõe uma abordagem estruturada e metodologicamente sólida para predição de risco de burnout utilizando técnicas modernas de Machine Learning. 
+
+A base de 30.000 registros, com variáveis demográficas, ocupacionais e de saúde, permite análise robusta e aplicação de modelos supervisionados com potencial de generalização.
 
 # Referências
-1. ALCÂNTARA, Enner; GUIMARÃES, Yasmim C.; BAIÃO, Cheila F. P. *et al.* Interpretable machine learning for flood susceptibility mapping in the metropolitan region of São Paulo, Southeast Brazil. *Discover Geoscience*, v. 3, art. 243, 2025. DOI: https://doi.org/10.1007/s44288-025-00362-9. 
+1. ADAMOPOULOS, I.; VALAMONTES, A.; TSIRKAS, P.; DOUNIAS, G. Predicting workplace hazard, stress and burnout among public health inspectors: An AI-driven analysis in the context of climate change. European Journal of Investigation in Health, Psychology and Education, v. 15, n. 5, p. 65, 2025. DOI: 10.3390/ejihpe15050065.
 
-2. ALI, J.; AHMED, A. *et al.* ML4FF: A machine-learning framework for flash flood forecasting applied to a Brazilian watershed. *Journal of Hydrology*, v. 652, 132674, 2025. DOI: https://doi.org/10.1016/j.jhydrol.2025.132674.
-  
-3. ASIF, Muhammad; KUGLITSCH, Monique M.; PELIVAN, Ivanka. *et al.* Review and intercomparison of machine learning applications for short-term flood forecasting. *Water Resources Management*, v. 39, p. 1971–1991, 2025. DOI: https://doi.org/10.1007/s11269-025-04093-x. 
- 
-4. BRANDÃO, A. R. A.; MENEZES FILHO, F. C. M.; OLIVEIRA, P. T. S.; FAVA, M. C. Artificial neural networks applied for flood forecasting in ungauged basin – the Paranaíba river study case. *Proceedings of the International Association of Hydrological Sciences*, v. 386, p. 81–86, 2024. DOI: https://doi.org/10.5194/piahs-386-81-2024. 
- 
-5. BRANDÃO, P. I.; LOUREIRO, G. F.; LUIZ, T. A. Aplicação de técnicas de machine learning na previsão de eventos de alta pluviosidade e riscos de inundação e alagamentos: um estudo de caso em Teófilo Otoni-MG. *Caderno Pedagógico*, v. 22, n. 13, e21735, 2025. DOI: https://doi.org/10.54033/cadpedv22n13-207. 
- 
-6. SANTOS, Leonardo B. L. *et al.* Machine learning-based hydrological models for flash floods: a systematic literature. *Hydrological Sciences Journal*, 2025. DOI: https://doi.org/10.1007/s44268-025-00071-9. 
- 
-7. ZHANG, Ting; ZHANG, Ran; LI, Jianzhu; FENG, Ping. Deep learning of flood forecasting by considering interpretability and physical constraints. *Hydrology and Earth System Sciences*, v. 29, p. 5955–5974, 2025. DOI: https://doi.org/10.5194/hess-29-5955-2025.    
+2. LIU, C.; CHUANG, Y.-C.; QIN, L.; REN, L.; CHIEN, C.-W.; TUNG, T.-H. Machine-learning-based model for analysing and accurately predicting factors related to burnout in healthcare workers. BMJ Public Health, 2025. DOI: 10.1136/bmjph-2023-000777.
 
-8. INSTITUTO NACIONAL DE METEOROLOGIA (INMET). Banco de Dados Meteorológicos para Ensino e Pesquisa – BDMEP. Brasília, 2024. Disponível em: https://bdmep.inmet.gov.br/. Acesso em: 03 mar. 2026.    
+3. SHI, H.; LIU, J.; YANG, C.; SHANG, J.; ZENG, Y. Machine learning for predicting burnout among healthcare workers: a systematic review and meta-analysis. Contemporary Nurse, 2025. DOI: 10.1080/10376178.2025.2593294.
 
-9. AGÊNCIA NACIONAL DE ÁGUAS E SANEAMENTO BÁSICO (ANA). Sistema Hidroweb: séries históricas hidrológicas. Brasília, 2024. Disponível em: https://www.snirh.gov.br/hidroweb/. Acesso em: 03 mar. 2026.    
+4. ROCHA, A.; COSTEIRA, C.; BARBOSA, R.; et al. Burnout protective patterns among oncology nurses: a cross-sectional study using machine learning analysis. BMC Nursing, v. 24, p. 805, 2025. DOI: 10.1186/s12912-025-03277-5.
 
-10. BRASIL. Ministério da Integração e do Desenvolvimento Regional. Sistema Integrado de Informações sobre Desastres (S2ID). Brasília, 2024. Disponível em: https://s2id.mi.gov.br/. Acesso em: 03 mar. 2026. 
- 
+5. VAN ZYL-CILLIÉ, M. M.; BÜHRMANN, J. H.; BLIGNAUT, A. J.; DEMIRTAS, D.; COETZEE, S. K. A machine learning model to predict the risk factors causing feelings of burnout and emotional exhaustion amongst nursing staff in South Africa. BMC Health Services Research, v. 24, p. 1665, 2024. DOI: 10.1186/s12913-024-12184-5.
+
+6. ZENG, Y.; ZHAO, X.; XIE, Z.; LIN, X.; QI, M.; LI, P. Prediction of job burnout in nurses based on the job demands-resources model: an explainable machine learning approach. Journal of Advanced Nursing, 2025. DOI: 10.1111/jan.17071. 
+
+ 
