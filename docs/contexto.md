@@ -120,7 +120,7 @@ Nesta seção, descreva abordagens da literatura que tratam problemas semelhante
 - **Contribuição:** Reforça a eficácia de modelos supervisionados na identificação de fatores críticos de burnout. 
 
 
-### 3. Machine Learning for Predicting Burnout Among Healthcare Workers: A Systematic Review and Meta-Analysis. Shi et al. (2025) [3] 
+### 3. Machine Learning for Predicting Burnout Among Healthcare Workers: A Systematic Review and Meta-Analysis. Shi et al. (2025) [4] 
 
 - **Problema e contexto:** Avaliação sistemática do uso de Machine Learning na predição de burnout em profissionais da saúde. 
 
@@ -134,7 +134,7 @@ Nesta seção, descreva abordagens da literatura que tratam problemas semelhante
 
 - **Contribuição:** Consolida evidências científicas sobre a eficácia de ML para predição de burnout e aponta lacunas quanto à generalização e interpretabilidade. 
 
-### 4. Burnout Protective Patterns Among Oncology Nurses: A Cross-Sectional Study Using Machine Learning Analysis. Rocha et al. (2025) [4] 
+### 4. Burnout Protective Patterns Among Oncology Nurses: A Cross-Sectional Study Using Machine Learning Analysis. Rocha et al. (2025) [3] 
 
 - **Problema e contexto:** Identificação de padrões protetivos contra burnout em enfermeiros oncológicos. 
 
@@ -148,7 +148,7 @@ Nesta seção, descreva abordagens da literatura que tratam problemas semelhante
 
 - **Contribuição:** Amplia a aplicação de ML ao identificar não apenas fatores de risco, mas também fatores de proteção. 
 
-### 5. A Machine Learning Model to Predict the Risk Factors Causing Feelings of Burnout and Emotional Exhaustion Amongst Nursing Staff in South Africa. Van Zyl-Cillié et al. (2024) [5] 
+### 5. A Machine Learning Model to Predict the Risk Factors Causing Feelings of Burnout and Emotional Exhaustion Amongst Nursing Staff in South Africa. Van Zyl-Cillié et al. (2024) [6] 
 
 - **Problema e contexto:** Predição de fatores associados à exaustão emocional em profissionais de enfermagem. 
 
@@ -162,7 +162,7 @@ Nesta seção, descreva abordagens da literatura que tratam problemas semelhante
 
 - **Contribuição:** Evidencia a importância do contexto organizacional na modelagem preditiva de burnout. 
 
-### 6. Prediction of Job Burnout in Nurses Based on the Job Demands-Resources Model: An Explainable Machine Learning Approach. Zeng et al. (2025) [6] 
+### 6. Prediction of Job Burnout in Nurses Based on the Job Demands-Resources Model: An Explainable Machine Learning Approach. Zeng et al. (2025) [7] 
 
 - **Problema e contexto:** Predição de burnout em enfermeiros com base no modelo teórico Job Demands–Resources (JD-R). 
 
