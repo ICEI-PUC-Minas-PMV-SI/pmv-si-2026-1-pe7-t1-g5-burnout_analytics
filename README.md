@@ -6,7 +6,7 @@
 
 `SEMESTRE: 7º`
 
-Este projeto tem como objetivo desenvolver um modelo preditivo para previsão de enchentes em municípios de Minas Gerais, a partir da integração de dados públicos meteorológicos, hidrológicos e históricos de desastres. Serão utilizados dados do Instituto Nacional de Meteorologia (INMET), da Agência Nacional de Águas e Saneamento Básico (ANA) e do Sistema Integrado de Informações sobre Desastres (S2ID).
+Este projeto tem como objetivo desenvolver um modelo preditivo de aprendizado de máquina para estimar o risco de burnout em profissionais, a partir da análise de características demográficas, hábitos de trabalho e indicadores de saúde e estilo de vida. Serão utilizados dados estruturados provenientes do Work Productivity & Burnout Risk Dataset, base pública disponibilizada na plataforma Kaggle, contendo informações sobre carga horária, níveis de estresse, tempo de tela e qualidade do sono.
 
 ## Integrantes
 
