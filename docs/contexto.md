@@ -58,21 +58,6 @@ Empresas podem utilizar modelos semelhantes para:
 - Gestão estratégica de equipes 
 
 ## Público-Alvo
-
-O público-alvo deste projeto compreende organizações, gestores de recursos humanos e equipes de saúde ocupacional interessados em identificar e prevenir o risco de burnout entre profissionais em ambiente de trabalho.
-
-Os dados utilizados representam trabalhadores adultos (18+ anos) de diferentes países, setores profissionais e portes de empresas, incluindo variáveis relacionadas a:
-- características demográficas (idade, gênero, país);
-- perfil profissional (cargo, experiência e porte da empresa);
-- hábitos de trabalho (carga horária, reuniões e ambiente de trabalho);
-- estilo de vida e saúde (sono, exercício físico, tempo de tela e nível de estresse).
-
-Dessa forma, o modelo desenvolvido poderá apoiar gestores organizacionais e profissionais de saúde ocupacional na identificação precoce de padrões associados ao risco de burnout, possibilitando a implementação de estratégias preventivas voltadas ao bem-estar e à produtividade no ambiente corporativo. 
-
-_____________________________________________________________________________________________________________________________
-
-## Sugestão de Novo "Público-Alvo"
-
 O projeto tem potencial de impacto em diferentes perfis estratégicos dentro do ambiente corporativo:
 
 ### 1. Gestores de Recursos Humanos (RH) e Lideranças:
@@ -302,10 +287,12 @@ A base de 30.000 registros, com variáveis demográficas, ocupacionais e de saú
 
 2. LIU, C.; CHUANG, Y.-C.; QIN, L.; REN, L.; CHIEN, C.-W.; TUNG, T.-H. Machine-learning-based model for analysing and accurately predicting factors related to burnout in healthcare workers. *BMJ Public Health*, 2025. DOI: 10.1136/bmjph-2023-000777. Disponível em: https://doi.org/10.1136/bmjph-2023-000777. Acesso em: 7 mar. 2026.
 
-3. SHI, H.; LIU, J.; YANG, C.; SHANG, J.; ZENG, Y. Machine learning for predicting burnout among healthcare workers: a systematic review and meta-analysis. *Contemporary Nurse*, 2025. DOI: 10.1080/10376178.2025.2593294. Disponível em: https://doi.org/10.1080/10376178.2025.2593294. Acesso em: 7 mar. 2026.
+3. ROCHA, A.; COSTEIRA, C.; BARBOSA, R.; et al. Burnout protective patterns among oncology nurses: a cross-sectional study using machine learning analysis. *BMC Nursing*, v. 24, p. 805, 2025. DOI: 10.1186/s12912-025-03277-5. Disponível em: https://doi.org/10.1186/s12912-025-03277-5. Acesso em: 7 mar. 2026.
 
-4. ROCHA, A.; COSTEIRA, C.; BARBOSA, R.; et al. Burnout protective patterns among oncology nurses: a cross-sectional study using machine learning analysis. *BMC Nursing*, v. 24, p. 805, 2025. DOI: 10.1186/s12912-025-03277-5. Disponível em: https://doi.org/10.1186/s12912-025-03277-5. Acesso em: 7 mar. 2026.
+4. SHI, H.; LIU, J.; YANG, C.; SHANG, J.; ZENG, Y. Machine learning for predicting burnout among healthcare workers: a systematic review and meta-analysis. *Contemporary Nurse*, 2025. DOI: 10.1080/10376178.2025.2593294. Disponível em: https://doi.org/10.1080/10376178.2025.2593294. Acesso em: 7 mar. 2026.
 
-5. VAN ZYL-CILLIÉ, M. M.; BÜHRMANN, J. H.; BLIGNAUT, A. J.; DEMIRTAS, D.; COETZEE, S. K. A machine learning model to predict the risk factors causing feelings of burnout and emotional exhaustion amongst nursing staff in South Africa. *BMC Health Services Research*, v. 24, p. 1665, 2024. DOI: 10.1186/s12913-024-12184-5. Disponível em: https://doi.org/10.1186/s12913-024-12184-5. Acesso em: 7 mar. 2026.
+5. SHREE0910. Work Productivity and Burnout Risk Dataset. *Kaggle*, [s.d.]. Disponível em: https://www.kaggle.com/datasets/shree0910/work-productivity-and-burnout-risk-dataset. Acesso em: 8 mar. 2026.
 
-6. ZENG, Y.; ZHAO, X.; XIE, Z.; LIN, X.; QI, M.; LI, P. Prediction of job burnout in nurses based on the job demands-resources model: an explainable machine learning approach. *Journal of Advanced Nursing*, 2025. DOI: 10.1111/jan.17071. Disponível em: https://doi.org/10.1111/jan.17071. Acesso em: 7 mar. 2026.
+6. VAN ZYL-CILLIÉ, M. M.; BÜHRMANN, J. H.; BLIGNAUT, A. J.; DEMIRTAS, D.; COETZEE, S. K. A machine learning model to predict the risk factors causing feelings of burnout and emotional exhaustion amongst nursing staff in South Africa. *BMC Health Services Research*, v. 24, p. 1665, 2024. DOI: 10.1186/s12913-024-12184-5. Disponível em: https://doi.org/10.1186/s12913-024-12184-5. Acesso em: 7 mar. 2026.
+
+7. ZENG, Y.; ZHAO, X.; XIE, Z.; LIN, X.; QI, M.; LI, P. Prediction of job burnout in nurses based on the job demands-resources model: an explainable machine learning approach. *Journal of Advanced Nursing*, 2025. DOI: 10.1111/jan.17071. Disponível em: https://doi.org/10.1111/jan.17071. Acesso em: 7 mar. 2026.
