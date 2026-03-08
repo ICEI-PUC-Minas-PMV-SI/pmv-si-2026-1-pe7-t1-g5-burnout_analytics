@@ -1,4 +1,4 @@
-# PrevEnchentes
+# Burnout Analytics
 
 `CURSO: Sistemas de Informação`
 
