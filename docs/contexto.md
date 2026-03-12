@@ -216,12 +216,12 @@ Dataset: **[Work Productivity & Burnout Risk Dataset (Kaggle)](https://www.kaggl
 | ``Meetings_Per_Day`` | Numérico | Reuniões diárias | 0 - 7 |
 | ``Internet_Speed_Mbps`` | Numérico | Velocidade da internet | 10 - 200 mbps | 
 | ``Work_Environment`` | Categórico | Remoto, Híbrido ou Presencial | -   |
-| ``Sleep_Hours`` | Numérico | Horas de sono |    |
-| ``Exercise_Hours_Per_Week`` | Numérico | Exercício semanal |     | 
-| ``Screen_Time_Hours`` | Numérico | Tempo de tela |     |
-| ``Stress_Level`` | Numérico | Escala de estresse |    |
-| ``Productivity_Score`` | Numérico | Escala de 1–100 |    |
-| ``Burnout_Risk`` | Binário | Yes/No |     |
+| ``Sleep_Hours`` | Numérico | Horas de sono | 4 - 9 horas   |
+| ``Exercise_Hours_Per_Week`` | Numérico | Exercício semanal | 0 - 6 horas  | 
+| ``Screen_Time_Hours`` | Numérico | Tempo de tela | 5 - 14 horas   |
+| ``Stress_Level`` | Numérico | Escala de estresse | Baixo, Médio e Alto   |
+| ``Productivity_Score`` | Numérico | Escala de 1–100 | 30 - 100 |
+| ``Burnout_Risk`` | Binário | Yes/No | Verdadeiro e Falso   |
 
 # Variável Alvo
 
