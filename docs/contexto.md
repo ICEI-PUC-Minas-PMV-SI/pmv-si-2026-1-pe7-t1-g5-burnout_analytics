@@ -264,6 +264,23 @@ Dimensões éticas consideradas:
 
 <img width="1920" height="1080" alt="CanvasAnalitico" src="https://github.com/user-attachments/assets/2fd69fd0-2580-4bbe-912d-db499b40068f" />
 
+
+|Canvas Analítico|||Projeto: Burnout Analytics |
+|----------|------|-----------|-------|
+|1. Onde estamos hoje? (Contexto e Dados Iniciais)| 2. Denição do Problema (O que estamos tentando resolver?)| 3. Como a solução se parece?| 4. O que precisa ser feito? (Impementação)|
+|||||
+|||||
+|||||
+|||||
+|----------|------|-----------|-------|
+|||||
+|||||
+|||||
+|||||
+|||||
+|----------|------|-----------|-------|
+
+
 # Considerações Finais
 O projeto propõe uma abordagem estruturada e metodologicamente sólida para predição de risco de burnout utilizando técnicas modernas de Machine Learning. 
 
