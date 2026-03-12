@@ -267,18 +267,26 @@ Dimensões éticas consideradas:
 
 |Canvas Analítico|||Projeto: Burnout Analytics |
 |----------|------|-----------|-------|
-|1. Onde estamos hoje? (Contexto e Dados Iniciais)| 2. Denição do Problema (O que estamos tentando resolver?)| 3. Como a solução se parece?| 4. O que precisa ser feito? (Impementação)|
+|1. Onde estamos hoje? (Contexto e Dados Iniciais)| 2. Definição do Problema (O que estamos tentando resolver?)| 3. Como a solução se parece?| 4. O que precisa ser feito? (Impementação)|
+|● Cenário: O esgotamento profissional afeta a produtividade e a saúde, mas as empresas só agem quando o colaborador já adoeceu. ● Dados disponíveis: Um dataset estruturado do Kaggle (Work Productivity.csv) com 30.000 registros e 17 variáveis contemplando dados demográficos, ocupacionais (carga horária, reuniões, modelo de trabalho) e de saúde/estilo de vida (sono, tempo de tela, estresse).||||
+|||||
+|||||
+|||||
+|----------|------|-----------|-------|
+|||||
 |||||
 |||||
 |||||
 |||||
 |----------|------|-----------|-------|
-|||||
-|||||
-|||||
-|||||
-|||||
-|----------|------|-----------|-------|
+
+
+| 1. Onde estamos hoje? (Contexto e Dados Iniciais) | 2. Definição do Problema (O que estamos tentando resolver?) | 3. Como a solução se parece? | 4. O que precisa ser feito? (Implementação) |
+|---|---|---|---|
+| ● Cenário: O esgotamento profissional afeta a produtividade e a saúde, mas as empresas só agem quando o colaborador já adoeceu.<br><br>● Dados disponíveis: Um dataset estruturado do Kaggle (Work Productivity.csv) com 30.000 registros e 17 variáveis contemplando dados demográficos, ocupacionais (carga horária, reuniões, modelo de trabalho) e de saúde/estilo de vida (sono, tempo de tela, estresse). | ● O problema principal é a incapacidade das organizações de antecipar o esgotamento profissional.<br><br>● O objetivo é construir um modelo preditivo capaz de identificar antecipadamente se um profissional tem alto risco de desenvolver burnout com base em seus hábitos de trabalho e estilo de vida. | ● Serão três modelos de aprendizado de máquina supervisionado (classificação binária) que, ao receber os dados de um colaborador, prevê a probabilidade de ele estar em risco de burnout (Sim/Não).<br><br>● A solução também apontará quais fatores (ex: falta de sono, excesso de reuniões) mais contribuem para esse risco (interpretabilidade). | ● Análise Exploratória (EDA): Analisar a distribuição de horas trabalhadas, nível de estresse e correlações com o risco de burnout.<br><br>● Pré-processamento: Converter variáveis categóricas (como Gênero e Cargo) via One-Hot Encoding e verificar necessidade de balanceamento de classes (SMOTE).<br><br>● Modelagem: Criar uma linha de base (Regressão Logística) e desenvolver modelos mais complexos (Random Forest, XGBoost).<br><br>● Avaliação: Comparar o desempenho dos algoritmos com base nas métricas estabelecidas. |
+| **5. O que vamos entregar? (Resultados)** | **6. Os Desafios e Heurísticas** | **7. Quem são os interessados? (Público-Alvo)** | **8. Quais as métricas de sucesso? (Validação)** |
+| ● Um modelo preditivo de Machine Learning treinado e avaliado.<br><br>● Um mapeamento de Feature Importance (A importância de cada variável), respondendo quais hábitos mais causam burnout.<br><br>● Um relatório documentando a metodologia, os resultados da análise exploratória e as métricas de desempenho. |● Desbalanceamento: A quantidade de profissionais com burnout pode ser muito menor que a de saudáveis, exigindo técnicas de balanceamento.<br><br>● Interpretabilidade: O RH não precisa apenas saber quem vai ter burnout, mas por que (necessidade de explicar o modelo).<br><br>● Questão Ética: Garantir que o modelo sugira intervenções preventivas de saúde, e não seja usado para punir ou demitir funcionários. | ● Equipe de RH e Lideranças: Interessados em gerenciar a carga de trabalho e reter talentos.<br><br>● Saúde Ocupacional: Focados em criar campanhas direcionadas de bem-estar corporativo.<br><br>● Alta Gestão: Interessados no impacto financeiro (redução de rotatividade e absenteísmo).<br><br>● Trabalhadores: Usuários finais que podem ganhar autoconsciência sobre seus limites. | ● Recall (Sensibilidade): Métrica fundamental para este projeto. É preferível o modelo errar prevendo burnout em alguém saudável (Falso Positivo) do que não alertar alguém que está prestes a colapsar (Falso Negativo).<br><br>● AUC-ROC e F1-Score: Para medir a capacidade do modelo de distinguir corretamente entre as duas classes (Com risco vs. Sem risco).<br><br>● Acurácia: Para medir a taxa geral de acertos. |
+ 
 
 
 # Considerações Finais
