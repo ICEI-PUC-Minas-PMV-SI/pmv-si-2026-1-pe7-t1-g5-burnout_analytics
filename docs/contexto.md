@@ -262,12 +262,72 @@ Dimensões éticas consideradas:
 
 # Canvas Analítico
 
-|Canvas Analítico||||
-|:---:|:---:|:---:|:---:|
-| 1. Onde estamos hoje? (Contexto e Dados Iniciais) | 2. Definição do Problema (O que estamos tentando resolver?) | 3. Como a solução se parece? | 4. O que precisa ser feito? (Implementação) |
-| ● Cenário: O esgotamento profissional afeta a produtividade e a saúde, mas as empresas só agem quando o colaborador já adoeceu.<br><br>● Dados disponíveis: Um dataset estruturado do Kaggle (Work Productivity.csv) com 30.000 registros e 17 variáveis contemplando dados demográficos, ocupacionais (carga horária, reuniões, modelo de trabalho) e de saúde/estilo de vida (sono, tempo de tela, estresse). | ● O problema principal é a incapacidade das organizações de antecipar o esgotamento profissional.<br><br>● O objetivo é construir um modelo preditivo capaz de identificar antecipadamente se um profissional tem alto risco de desenvolver burnout com base em seus hábitos de trabalho e estilo de vida. | ● Serão três modelos de aprendizado de máquina supervisionados que, ao receberem os dados de um colaborador, preveem a probabilidade dele estar em risco de burnout (Sim/Não).<br><br>● A solução também apontará quais fatores (ex: falta de sono, excesso de reuniões) mais contribuem para esse risco (interpretabilidade). | ● Análise Exploratória (EDA): Analisar a distribuição de horas trabalhadas, nível de estresse e correlações com o risco de burnout.<br><br>● Pré-processamento: Converter variáveis categóricas (como Gênero e Cargo) via One-Hot Encoding e verificar necessidade de balanceamento de classes (SMOTE).<br><br>● Modelagem: Criar uma linha de base (Regressão Logística) e desenvolver modelos mais complexos (Random Forest, XGBoost).<br><br>● Avaliação: Comparar o desempenho dos algoritmos com base nas métricas estabelecidas. |
-| **5. O que vamos entregar? (Resultados)** | **6. Os Desafios e Heurísticas** | **7. Quem são os interessados? (Público-Alvo)** | **8. Quais as métricas de sucesso? (Validação)** |
-| ● Três modelos preditivos de Machine Learning treinados e avaliados.<br><br>● Um mapeamento de Feature Importance (A importância de cada variável), respondendo quais hábitos mais causam burnout.<br><br>● Um relatório documentando a metodologia, os resultados da análise exploratória e as métricas de desempenho. | **Heurísticas:** <br><br> ● Longas jornadas de trabalho estão associadas a um maior risco de burnout? <br><br>● Empresas de menor porte estão associadas a um maior risco de burnout? <br><br>● Há um determinado gênero mais propenso a desenvolver burnout? <br><br>● Altos níveis de estresse são preditores de burnout? <br><br>● Qual dos modelos apresenta maior capacidade de captura de relações não lineares e apresenta melhor desempenho na previsão de risco de burnout?<br><br> **Desafios:** <br><br>● Desbalanceamento: A quantidade de profissionais com burnout pode ser muito menor que a de saudáveis, exigindo técnicas de balanceamento.<br><br>● Interpretabilidade: O RH não precisa apenas saber quem vai ter burnout, mas por que (necessidade de explicar o modelo). | ● Equipe de RH e Lideranças: Interessados em gerenciar a carga de trabalho e reter talentos.<br><br>● Saúde Ocupacional: Focados em criar campanhas direcionadas de bem-estar corporativo.<br><br>● Alta Gestão: Interessados no impacto financeiro (redução de rotatividade e absenteísmo).<br><br>● Trabalhadores: Usuários finais que podem ganhar autoconsciência sobre seus limites. | ● Recall (Sensibilidade): Métrica fundamental para este projeto. É preferível o modelo errar prevendo burnout em alguém saudável (Falso Positivo) do que não alertar alguém que está prestes a colapsar (Falso Negativo).<br><br>● AUC-ROC e F1-Score: Para medir a capacidade do modelo de distinguir corretamente entre as duas classes (Com risco vs. Sem risco).<br><br>● Acurácia: Para medir a taxa geral de acertos. |
+<table>
+  <tr>
+    <th colspan="4" align="center">Canvas Analítico</th>
+  </tr>
+  <tr>
+    <td valign="top" align="center"><b>1. Onde estamos hoje? (Contexto e Dados Iniciais)</b></td>
+    <td valign="top" align="center"><b>2. Definição do Problema (O que estamos tentando resolver?)</b></td>
+    <td valign="top" align="center"><b>3. Como a solução se parece?</b></td>
+    <td valign="top" align="center"><b>4. O que precisa ser feito? (Implementação)</b></td>
+  </tr>
+  <tr>
+    <td valign="top" align="left">
+      ● Cenário: O esgotamento profissional afeta a produtividade e a saúde, mas as empresas só agem quando o colaborador já adoeceu.<br><br>
+      ● Dados disponíveis: Um dataset estruturado do Kaggle (Work Productivity.csv) com 30.000 registros e 17 variáveis contemplando dados demográficos, ocupacionais (carga horária, reuniões, modelo de trabalho) e de saúde/estilo de vida (sono, tempo de tela, estresse).
+    </td>
+    <td valign="top" align="left">
+      ● O problema principal é a incapacidade das organizações de antecipar o esgotamento profissional.<br><br>
+      ● O objetivo é construir um modelo preditivo capaz de identificar antecipadamente se um profissional tem alto risco de desenvolver burnout com base em seus hábitos de trabalho e estilo de vida.
+    </td>
+    <td valign="top" align="left">
+      ● Serão três modelos de aprendizado de máquina supervisionados que, ao receberem os dados de um colaborador, preveem a probabilidade dele estar em risco de burnout (Sim/Não).<br><br>
+      ● A solução também apontará quais fatores (ex: falta de sono, excesso de reuniões) mais contribuem para esse risco (interpretabilidade).
+    </td>
+    <td valign="top" align="left">
+      ● Análise Exploratória (EDA): Analisar a distribuição de horas trabalhadas, nível de estresse e correlações com o risco de burnout.<br><br>
+      ● Pré-processamento: Converter variáveis categóricas (como Gênero e Cargo) via One-Hot Encoding e verificar necessidade de balanceamento de classes (SMOTE).<br><br>
+      ● Modelagem: Criar uma linha de base (Regressão Logística) e desenvolver modelos mais complexos (Random Forest, XGBoost).<br><br>
+      ● Avaliação: Comparar o desempenho dos algoritmos com base nas métricas estabelecidas.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" align="center"><b>5. O que vamos entregar? (Resultados)</b></td>
+    <td valign="top" align="center"><b>6. Os Desafios e Heurísticas</b></td>
+    <td valign="top" align="center"><b>7. Quem são os interessados? (Público-Alvo)</b></td>
+    <td valign="top" align="center"><b>8. Quais as métricas de sucesso? (Validação)</b></td>
+  </tr>
+  <tr>
+    <td valign="top" align="left">
+      ● Três modelos preditivos de Machine Learning treinados e avaliados.<br><br>
+      ● Um mapeamento de Feature Importance (A importância de cada variável), respondendo quais hábitos mais causam burnout.<br><br>
+      ● Um relatório documentando a metodologia, os resultados da análise exploratória e as métricas de desempenho.
+    </td>
+    <td valign="top" align="left">
+      <b>Heurísticas:</b><br><br>
+      ● Longas jornadas de trabalho estão associadas a um maior risco de burnout?<br><br>
+      ● Empresas de menor porte estão associadas a um maior risco de burnout?<br><br>
+      ● Há um determinado gênero mais propenso a desenvolver burnout?<br><br>
+      ● Altos níveis de estresse são preditores de burnout?<br><br>
+      ● Qual dos modelos apresenta maior capacidade de captura de relações não lineares e apresenta melhor desempenho na previsão de risco de burnout?<br><br>
+      <b>Desafios:</b><br><br>
+      ● Desbalanceamento: A quantidade de profissionais com burnout pode ser muito menor que a de saudáveis, exigindo técnicas de balanceamento.<br><br>
+      ● Interpretabilidade: O RH não precisa apenas saber quem vai ter burnout, mas por que (necessidade de explicar o modelo).
+    </td>
+    <td valign="top" align="left">
+      ● Equipe de RH e Lideranças: Interessados em gerenciar a carga de trabalho e reter talentos.<br><br>
+      ● Saúde Ocupacional: Focados em criar campanhas direcionadas de bem-estar corporativo.<br><br>
+      ● Alta Gestão: Interessados no impacto financeiro (redução de rotatividade e absenteísmo).<br><br>
+      ● Trabalhadores: Usuários finais que podem ganhar autoconsciência sobre seus limites.
+    </td>
+    <td valign="top" align="left">
+      ● Recall (Sensibilidade): Métrica fundamental para este projeto. É preferível o modelo errar prevendo burnout em alguém saudável (Falso Positivo) do que não alertar alguém que está prestes a colapsar (Falso Negativo).<br><br>
+      ● AUC-ROC e F1-Score: Para medir a capacidade do modelo de distinguir corretamente entre as duas classes (Com risco vs. Sem risco).<br><br>
+      ● Acurácia: Para medir a taxa geral de acertos.
+    </td>
+  </tr>
+</table>
 
 # Considerações Finais
 O projeto propõe uma abordagem estruturada e metodologicamente sólida para predição de risco de burnout utilizando técnicas modernas de Machine Learning. 
