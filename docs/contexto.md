@@ -262,25 +262,6 @@ Dimensões éticas consideradas:
 
 # Canvas Analítico
 
-<img width="1920" height="1080" alt="CanvasAnalitico" src="https://github.com/user-attachments/assets/2fd69fd0-2580-4bbe-912d-db499b40068f" />
-
-
-|Canvas Analítico|||Projeto: Burnout Analytics |
-|----------|------|-----------|-------|
-|1. Onde estamos hoje? (Contexto e Dados Iniciais)| 2. Definição do Problema (O que estamos tentando resolver?)| 3. Como a solução se parece?| 4. O que precisa ser feito? (Impementação)|
-|● Cenário: O esgotamento profissional afeta a produtividade e a saúde, mas as empresas só agem quando o colaborador já adoeceu. ● Dados disponíveis: Um dataset estruturado do Kaggle (Work Productivity.csv) com 30.000 registros e 17 variáveis contemplando dados demográficos, ocupacionais (carga horária, reuniões, modelo de trabalho) e de saúde/estilo de vida (sono, tempo de tela, estresse).||||
-|||||
-|||||
-|||||
-|----------|------|-----------|-------|
-|||||
-|||||
-|||||
-|||||
-|||||
-|----------|------|-----------|-------|
-
-
 | 1. Onde estamos hoje? (Contexto e Dados Iniciais) | 2. Definição do Problema (O que estamos tentando resolver?) | 3. Como a solução se parece? | 4. O que precisa ser feito? (Implementação) |
 |---|---|---|---|
 | ● Cenário: O esgotamento profissional afeta a produtividade e a saúde, mas as empresas só agem quando o colaborador já adoeceu.<br><br>● Dados disponíveis: Um dataset estruturado do Kaggle (Work Productivity.csv) com 30.000 registros e 17 variáveis contemplando dados demográficos, ocupacionais (carga horária, reuniões, modelo de trabalho) e de saúde/estilo de vida (sono, tempo de tela, estresse). | ● O problema principal é a incapacidade das organizações de antecipar o esgotamento profissional.<br><br>● O objetivo é construir um modelo preditivo capaz de identificar antecipadamente se um profissional tem alto risco de desenvolver burnout com base em seus hábitos de trabalho e estilo de vida. | ● Serão três modelos de aprendizado de máquina supervisionados que, ao receberem os dados de um colaborador, preveem a probabilidade dele estar em risco de burnout (Sim/Não).<br><br>● A solução também apontará quais fatores (ex: falta de sono, excesso de reuniões) mais contribuem para esse risco (interpretabilidade). | ● Análise Exploratória (EDA): Analisar a distribuição de horas trabalhadas, nível de estresse e correlações com o risco de burnout.<br><br>● Pré-processamento: Converter variáveis categóricas (como Gênero e Cargo) via One-Hot Encoding e verificar necessidade de balanceamento de classes (SMOTE).<br><br>● Modelagem: Criar uma linha de base (Regressão Logística) e desenvolver modelos mais complexos (Random Forest, XGBoost).<br><br>● Avaliação: Comparar o desempenho dos algoritmos com base nas métricas estabelecidas. |
