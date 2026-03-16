@@ -78,10 +78,52 @@ Algumas estatísticas relevantes observadas foram:
 | ``Exercise_Hours_Per_Week``|	~2.4 horas |	2 |	0 |	6 |
 | ``Productivity_Score``|	~71	| 72 |	30	| 100 |
 
+### Interpretação
 
+Observa-se que a média de horas de sono (6,5) está abaixo da recomendação média para adultos, que geralmente varia entre 7 e 8 horas por noite. Além disso, o tempo médio de exposição a telas (9,3 horas) é relativamente elevado, refletindo a realidade de ambientes profissionais altamente digitalizados.
 
+Esses fatores podem contribuir para níveis mais elevados de estresse ocupacional e estão frequentemente associados ao risco de burnout.
 
+## Medidas de dispersão
 
+Para avaliar a variabilidade dos dados foram analisadas medidas de dispersão, como desvio padrão e quartis.
+
+Essas medidas permitem compreender o grau de heterogeneidade entre os indivíduos analisados.
+
+Variáveis como ``Screen_Time_Hours`` e ``Productivity_Score`` apresentaram maior dispersão, indicando que os indivíduos da amostra apresentam comportamentos bastante variados em relação ao tempo de exposição digital e produtividade.
+
+## Distribuição das variáveis numéricas
+
+Histogramas foram utilizados para visualizar a distribuição das variáveis numéricas.
+
+``
+df.hist(figsize=(12,10))
+plt.show()
+``
+
+A análise das distribuições revelou alguns padrões importantes:
+
+``Work_Hours_Per_Day`` apresenta concentração entre 6 e 9 horas de trabalho diário.
+
+``Sleep_Hours`` apresenta distribuição levemente assimétrica, com menor frequência de indivíduos que dormem mais de 8 horas.
+
+``Screen_Time_Hours`` apresenta valores elevados, indicando alta exposição digital.
+
+Esses resultados refletem características comuns do ambiente de trabalho contemporâneo, marcado pela intensa utilização de dispositivos digitais.
+
+## Detecção de outliers
+
+Para identificar possíveis valores extremos foram utilizados gráficos de boxplot.
+
+``
+plt.figure(figsize=(12,6))
+sns.boxplot(data=df[['Work_Hours_Per_Day','Sleep_Hours','Screen_Time_Hours']])
+plt.show()
+``
+
+A análise visual indica alguns valores extremos, como indivíduos que apresentam menos de 5 horas de sono por noite ou mais de 13 horas de exposição a telas.
+
+Esses casos podem representar perfis com maior vulnerabilidade ao estresse ocupacional.
 
 
 
