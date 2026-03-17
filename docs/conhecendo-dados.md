@@ -22,13 +22,16 @@ A primeira etapa da análise consistiu em carregar o dataset e inspecionar sua e
 
 ```python
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
+import os
+import kagglehub
 
-sns.set(style="whitegrid")
+path = kagglehub.dataset_download("shree0910/work-productivity-and-burnout-risk-dataset")
 
-df = pd.read_csv("Work_Productivity.csv")
+print("Path to dataset files:", path)
+
+csv_file_path = os.path.join(path, "Work Productivity.csv")
+
+df = pd.read_csv(csv_file_path)
 
 df.head()
 ```
