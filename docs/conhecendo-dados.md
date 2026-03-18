@@ -1,13 +1,5 @@
 # Conhecendo os dados
 
-Nesta seção, deverá ser registrada uma detalhada análise descritiva e exploratória sobre a base de dados selecionada na Etapa 1 com o objetivo de compreender a estrutura dos dados, detectar eventuais _outliers_ e também, avaliar/detectar as relações existentes entre as variáveis analisadas.
-
-Para isso, sugere-se que sejam utilizados cálculos de medidas de tendência central, como média, mediana e moda, para entender a centralidade dos dados; sejam exploradas medidas de dispersão como desvio padrão e intervalos interquartil para avaliar a variabilidade dos dados; sejam utilizados gráficos descritivos como histogramas e box plots, para representar visualmente as características essenciais dos dados, pois essas visualizações podem facilitar a identificação de padrões e anomalias; sejam analisadas as relações entre as variáveis por meio de análise de correlação, gráficos de dispersões, mapas de calor, entre outras técnicas. 
-
-Inclua nesta seção, gráficos, tabelas, trechos de código e demais artefatos que você considere relevantes para entender os dados com os quais você irá trabalhar.  Além disso, inclua e comente os trechos de código mais relevantes desenvolvidos para realizar suas análises. Na pasta "src", inclua o código fonte completo.
-
-# Conhecendo os dados
-
 Nesta seção é apresentada uma análise descritiva e exploratória da base de dados **Work Productivity & Burnout Risk Dataset**. O objetivo dessa análise é compreender a estrutura dos dados, identificar possíveis outliers e investigar relações existentes entre as variáveis presentes no dataset.
 
 A análise exploratória de dados (*Exploratory Data Analysis – EDA*) é uma etapa fundamental em projetos de ciência de dados e aprendizado de máquina, pois permite entender o comportamento das variáveis antes da construção de modelos preditivos. A partir dessa etapa é possível identificar padrões relevantes, inconsistências nos dados e possíveis relações entre fatores que influenciam o fenômeno estudado.
@@ -26,14 +18,8 @@ import os
 import kagglehub
 
 path = kagglehub.dataset_download("shree0910/work-productivity-and-burnout-risk-dataset")
-
-print("Path to dataset files:", path)
-
 csv_file_path = os.path.join(path, "Work Productivity.csv")
-
 df = pd.read_csv(csv_file_path)
-
-df.head()
 ```
 
 Em seguida, foram verificadas informações gerais sobre o dataset.
@@ -68,16 +54,16 @@ Algumas estatísticas relevantes observadas foram:
 | Variável | Média |	Mediana | Mínimo |	Máximo |
 |---|----|----|----|---|
 | ``Age`` |~38 anos |	38 | 22 |	54 |
-| ``Work_Hours_Per_Day`` |	~7.1 horas	| 7 |	4 |	10 |
-| ``Meetings_Per_Day``|	~3.2 |	3 |	0 |	7 |
-| ``Sleep_Hours``|	~6.5 horas |	6 | 4 |	9 |
-| ``Screen_Time_Hours``|	~9.3 horas |	9	| 5 |	14 |
-| ``Exercise_Hours_Per_Week``|	~2.4 horas |	2 |	0 |	6 |
-| ``Productivity_Score``|	~71	| 72 |	30	| 100 |
+| ``Work_Hours_Per_Day`` |	~7 horas	| 7 |	4 |	10 |
+| ``Meetings_Per_Day``|	~3.5 | 4 | 0 | 7 |
+| ``Sleep_Hours``|	~6.5 horas | 6 | 4 | 9 |
+| ``Screen_Time_Hours``| ~9.5 horas |	9	| 5 |	14 |
+| ``Exercise_Hours_Per_Week``| ~3 horas |	3 |	0 |	6 |
+| ``Productivity_Score``|	~75	| 76 | 30	| 100 |
 
 ### Interpretação
 
-Observa-se que a média de horas de sono (6,5) está abaixo da recomendação média para adultos, que geralmente varia entre 7 e 8 horas por noite. Além disso, o tempo médio de exposição a telas (9,3 horas) é relativamente elevado, refletindo a realidade de ambientes profissionais altamente digitalizados.
+Observa-se que a média de horas de sono (6,5) está abaixo da recomendação média para adultos, que geralmente varia entre 7 e 8 horas por noite. Além disso, o tempo médio de exposição a telas (9,5 horas) é relativamente elevado, refletindo a realidade de ambientes profissionais altamente digitalizados.
 
 Esses fatores podem contribuir para níveis mais elevados de estresse ocupacional e estão frequentemente associados ao risco de burnout.
 
@@ -94,13 +80,13 @@ Variáveis como ``Screen_Time_Hours`` e ``Productivity_Score`` apresentaram maio
 Histogramas foram utilizados para visualizar a distribuição das variáveis numéricas.
 
 ``
-df.hist(figsize=(12,10))
+df[colsNum].hist(figsize=(12,10))
 plt.show()
 ``
 
 A análise das distribuições revelou alguns padrões importantes:
 
-``Work_Hours_Per_Day`` apresenta concentração entre 6 e 9 horas de trabalho diário.
+``Work_Hours_Per_Day`` apresenta concentração entre 6 e 10 horas de trabalho diário.
 
 ``Sleep_Hours`` apresenta distribuição levemente assimétrica, com menor frequência de indivíduos que dormem mais de 8 horas.
 
@@ -113,8 +99,8 @@ Esses resultados refletem características comuns do ambiente de trabalho contem
 Para identificar possíveis valores extremos foram utilizados gráficos de boxplot.
 
 ``
-plt.figure(figsize=(12,6))
-sns.boxplot(data=df[['Work_Hours_Per_Day','Sleep_Hours','Screen_Time_Hours']])
+plt.figure(figsize=(12, 6))
+sns.boxplot(data=df[colsNum])
 plt.show()
 ``
 
@@ -150,22 +136,34 @@ Essas variáveis permitem analisar possíveis diferenças no risco de burnout en
 A variável alvo ``Burnout_Risk`` foi analisada para verificar o balanceamento das classes.
 
 ``
-sns.countplot(x="Burnout_Risk", data=df)
+counts = df["Burnout_Risk"].value_counts()
+percent = df["Burnout_Risk"].value_counts(normalize=True) * 100
+
+ax = sns.barplot(x=counts.index, y=counts.values)
+ax.set_xticks([0,1])
+ax.set_xticklabels(["No", "Yes"])
+
+for i, p in enumerate(ax.patches):
+    ax.text(p.get_x() + p.get_width()/2,
+            p.get_height(),
+            f'{percent[i]:.1f}%',
+            ha="center")
+
 plt.show()
 ``
 
-Foi observado que aproximadamente **63% dos registros correspondem à classe "No" e 37% à classe "Yes"**.
+Foi observado que aproximadamente **80% dos registros correspondem à classe "No" e 20% à classe "Yes"**.
 
-Esse resultado indica um leve desbalanceamento, mas ainda dentro de um intervalo aceitável para a aplicação de modelos de classificação.
+Essa distribuição caracteriza um desbalanceamento moderado significativo, podendo impactar o desempenho de modelos de classificação, especialmente na identificação da classe minoritária.
 
 ## Análise de correlação
 
 Para investigar relações entre as variáveis numéricas foi utilizada a correlação de Pearson.
 
 ``
-corr = df.corr(numeric_only=True)
+cols = ["Burnout_Risk", "Work_Hours_Per_Day", "Stress_Level", "Sleep_Hours", "Exercise_Hours_Per_Week", "Productivity_Score", "Screen_Time_Hours"]
+corr = df[cols].corr()
 
-plt.figure(figsize=(10,8))
 sns.heatmap(corr, annot=True, cmap="coolwarm")
 plt.show()
 ``
@@ -174,22 +172,17 @@ A análise do mapa de calor permitiu identificar algumas relações relevantes e
 
 Entre as correlações mais relevantes destacam-se:
 
-``Stress_Level`` e ``Burnout_Risk`` apresentam correlação positiva significativa.
+``Stress_Level`` e ``Burnout_Risk`` apresentam correlação praticamente nula (-0,0042), indicando ausência de relação linear significativa entre as variáveis.
 
-``Work_Hours_Per_Day`` e ``Burnout_Risk`` apresentam correlação positiva moderada.
+``Work_Hours_Per_Day`` e ``Burnout_Risk`` apresentam correlação negativa moderada (-0,34), sugerindo que o aumento das horas de trabalho está associado a uma leve redução no risco de burnout.
 
-``Sleep_Hours`` e ``Burnout_Risk`` apresentam correlação negativa moderada.
+``Sleep_Hours`` e ``Burnout_Risk`` apresentam correlação negativa moderada (-0,44), indicando que maiores horas de sono estão relacionadas à diminuição do risco de burnout.
 
-``Exercise_Hours_Per_Week`` e ``Burnout_Risk`` apresentam correlação negativa fraca.
+``Exercise_Hours_Per_Week`` e ``Burnout_Risk`` apresentam correlação negativa fraca (-0,27), sugerindo uma leve tendência de redução do burnout com o aumento da prática de exercícios.
 
-Esses resultados sugerem que níveis elevados de estresse e maior carga de trabalho estão associados ao aumento do risco de burnout, enquanto hábitos saudáveis como atividade física e sono adequado podem atuar como fatores protetivos.
+Esses resultados sugerem que maiores horas de sono estão associadas à redução do risco de burnout, enquanto outras variáveis apresentaram relações fracas ou inexistentes. No entanto, essas associações devem ser interpretadas com cautela, uma vez que não indicam causalidade.
 
 ---
-
-# Descrição dos achados
-
-A partir da análise descrita e exploratória realizada, descreva todos os achados considerados relevantes para o contexto em que o trabalho se insere. Por exemplo: com relação à centralidade dos dados algo chamou a atenção? Foi possível identificar correlação entre os atributos? Que tipo de correlação (forte, fraca, moderada)? 
-
 
 ## Descrição dos achados
 
@@ -201,23 +194,19 @@ Entre os principais achados destacam-se:
 
 - O tempo médio de exposição a telas é elevado, refletindo a forte digitalização do ambiente de trabalho moderno.
 
-- A análise de correlação indicou que **altos níveis de estresse apresentam forte associação com o risco de burnout**.
+- A análise de correlação indicou que não há associação linear significativa entre os níveis de estresse e o risco de burnout.
 
-- Variáveis relacionadas à carga de trabalho, como número de horas trabalhadas e quantidade de reuniões, apresentam correlação positiva com o risco de burnout.
+- Variáveis relacionadas à carga de trabalho, como número de horas trabalhadas, apresentaram correlação negativa moderada com o risco de burnout.
 
-- Variáveis relacionadas ao estilo de vida saudável, como horas de sono e prática de exercícios físicos, apresentam correlação negativa com o risco de burnout.
+- Variáveis relacionadas ao estilo de vida saudável, como horas de sono e prática de exercícios físicos, apresentaram correlação negativa, com destaque para o sono, que demonstrou associação moderada com a redução do risco de burnout.
 
-Esses resultados são consistentes com a literatura científica discutida na Etapa 1, que aponta fatores como carga de trabalho elevada, privação de sono e estresse crônico como determinantes importantes para o desenvolvimento do burnout ocupacional.
+Esses resultados indicam a presença de algumas associações entre as variáveis analisadas, especialmente relacionadas a hábitos de vida, porém devem ser interpretados com cautela, uma vez que não implicam relações de causa e efeito.
 
-A análise exploratória também mostrou que o dataset possui boa qualidade estrutural, sem valores ausentes e com distribuição relativamente equilibrada entre as classes da variável alvo.
+A análise exploratória também mostrou que o dataset possui boa qualidade estrutural, sem valores ausentes e com distribuição desbalanceada da variável alvo, na qual aproximadamente 80% dos registros pertencem à classe “No” e 20% à classe “Yes”.
 
-Essas características tornam o conjunto de dados adequado para o treinamento de modelos de aprendizado de máquina supervisionado nas etapas posteriores do projeto.
+Essas características tornam o conjunto de dados adequado para o treinamento de modelos de aprendizado de máquina supervisionado, embora o desbalanceamento entre as classes deva ser considerado nas etapas posteriores do projeto.
 
 ---
-
-# Ferramentas utilizadas
-
-Existem muitas ferramentas diferentes que podem ser utilizadas para fazer a análise dos dados. Nesta seção, descreva as ferramentas/tecnologias utilizadas e sua aplicação. Vale destacar que, preferencialmente, as análises deverão ser realizadas utilizando a linguagem de programação Python.
 
 ## Ferramentas utilizadas
 
@@ -229,7 +218,6 @@ As principais bibliotecas utilizadas foram:
 |---|---|
 | **Python** |	Linguagem de programação utilizada para análise dos dados |
 | **pandas** |	Manipulação e estruturação de dados em DataFrames |
-| **numpy** |	Operações matemáticas e estatísticas |
 | **matplotlib** |	Criação de gráficos e visualizações |
 | **seaborn** | Visualização estatística avançada |
 
