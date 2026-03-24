@@ -33,6 +33,17 @@ Essa inspeção inicial permitiu identificar o tipo de cada variável e confirma
 
 Foi observado que o conjunto de dados possui 30.000 registros e 17 colunas, contendo variáveis numéricas e categóricas.
 
+## Estrutura dos Dados
+
+A verificação inicial do tipo de cada variável mostrou que o dataset contém tanto variáveis numéricas (Sleep_Hours, Screen_Time_Hours, Age, etc.) quanto categóricas (Gender, Country, Job_Role, etc.)
+
+```
+print(df_dataset.dtypes)
+```
+
+<img width="507" height="383" alt="Screen Shot 2026-03-23 at 20 53 43" src="https://github.com/user-attachments/assets/3f552957-cea1-4c37-8250-7e8cedf7efe4" />
+
+
 ## Verificação de valores ausentes
 
 Uma etapa importante da análise exploratória consiste em verificar a presença de valores ausentes.
@@ -41,39 +52,23 @@ Uma etapa importante da análise exploratória consiste em verificar a presença
 df.isnull().sum()
 ```
 
+<img width="167" height="459" alt="Screen Shot 2026-03-23 at 21 04 40" src="https://github.com/user-attachments/assets/14497db2-278f-4374-b42a-79a81d31af14" />
+
 O resultado mostrou que não há valores ausentes no dataset, indicando boa qualidade estrutural dos dados e reduzindo a necessidade de etapas adicionais de tratamento.
 
-## Medidas de tendência central
+## Medidas de tendência central e dispersão
 
-Para compreender o comportamento das variáveis numéricas foram calculadas medidas de tendência central.
+Para compreender o comportamento das variáveis numéricas foram calculadas medidas de tendência central e dispersão.
 
-```
-df.describe()
-```
-
-Algumas estatísticas relevantes observadas foram:
-
-| Variável | Média |	Mediana | Mínimo |	Máximo |
-|---|----|----|----|---|
-| ``Age`` |~38 anos |	38 | 22 |	54 |
-| ``Work_Hours_Per_Day`` |	~7 horas	| 7 |	4 |	10 |
-| ``Meetings_Per_Day``|	~3.5 | 4 | 0 | 7 |
-| ``Sleep_Hours``|	~6.5 horas | 6 | 4 | 9 |
-| ``Screen_Time_Hours``| ~9.5 horas |	9	| 5 |	14 |
-| ``Exercise_Hours_Per_Week``| ~3 horas |	3 |	0 |	6 |
-| ``Productivity_Score``|	~75	| 76 | 30	| 100 |
+<img width="698" height="290" alt="Screen Shot 2026-03-23 at 21 31 50" src="https://github.com/user-attachments/assets/12561c02-4e99-48da-9565-e80868f05e04" />
 
 ### Interpretação
 
 Observa-se que a média de horas de sono (6,5) está abaixo da recomendação média para adultos, que geralmente varia entre 7 e 8 horas por noite. Além disso, o tempo médio de exposição a telas (9,5 horas) é relativamente elevado, refletindo a realidade de ambientes profissionais altamente digitalizados.
 
-Esses fatores podem contribuir para níveis mais elevados de estresse ocupacional e estão frequentemente associados ao risco de burnout.
+Esses fatores podem contribuir para níveis mais elevados de estresse ocupacional e estão frequentemente associados ao risco de burnout. 
 
-## Medidas de dispersão
-
-Para avaliar a variabilidade dos dados foram analisadas medidas de dispersão, como desvio padrão e quartis.
-
-Essas medidas permitem compreender o grau de heterogeneidade entre os indivíduos analisados.
+As medidas de dispersão permitem compreender o grau de heterogeneidade entre os indivíduos analisados.
 
 Variáveis como ``Screen_Time_Hours`` e ``Productivity_Score`` apresentaram maior dispersão, indicando que os indivíduos da amostra apresentam comportamentos bastante variados em relação ao tempo de exposição digital e produtividade.
 
@@ -85,6 +80,7 @@ Histogramas foram utilizados para visualizar a distribuição das variáveis num
 df[colsNum].hist(figsize=(12,10))
 plt.show()
 ```
+<img width="994" height="836" alt="image" src="https://github.com/user-attachments/assets/8abf35e8-f5a2-461e-acc0-13cbff371a48" />
 
 A análise das distribuições revelou alguns padrões importantes:
 
@@ -106,6 +102,8 @@ sns.boxplot(data=df[colsNum])
 plt.show()
 ```
 
+<img width="1597" height="813" alt="image" src="https://github.com/user-attachments/assets/22b86637-ebca-4ddb-9998-e829fecdd85e" />
+
 A análise visual indica alguns valores extremos, como indivíduos que apresentam menos de 5 horas de sono por noite ou mais de 13 horas de exposição a telas.
 
 Esses casos podem representar perfis com maior vulnerabilidade ao estresse ocupacional.
@@ -123,13 +121,25 @@ Observou-se uma distribuição relativamente equilibrada entre os gêneros, o qu
 
 Outras variáveis categóricas analisadas incluem:
 
+``Gender``
+
+<img width="589" height="455" alt="image" src="https://github.com/user-attachments/assets/5493e9a5-9d41-4074-9095-ee40d46721f4" />
+
 ``Country``
+
+<img width="580" height="455" alt="image" src="https://github.com/user-attachments/assets/ab005dec-ef25-41a9-9533-68a389546e28" />
 
 ``Job_Role``
 
+<img width="598" height="455" alt="image" src="https://github.com/user-attachments/assets/d05383dd-adf7-4c33-a7e9-0aad6d85d100" />
+
 ``Company_Size``
 
+<img width="580" height="455" alt="image" src="https://github.com/user-attachments/assets/340fcf7d-7aeb-4b10-8062-265e90402489" />
+
 ``Work_Environment``
+
+<img width="580" height="455" alt="image" src="https://github.com/user-attachments/assets/de4a5778-d5d0-4ad2-a58a-595a096dfcde" />
 
 Essas variáveis permitem analisar possíveis diferenças no risco de burnout entre diferentes contextos organizacionais.
 
@@ -154,9 +164,11 @@ for i, p in enumerate(ax.patches):
 plt.show()
 ```
 
+<img width="569" height="434" alt="image" src="https://github.com/user-attachments/assets/ff7bf00c-6a4e-4d5a-8eef-29391d1863fa" />
+
 Foi observado que aproximadamente **80% dos registros correspondem à classe "No" e 20% à classe "Yes"**.
 
-Essa distribuição caracteriza um desbalanceamento moderado significativo, podendo impactar o desempenho de modelos de classificação, especialmente na identificação da classe minoritária.
+Essa distribuição caracteriza um desbalanceamento significativo, podendo impactar o desempenho de modelos de classificação, especialmente na identificação da classe minoritária.
 
 ## Análise de correlação
 
@@ -169,6 +181,8 @@ corr = df[cols].corr()
 sns.heatmap(corr, annot=True, cmap="coolwarm")
 plt.show()
 ```
+
+<img width="692" height="584" alt="image" src="https://github.com/user-attachments/assets/c874b8b2-a0e7-4c30-a7c2-b43b5f0edada" />
 
 A análise do mapa de calor permitiu identificar algumas relações relevantes entre as variáveis do dataset.
 
