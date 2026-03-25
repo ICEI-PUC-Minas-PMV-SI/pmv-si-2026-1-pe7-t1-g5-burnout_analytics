@@ -104,9 +104,13 @@ plt.show()
 
 <img width="1597" height="813" alt="image" src="https://github.com/user-attachments/assets/22b86637-ebca-4ddb-9998-e829fecdd85e" />
 
-A análise visual indica alguns valores extremos, como indivíduos que apresentam menos de 5 horas de sono por noite ou mais de 13 horas de exposição a telas.
+A análise visual indica alguns valores extremos, como indivíduos que apresentam menos de 5 horas de sono por noite ou mais de 13 horas de exposição a telas. Esses casos podem representar perfis com maior vulnerabilidade ao estresse ocupacional.
 
-Esses casos podem representar perfis com maior vulnerabilidade ao estresse ocupacional.
+Entretanto, a análise estatística complementar pelo método IQR (Tukey) não identificou outliers formais em nenhuma das variáveis analisadas, conforme demonstrado na Tabela abaixo.
+
+<img width="414" height="601" alt="Screen Shot 2026-03-25 at 20 57 27" src="https://github.com/user-attachments/assets/3ea43106-d750-48f8-9bde-126d95c294cd" />
+
+Todos os valores observados encontram-se dentro dos limites de tolerância calculados (Q1 - 1,5×IQR e Q3 + 1,5×IQR). Isso indica que, embora existam perfis atípicos, eles não são suficientemente extremos para serem classificados como outliers segundo o critério estatístico adotado. Portanto, todos os casos serão mantidos para as análises subsequentes, uma vez que representam perfis potencialmente relevantes para o estudo do burnout ocupacional.
 
 ## Distribuição das variáveis categóricas
 
