@@ -54,7 +54,7 @@ Todas as tarefas realizadas nesta etapa deverão ser registradas em formato de t
 
 -----////------
 
-# Preparação dos dados
+# Etapa 3: Preparação dos dados
 
 Nesta etapa, foram aplicadas técnicas de pré-processamento com o objetivo de adequar o conjunto de dados ao treinamento do modelo de aprendizado de máquina, garantindo consistência, robustez e reprodutibilidade dos resultados.
 
