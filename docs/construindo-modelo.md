@@ -108,22 +108,23 @@ Com o objetivo de avaliar o impacto de diferentes configurações do modelo no d
 A realização desses testes permite compreender a sensibilidade do modelo a diferentes configurações, além de fornecer embasamento empírico para a escolha da configuração final adotada.
 
 Tabela I – Resultados dos testes experimentais da Regressão Logística
-| Teste | Class Weight | Penalização | C     | Accuracy | Precision | Recall | F1-Score | AUC-ROC |
-|------:|-------------|-------------|-------|----------|-----------|--------|----------|---------|
-| 1     | None        | L2          | 1.0   | 0.84     | 0.70      | 0.52   | 0.60     | 0.78    |
-| 2     | Balanced    | L2          | 1.0   | 0.81     | 0.62      | 0.71   | 0.66     | 0.80    |
-| 3     | Balanced    | L2          | 0.1   | 0.79     | 0.60      | 0.74   | 0.66     | 0.79    |
-| 4     | Balanced    | L2          | 10.0  | 0.82     | 0.64      | 0.69   | 0.66     | 0.81    |
-| 5     | Balanced    | L1          | 1.0   | 0.80     | 0.63      | 0.70   | 0.66     | 0.80    |
-| 6     | None        | L2          | 0.1   | 0.83     | 0.68      | 0.55   | 0.61     | 0.77    |
 
-A análise dos resultados evidencia padrões importantes no comportamento do modelo. Observa-se que a utilização de `class_weight='balanced'` promove aumento consistente nos valores de recall, indicando maior capacidade do modelo em identificar corretamente a classe minoritária. Esse resultado é esperado, uma vez que o balanceamento penaliza mais fortemente erros associados a essa classe.
+| Teste           | Class Weight | Penalização | C    | Accuracy | Precision | Recall | F1-Score | AUC-ROC |
+|-----------------|--------------|-------------|------|----------|-----------|--------|----------|---------|
+|1. Baseline      | None         | L2          | 1.0  | 0.9997   | 0.9992    | 0.9992 | 0.9992   | 1.0000  |
+|2. Balanced L2   | balanced     | L2          | 1.0  | 0.9893   | 0.9488    | 1.0000 | 0.9737   | 1.0000  |
+|3. L2 C=0.1      | balanced     | L2          | 0.1  | 0.9793   | 0.9053    | 1.0000 | 0.9503   | 0.9998  |
+|4. L2 C=10       | balanced     | L2          | 10.0 | 0.9997   | 0.9983    | 1.0000 | 0.9992   | 1.0000  |
+|5. L1 C=1.0      | balanced     | L1          | 1.0  | 1.0000   | 1.0000    | 1.0000 | 1.0000   | 1.0000  |
+|6. Threshold 0.3 | balanced     | L2          | 1.0  | 0.9820   | 0.9165    | 1.0000 | 0.9565   | 1.0000  |
 
-Por outro lado, modelos sem balanceamento apresentaram maiores valores de acurácia, porém com redução significativa no recall, evidenciando um viés em favor da classe majoritária. Esse comportamento reforça a limitação da acurácia em cenários desbalanceados.
+A análise dos resultados evidencia que o modelo apresenta desempenho extremamente elevado em todas as configurações testadas, com valores de recall próximos ou iguais a 1.0 na maioria dos experimentos. Esse comportamento indica que o modelo já possui alta capacidade de identificação da classe positiva, independentemente da configuração adotada.
 
-Em relação ao parâmetro de regularização (C), verifica-se que valores menores (maior regularização) tendem a aumentar o recall, possivelmente por reduzir o overfitting, enquanto valores maiores favorecem levemente a acurácia, ao custo de menor generalização.
+Nesse contexto, a utilização de `class_weight='balanced'` não resultou em ganhos expressivos de recall, mas impactou negativamente a precisão, indicando aumento na ocorrência de falsos positivos. Esse comportamento é esperado, uma vez que o balanceamento torna o modelo mais sensível à classe minoritária.
 
-Adicionalmente, a penalização L1 apresentou desempenho semelhante à L2, com leve tendência à simplificação do modelo, característica associada à seleção implícita de variáveis.
+Observa-se que as principais variações entre os testes ocorreram na precisão, e não no recall, evidenciando um trade-off entre sensibilidade e especificidade do modelo. Configurações mais sensíveis, como o uso de balanceamento ou redução do threshold, tendem a aumentar a identificação de casos positivos ao custo de maior número de classificações incorretas.
+
+Adicionalmente, a variação do parâmetro de regularização (C) e do tipo de penalização (L1 e L2) não resultou em mudanças significativas no desempenho global, indicando que o problema apresenta alta separabilidade entre as classes. Esse resultado sugere que o dataset, possivelmente por sua natureza sintética, apresenta padrões facilmente capturáveis pelo modelo.
 
 Todos os experimentos foram executados utilizando o mesmo pipeline de pré-processamento e divisão de dados, garantindo comparabilidade entre os testes. As variações foram aplicadas exclusivamente nos parâmetros do modelo, mantendo-se constantes os demais elementos do processo. Essa abordagem assegura que as diferenças observadas nos resultados sejam decorrentes apenas das configurações testadas.
 
