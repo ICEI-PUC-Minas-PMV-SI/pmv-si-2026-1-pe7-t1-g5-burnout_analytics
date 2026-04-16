@@ -109,14 +109,14 @@ A realização desses testes permite compreender a sensibilidade do modelo a dif
 
 Tabela I – Resultados dos testes experimentais da Regressão Logística
 
-| Teste           | Class Weight | Penalização | C    | Accuracy | Precision | Recall | F1-Score | AUC-ROC |
-|-----------------|--------------|-------------|------|----------|-----------|--------|----------|---------|
-|1. Baseline      | None         | L2          | 1.0  | 0.9997   | 0.9992    | 0.9992 | 0.9992   | 1.0000  |
-|2. Balanced L2   | balanced     | L2          | 1.0  | 0.9893   | 0.9488    | 1.0000 | 0.9737   | 1.0000  |
-|3. L2 C=0.1      | balanced     | L2          | 0.1  | 0.9793   | 0.9053    | 1.0000 | 0.9503   | 0.9998  |
-|4. L2 C=10       | balanced     | L2          | 10.0 | 0.9997   | 0.9983    | 1.0000 | 0.9992   | 1.0000  |
-|5. L1 C=1.0      | balanced     | L1          | 1.0  | 1.0000   | 1.0000    | 1.0000 | 1.0000   | 1.0000  |
-|6. Threshold 0.3 | balanced     | L2          | 1.0  | 0.9820   | 0.9165    | 1.0000 | 0.9565   | 1.0000  |
+| Teste           | Class Weight | Penalização | C    | Accuracy | Precision | Recall  | F1-Score | AUC-ROC  |
+|-----------------|-------------|-------------|------|----------|-----------|---------|----------|----------|
+| Baseline        | None        | L2          | 1.0  | 0.999000 | 0.997470  | 0.997470| 0.997470 | 0.999990 |
+| Balanced L2     | Balanced    | L2          | 1.0  | 0.990167 | 0.952610  | 1.000000| 0.975730 | 0.999993 |
+| L2 C=0.1        | Balanced    | L2          | 0.1  | 0.978333 | 0.901216  | 1.000000| 0.948042 | 0.999651 |
+| L2 C=10         | Balanced    | L2          | 10.0 | 0.999667 | 0.998316  | 1.000000| 0.999158 | 1.000000 |
+| L1 C=1.0        | Balanced    | L1          | 1.0  | 1.000000 | 1.000000  | 1.000000| 1.000000 | 1.000000 |
+| Threshold 0.3   | Balanced    | L2          | 1.0  | 0.981000 | 0.912308  | 1.000000| 0.954143 | 0.999993 |
 
 A análise dos resultados evidencia que o modelo apresenta desempenho extremamente elevado em todas as configurações testadas, com valores de recall próximos ou iguais a 1.0 na maioria dos experimentos. Esse comportamento indica que o modelo já possui alta capacidade de identificação da classe positiva, independentemente da configuração adotada.
 
