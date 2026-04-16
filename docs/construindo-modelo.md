@@ -54,7 +54,7 @@ Todas as tarefas realizadas nesta etapa deverão ser registradas em formato de t
 
 -----////------
 
-# Etapa 3: Preparação dos dados
+# Preparação dos dados
 
 Nesta etapa, foram aplicadas técnicas de pré-processamento com o objetivo de adequar o conjunto de dados ao treinamento do modelo de aprendizado de máquina, garantindo consistência, robustez e reprodutibilidade dos resultados.
 
@@ -180,6 +180,6 @@ Esse pipeline não apenas organiza o fluxo de trabalho, mas também permite sua 
 
 # Observações importantes
 
-Todas as etapas de modelagem, avaliação e análise foram implementadas utilizando a linguagem Python, com suporte das bibliotecas pandas, scikit-learn e numpy.
+Todas as etapas de modelagem, avaliação e análise foram implementadas utilizando a linguagem Python, com suporte das bibliotecas pandas e scikit-learn.
 
 Os códigos desenvolvidos encontram-se documentados e devem ser disponibilizados integralmente na pasta "src" do repositório, garantindo transparência, reprodutibilidade e aderência às boas práticas de desenvolvimento em projetos de ciência de dados.
