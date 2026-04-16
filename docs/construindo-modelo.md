@@ -88,7 +88,7 @@ Como principal limitação, destaca-se o fato de que a Regressão Logística ass
 
 Adicionalmente, o modelo permite a análise direta dos coeficientes estimados, possibilitando a identificação dos fatores que mais contribuem para o aumento ou redução do risco de burnout, reforçando sua aplicabilidade no contexto organizacional.
 
-# Avaliação dos modelos criados
+# Avaliação do modelo criado
 ## Métricas utilizadas
 
 A avaliação do modelo foi realizada por meio de múltiplas métricas, com o objetivo de obter uma visão abrangente de seu desempenho. Foram consideradas as métricas de *acurácia (accuracy)*, *precisão (precision)*, *revocação (recall)*, *F1-score* e área sob a *curva ROC (AUC-ROC)*.
