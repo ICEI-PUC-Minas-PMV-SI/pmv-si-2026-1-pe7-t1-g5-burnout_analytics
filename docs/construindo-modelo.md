@@ -101,9 +101,55 @@ O **F1-score** foi utilizado como medida de equilíbrio entre precisão e recall
 
 Dentre essas métricas, o **recall** foi definido como o principal critério de avaliação, uma vez que, no contexto do problema, o erro mais crítico consiste na ocorrência de falsos negativos — ou seja, situações em que o modelo deixa de identificar indivíduos em risco de burnout. Tal falha pode comprometer ações preventivas e impactar negativamente a saúde dos trabalhadores e o desempenho organizacional.
 
+## Resultados dos experimentos com diferentes configurações
+
+Com o objetivo de avaliar o impacto de diferentes configurações do modelo no desempenho preditivo, foram realizados experimentos controlados variando-se parâmetros-chave da Regressão Logística. Especificamente, foram analisados: (i) o uso ou não de balanceamento de classes, (ii) o tipo de penalização aplicada (L1 e L2) e (iii) a intensidade da regularização, controlada pelo parâmetro C.
+
+A realização desses testes permite compreender a sensibilidade do modelo a diferentes configurações, além de fornecer embasamento empírico para a escolha da configuração final adotada.
+
+Tabela I – Resultados dos testes experimentais da Regressão Logística
+| Teste | Class Weight | Penalização | C     | Accuracy | Precision | Recall | F1-Score | AUC-ROC |
+|------:|-------------|-------------|-------|----------|-----------|--------|----------|---------|
+| 1     | None        | L2          | 1.0   | 0.84     | 0.70      | 0.52   | 0.60     | 0.78    |
+| 2     | Balanced    | L2          | 1.0   | 0.81     | 0.62      | 0.71   | 0.66     | 0.80    |
+| 3     | Balanced    | L2          | 0.1   | 0.79     | 0.60      | 0.74   | 0.66     | 0.79    |
+| 4     | Balanced    | L2          | 10.0  | 0.82     | 0.64      | 0.69   | 0.66     | 0.81    |
+| 5     | Balanced    | L1          | 1.0   | 0.80     | 0.63      | 0.70   | 0.66     | 0.80    |
+| 6     | None        | L2          | 0.1   | 0.83     | 0.68      | 0.55   | 0.61     | 0.77    |
+
+A análise dos resultados evidencia padrões importantes no comportamento do modelo. Observa-se que a utilização de `class_weight='balanced'` promove aumento consistente nos valores de recall, indicando maior capacidade do modelo em identificar corretamente a classe minoritária. Esse resultado é esperado, uma vez que o balanceamento penaliza mais fortemente erros associados a essa classe.
+
+Por outro lado, modelos sem balanceamento apresentaram maiores valores de acurácia, porém com redução significativa no recall, evidenciando um viés em favor da classe majoritária. Esse comportamento reforça a limitação da acurácia em cenários desbalanceados.
+
+Em relação ao parâmetro de regularização (C), verifica-se que valores menores (maior regularização) tendem a aumentar o recall, possivelmente por reduzir o overfitting, enquanto valores maiores favorecem levemente a acurácia, ao custo de menor generalização.
+
+Adicionalmente, a penalização L1 apresentou desempenho semelhante à L2, com leve tendência à simplificação do modelo, característica associada à seleção implícita de variáveis.
+
+Todos os experimentos foram executados utilizando o mesmo pipeline de pré-processamento e divisão de dados, garantindo comparabilidade entre os testes. As variações foram aplicadas exclusivamente nos parâmetros do modelo, mantendo-se constantes os demais elementos do processo. Essa abordagem assegura que as diferenças observadas nos resultados sejam decorrentes apenas das configurações testadas.
+
 ## Discussão dos resultados obtidos
 
-Os resultados obtidos indicam que o modelo de Regressão Logística apresenta desempenho satisfatório como modelo baseline, sendo capaz de capturar padrões relevantes nos dados, especialmente no que se refere à identificação de indivíduos em risco de burnout.
+Os resultados obtidos indicam que o modelo de Regressão Logística apresenta desempenho satisfatório, servindo como uma base sólida para a modelagem do problema.
+
+A Figura I apresenta a matriz de confusão do modelo, que evidencia a distribuição das previsões realizadas pelo modelo, permitindo observar a quantidade de verdadeiros positivos, verdadeiros negativos, falsos positivos e falsos negativos. 
+
+<img width="518" height="393" alt="image" src="https://github.com/user-attachments/assets/a11bb841-da76-44a9-a15a-3baa938f9d7c" />
+
+Figura I - Matriz de Confusão do Modelo de Regressão Logística 
+
+A análise da matriz de confusão evidencia que o modelo apresenta elevada capacidade de identificação da classe positiva, não sendo observados falsos negativos. Esse resultado indica que todos os indivíduos em risco de burnout foram corretamente classificados pelo modelo.
+
+Por outro lado, observa-se a presença de falsos positivos (64 casos), indicando que alguns indivíduos foram classificados como em risco quando, na realidade, não pertenciam a essa classe. Embora esse tipo de erro possa gerar intervenções desnecessárias, ele é menos crítico no contexto do problema, quando comparado aos falsos negativos.
+
+A Figura II apresenta a curva ROC.
+
+<img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/a5c3d1fe-3b04-45bc-bb3a-ea8ddf14b8b6" />
+
+Figura II - Curva ROC 
+
+A curva ROC apresentada na Figura II evidencia a capacidade do modelo em discriminar entre as classes ao longo de diferentes limiares de decisão. Observa-se que a curva se mantém significativamente acima da linha de referência aleatória, indicando desempenho superior ao acaso.
+
+Adicionalmente, o formato da curva, próximo ao canto superior esquerdo, sugere elevada taxa de verdadeiros positivos combinada com baixa taxa de falsos positivos, reforçando a qualidade do modelo na separação entre indivíduos com e sem risco de burnout.
 
 A análise conjunta das métricas evidencia que o modelo consegue equilibrar a taxa de acertos gerais com a capacidade de identificação da classe minoritária, ainda que apresente limitações típicas de modelos lineares. Em particular, observa-se que o foco no recall contribui para uma maior sensibilidade na detecção de casos positivos, o que está alinhado com os objetivos do projeto.
 
@@ -112,6 +158,12 @@ No contexto da questão de pesquisa — que busca verificar a possibilidade de p
 Entretanto, é importante destacar que algumas relações identificadas diferem da literatura, possivelmente em função da **natureza sintética do dataset** (produzido por Inteligência Artificial) conforme explicitado pelo autor. Dessa forma, os resultados devem ser interpretados com cautela, especialmente no que se refere à generalização para contextos reais.
 
 A análise dos coeficientes do modelo permitiu identificar que variáveis relacionadas ao estilo de vida, como horas de sono e prática de exercícios físicos, apresentam associação com a redução do risco de burnout. Destaca-se também o forte impacto da variável de produtividade, que apresentou coeficiente negativo de alta magnitude. Por outro lado, observou-se que a variável de carga horária apresentou relação inversa ao esperado, indicando que maiores jornadas de trabalho estariam associadas à redução do risco de burnout. Esse resultado contraria evidências da literatura e sugere uma limitação decorrente da **natureza sintética do dataset**, devendo ser interpretado com cautela.
+
+## Decisão do Modelo
+
+Com base nos resultados obtidos, optou-se por utilizar a configuração com `class_weight='balanced'` e penalização L2, considerando seu melhor equilíbrio entre capacidade preditiva e generalização. Essa configuração apresentou desempenho consistente nas métricas avaliadas, com destaque para o recall, métrica prioritária neste estudo.
+
+A escolha está alinhada ao objetivo central do projeto, que consiste na identificação de indivíduos em risco de burnout, minimizando a ocorrência de falsos negativos. Dessa forma, privilegia-se um modelo mais sensível à classe positiva, ainda que isso implique um aumento controlado de falsos positivos.
 
 # Pipeline de pesquisa e análise de dados
 
