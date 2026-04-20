@@ -37,9 +37,6 @@ Foi observado que o conjunto de dados possui 30.000 registros e 17 colunas, cont
 
 A verificação inicial do tipo de cada variável mostrou que o dataset contém tanto variáveis numéricas (Sleep_Hours, Screen_Time_Hours, Age, etc.) quanto categóricas (Gender, Country, Job_Role, etc.)
 
-```
-print(df_dataset.dtypes)
-```
 
 <img width="507" height="383" alt="Screen Shot 2026-03-23 at 20 53 43" src="https://github.com/user-attachments/assets/3f552957-cea1-4c37-8250-7e8cedf7efe4" />
 
