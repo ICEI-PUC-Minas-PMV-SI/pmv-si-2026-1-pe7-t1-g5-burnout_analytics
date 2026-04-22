@@ -238,7 +238,7 @@ A utilização combinada de análise visual e métodos estatísticos permitiu um
 
 ## Análise bivariada: variáveis numéricas vs Burnout_Risk
 
-Com o objetivo de investigar a relação entre as variáveis numéricas e a variável alvo (Burnout_Risk), foram utilizados gráficos de boxplot, que permitem comparar a distribuição dos dados entre os grupos “com burnout” e “sem burnout”.
+Com o objetivo de investigar a relação entre as variáveis numéricas e a variável alvo (Burnout_Risk), foram utilizados gráficos de boxplot, que permitem comparar a distribuição dos dados entre os grupos “sem burnout = 0” e “com burnout = 1”.
 
 ```
 for col in colsNum:
