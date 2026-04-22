@@ -457,39 +457,6 @@ A normalização por linha (normalize='index') permite analisar a proporção de
 <img width="571" height="496" alt="image" src="https://github.com/user-attachments/assets/b0a6583c-e346-4eb0-a1db-00fd1387d44e" />
 <img width="571" height="514" alt="image" src="https://github.com/user-attachments/assets/8e8ed472-65c8-434d-975e-234551b26482" />
 
-
-
-
-
-
-
-
-### Medida de associação para variáveis categóricas (V de Cramér)
-
-### Força da associação (V de Cramér)
-
-Para quantificar a associação entre variáveis categóricas e burnout, calculou-se o coeficiente V de Cramér (0 = nenhuma associação, 1 = associação perfeita):
-
-| Variável | V de Cramér | Interpretação |
-| :--- | :--- | :--- |
-| Work_Environment | 0.031 | Muito fraca |
-| Job_Role | 0.029 | Muito fraca |
-| Company_Size | 0.025 | Muito fraca |
-| Gender | 0.019 | Desprezível |
-| Country | 0.016 | Desprezível |
-
-**Conclusão:** Todas as variáveis categóricas apresentam associação desprezível com o risco de burnout, confirmando que o fenômeno é explicado por fatores comportamentais, não demográficos.
-
-
-
-
-
-
-
-
-
-
-
 ### Interpretação dos resultados
 
 A análise das proporções revelou padrões distintos entre as variáveis categóricas.
@@ -519,7 +486,7 @@ Caso alguma variável mostre proporções muito semelhantes entre categorias, is
 
 De forma geral, observa-se que o risco de burnout varia entre diferentes contextos organizacionais; variáveis categóricas podem capturar aspectos não representados nas variáveis numéricas; a análise por proporção é mais adequada do que contagem absoluta, especialmente em datasets desbalanceados.
 
-Quanto às limitações da análise, nota-se que não foram realizados testes estatísticos formais (como qui-quadrado), sendo esta uma análise exploratória. As associações observadas não implicam causalidade e o dataset é sintético, podendo apresentar padrões artificiais.
+Quanto às limitações da análise, os testes estatísticos formais (qui-quadrado e V de Cramér) realizados posteriormente confirmaram que as diferenças visuais observadas não são estatisticamente significativas.
 
 ## Distribuição da variável alvo (Burnout_Risk)
 
@@ -565,6 +532,21 @@ A análise do balanceamento também é importante do ponto de vista aplicado, um
 
 ## Análise de correlação
 
+A tabela abaixo apresenta as variáveis mais associadas ao risco de burnout, ordenadas por intensidade da correlação:
+
+| Variável | Coeficiente | Método | Interpretação |
+| :--- | :--- | :--- | :--- |
+| Productivity_Score | **-0.62** | Point-Biserial | Forte (negativa) |
+| Sleep_Hours | **-0.42** | Point-Biserial | Moderada (negativa) |
+| Exercise_Hours_Per_Week | **-0.30** | Point-Biserial | Fraca a moderada |
+| Screen_Time_Hours | **0.29** | Point-Biserial | Fraca a moderada |
+| Stress_Level | **0.25** | Spearman | Fraca |
+| Work_Hours_Per_Day | **-0.16** | Point-Biserial | Fraca (contraintuitivo*) |
+
+*O resultado contraintuitivo de `Work_Hours_Per_Day` (mais horas = menos burnout) pode ser um artefato do dataset sintético e será investigado na modelagem.
+
+As demais variáveis (Age, Experience_Years, Internet_Speed_Mbps) apresentam correlação desprezível (< |0.05|).
+
 Para investigar as relações entre as variáveis numéricas, foi utilizada a correlação de Spearman, que mede associações monotônicas entre variáveis, sendo mais adequada em contextos onde não há garantia de linearidade ou normalidade dos dados.
 
 Essa escolha também se justifica pela presença de variáveis ordinais, como Stress_Level, e pela natureza potencialmente não linear das relações analisadas.
@@ -591,7 +573,7 @@ Entre os principais achados destacam-se a relações com Burnout_Risk:
 - ``Exercise_Hours_Per_Week`` apresenta correlação negativa fraca a moderada, sugerindo que a prática de exercícios pode estar associada à redução do risco.
 - ``Screen_Time_Hours`` apresenta correlação positiva (se aplicável ao seu gráfico), indicando possível associação entre maior exposição a telas e aumento do risco.
 - ``Stress_Level`` apresenta correlação fraca, sugerindo baixa associação monotônica direta com o risco de burnout.
-- ``Work_Hours_Per_Day`` apresenta correlação negativa moderada, indicando um comportamento contraintuitivo, no qual maiores cargas de trabalho estariam associadas a menor risco de burnout.
+- ``Work_Hours_Per_Day`` apresenta correlação negativa fraca (-0.16), indicando um comportamento contraintuitivo, no qual maiores cargas de trabalho estariam associadas a menor risco de burnout.
 
 ## Discussão de resultados contraintuitivos
 
@@ -648,17 +630,9 @@ Relações com Burnout_Risk
 - ``Screen_Time_Hours`` (se aparecer no seu mapa) pode apresentar correlação positiva, indicando associação com maior risco.
 - ``Work_Hours_Per_Day`` apresenta correlação negativa moderada, configurando um resultado contraintuitivo.
 
-[...]
-
 <img width="692" height="601" alt="image" src="https://github.com/user-attachments/assets/d57c9b3d-bc99-4578-943c-cd1f326bafeb" />
 
-
-
-
-
-
 ## Análise do Point-Biserial para Burnout
-
 
 ```
 from scipy.stats import pointbiserialr
@@ -671,10 +645,7 @@ for col in colsNum:
 
 O risco de burnout está fortemente associado a queda de produtividade e piora de hábitos de recuperação (sono e exercício). Fatores demográficos como idade e experiência são irrelevantes. O modelo sugere que burnout é um fenômeno predominantemente comportamental e operacional.
 
-
-
 ## Análise do teste Qui-quadrado para variáveis categóricas
-
 
 ```
 from scipy.stats import chi2_contingency
@@ -748,8 +719,6 @@ O burnout no conjunto analisado está fortemente associado a um padrão de piora
 - aumento de reuniões e tempo de tela
 
 Em contraste, características demográficas não apresentam poder explicativo relevante. Isso sugere que o fenômeno é predominantemente comportamental e operacional, não estrutural.
-
-
 
 ## Considerações éticas e adequação à LGPD
 
