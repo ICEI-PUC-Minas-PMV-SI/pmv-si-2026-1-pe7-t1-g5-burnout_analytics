@@ -15,12 +15,19 @@ Para realizar a análise exploratória foram utilizadas medidas estatísticas de
 A primeira etapa da análise consistiu em carregar o dataset e inspecionar sua estrutura.
 
 ```python
-import pandas as pd
-import os
-import kagglehub
 
+# IMPORTAÇÃO DAS BIBLIOTECAS
+import pandas as pd                        # Manipulação de dados em formato de tabelas (DataFrames)
+import os                                  # Operações com caminhos de arquivos (path, diretórios)
+import kagglehub                           # Download de datasets diretamente do Kaggle
+import matplotlib.pyplot as plt            # Criação de gráficos básicos
+import seaborn as sns                      # Visualização estatística mais avançada (baseado em matplotlib)
+
+# CARREGAMENTO DO DATA SET
 path = kagglehub.dataset_download("shree0910/work-productivity-and-burnout-risk-dataset")
 csv_file_path = os.path.join(path, "Work Productivity.csv")
+
+# Lê o arquivo CSV e carrega os dados em um DataFrame do pandas
 df = pd.read_csv(csv_file_path)
 ```
 
@@ -53,21 +60,186 @@ df.isnull().sum()
 
 O resultado mostrou que não há valores ausentes no dataset, indicando boa qualidade estrutural dos dados e reduzindo a necessidade de etapas adicionais de tratamento.
 
+## Tratamento das variáveis e preparação dos dados
+
+Antes da realização das análises estatísticas, foi necessário realizar algumas transformações nas variáveis, com o objetivo de adequar o dataset para análise exploratória e posterior modelagem.
+
+Inicialmente, a variável Employee_ID foi removida do conjunto de dados, por se tratar de um identificador único para cada registro. Esse tipo de variável não possui significado analítico e não contribui para a identificação de padrões ou relações entre variáveis.
+
+```
+# TRATAMENTO DAS VARIÁVEIS
+df = df.drop(columns=['Employee_ID']) # Employee_ID foi removido por ser identificador
+```
+
+Em seguida, foram realizadas transformações em variáveis categóricas ordinais e na variável alvo, de modo a convertê-las para formato numérico, permitindo sua utilização em análises estatísticas.
+
+A variável Burnout_Risk, originalmente categórica (“Yes”/“No”), foi convertida para valores binários (1 e 0). Essa transformação é necessária para viabilizar análises quantitativas, como correlação, além de ser uma etapa padrão em problemas de classificação supervisionada.
+
+```
+# Trata a variável Burnout_Risk para que os valores sejam numéricos
+df["Burnout_Risk"] = df["Burnout_Risk"].map({
+    "Yes": 1,
+    "No": 0
+})
+```
+
+A variável Stress_Level, que representa níveis ordinais de estresse (“Low”, “Medium” e “High”), foi convertida para uma escala numérica (1, 2 e 3, respectivamente). Essa transformação preserva a ordem natural entre as categorias, permitindo sua utilização em análises que consideram intensidade ou progressão.
+
+```
+# Trata a variável Stress_Level para que os valores sejam numéricos
+df["Stress_Level"] = df["Stress_Level"].map({
+    "Low": 1,
+    "Medium": 2,
+    "High": 3
+})
+```
+
+É importante destacar que, apesar dessa codificação numérica, Stress_Level continua sendo uma variável ordinal, e sua interpretação deve respeitar essa característica. Dessa forma, análises que assumem relações lineares estritas devem ser interpretadas com cautela.
+
+Após o tratamento das variáveis, foi realizada a separação entre variáveis numéricas e categóricas:
+
+```
+# VARIÁVEIS GERAIS
+colsNum = df.select_dtypes(include='number').columns # Variável com todas as colunas numéricas
+colsCat = df.select_dtypes(include='object').columns # Variável com todas as colunas categóricas
+```
+
+Variáveis numéricas: utilizadas em análises estatísticas, como medidas de tendência central, dispersão e correlação.
+Variáveis categóricas: utilizadas em análises de frequência e proporção, especialmente em relação à variável alvo.
+
+Essa separação foi realizada automaticamente com base nos tipos de dados do DataFrame, garantindo maior consistência e escalabilidade da análise.
+
+## Estatísticas descritivas iniciais
+
+Como etapa inicial da análise exploratória, foram calculadas estatísticas descritivas para todas as variáveis numéricas do dataset.
+```
+df[colsNum].describe()
+```
+
+<img width="1503" height="266" alt="Screen Shot 2026-04-21 at 21 42 50" src="https://github.com/user-attachments/assets/39c00223-246e-4a86-93bc-bb01a1cd0bca" />
+
+Essas estatísticas incluem, média (mean), desvio padrão (std), valores mínimos e máximos, quartis (25%, 50% e 75%). Essas medidas permitem uma visão geral da distribuição dos dados, auxiliando na identificação de padrões, dispersão e possíveis valores extremos. A análise das estatísticas descritivas revelou que:
+
+* A idade média dos indivíduos é de aproximadamente 38 anos, com distribuição relativamente equilibrada entre 22 e 54 anos.
+* O tempo médio de experiência profissional é de 8 anos, apresentando alta variabilidade, o que indica a presença de indivíduos tanto iniciantes quanto experientes.
+* A média de horas de trabalho diárias é de aproximadamente 7 horas, com baixa dispersão, sugerindo uma distribuição relativamente homogênea.
+* O tempo médio de sono é de 6,5 horas, abaixo da recomendação usual para adultos, o que pode estar associado a fatores de estresse e saúde ocupacional.
+* O tempo médio de exposição a telas é elevado (aproximadamente 9,5 horas), refletindo ambientes de trabalho altamente digitalizados.
+* A variável Burnout_Risk apresenta média de 0,197, indicando que cerca de 19,7% dos indivíduos estão classificados com risco de burnout, o que confirma o desbalanceamento da variável alvo.
+
+De forma geral, observa-se que variáveis relacionadas ao estilo de vida (sono, exercício, tempo de tela) apresentam maior dispersão em comparação com variáveis estruturais (idade, horas de trabalho), o que sugere maior heterogeneidade comportamental entre os indivíduos analisados.
+
 ## Medidas de tendência central e dispersão
 
-Para compreender o comportamento das variáveis numéricas foram calculadas medidas de tendência central e dispersão.
+Para compreender o comportamento das variáveis numéricas, foram calculadas medidas de tendência central (média, mediana e moda) e medidas de dispersão (desvio padrão e intervalo interquartil).
 
-<img width="748" height="294" alt="Screen Shot 2026-03-23 at 22 04 44" src="https://github.com/user-attachments/assets/6a422c19-d1d0-401d-a8d5-e991c047255d" />
+<img width="771" height="352" alt="Screen Shot 2026-04-21 at 21 47 41" src="https://github.com/user-attachments/assets/8517fb05-df84-4d49-a304-6c7970f3de59" />
 
 ### Interpretação
 
-Observa-se que a média de horas de sono (6,5) está abaixo da recomendação média para adultos, que geralmente varia entre 7 e 8 horas por noite. Além disso, o tempo médio de exposição a telas (9,5 horas) é relativamente elevado, refletindo a realidade de ambientes profissionais altamente digitalizados.
+A análise das medidas descritivas permite identificar padrões importantes na distribuição das variáveis do dataset.
 
-Esses fatores podem contribuir para níveis mais elevados de estresse ocupacional e estão frequentemente associados ao risco de burnout. 
+A variável Age apresenta média e mediana praticamente iguais (≈ 38 anos), indicando uma distribuição aproximadamente simétrica. O intervalo interquartil (30 a 46 anos) sugere concentração dos indivíduos em idade adulta intermediária.
 
-As medidas de dispersão permitem compreender o grau de heterogeneidade entre os indivíduos analisados.
+A variável Experience_Years apresenta média (8,0) superior à mediana (6,0), indicando assimetria à direita, ou seja, a presença de indivíduos com muitos anos de experiência que elevam a média. Isso é consistente com a cauda longa observada na distribuição.
 
-Variáveis como ``Screen_Time_Hours`` e ``Productivity_Score`` apresentaram maior dispersão, indicando que os indivíduos da amostra apresentam comportamentos bastante variados em relação ao tempo de exposição digital e produtividade.
+A variável Work_Hours_Per_Day apresenta baixa dispersão (desvio padrão ≈ 1,73), indicando que a maioria dos indivíduos trabalha em uma faixa relativamente homogênea entre 5,5 e 8,5 horas diárias.
+
+Já a variável Meetings_Per_Day apresenta maior variabilidade relativa, com valores distribuídos entre 0 e 7 reuniões diárias, indicando diferentes perfis de carga de reuniões entre os indivíduos.
+
+A variável Sleep_Hours apresenta média de aproximadamente 6,5 horas, abaixo da recomendação média para adultos (7 a 8 horas). Esse resultado pode indicar um padrão de privação de sono, frequentemente associado a fatores de estresse ocupacional.
+
+A variável Screen_Time_Hours apresenta média elevada (≈ 9,5 horas) e alta dispersão, refletindo a forte presença de atividades digitais no ambiente de trabalho analisado.
+
+As variáveis Exercise_Hours_Per_Week e Sleep_Hours apresentam dispersão moderada, sugerindo heterogeneidade nos hábitos de vida dos indivíduos.
+
+A variável Productivity_Score apresenta ampla variação (30 a 100), com desvio padrão elevado, indicando grande diversidade de níveis de produtividade na amostra.
+
+A variável Internet_Speed_Mbps também apresenta alta dispersão, o que pode refletir diferentes contextos de infraestrutura tecnológica entre os indivíduos analisados.
+
+A variável Stress_Level, embora representada numericamente, é de natureza ordinal, assumindo valores de 1 (baixo), 2 (médio) e 3 (alto). Sua média próxima de 2 indica predominância de níveis moderados de estresse na amostra.
+
+Por fim, a variável Burnout_Risk é binária e sua média (0,1977) deve ser interpretada como a proporção de indivíduos com risco de burnout, indicando que aproximadamente 19,7% da amostra pertence à classe positiva. Esse resultado confirma o desbalanceamento da variável alvo.
+
+De forma geral, observa-se que variáveis comportamentais, como sono, exercício físico e tempo de exposição a telas, apresentam maior variabilidade em comparação com variáveis estruturais, como idade e horas de trabalho. Esse padrão sugere que fatores relacionados ao estilo de vida podem ter maior heterogeneidade e potencial influência no risco de burnout.
+
+## Detecção de outliers
+
+Para identificar possíveis valores extremos, foram utilizados duas abordagens complementares: 
+* Análise visual por meio de gráficos de boxplot
+* Análise estatística utilizando o método do intervalo interquartil (IQR)
+
+### Análise visual (Boxplot)
+
+Inicialmente, foi gerado um boxplot considerando todas as variáveis numéricas, com exceção da variável Burnout_Risk, por se tratar de uma variável binária.
+
+```
+plt.figure(figsize=(20, 10))
+sns.boxplot(data=df[colsOutliers],
+    flierprops={
+        'marker': 'o',               # formato do marcador
+        'markerfacecolor': 'red',    # cor dos outliers
+        'markersize': 6              # tamanho dos pontos
+    }
+)
+plt.xticks(rotation=45)
+plt.show()
+```
+
+<img width="1210" height="703" alt="Screen Shot 2026-04-21 at 21 58 23" src="https://github.com/user-attachments/assets/8c571aa6-7bf0-497d-88a6-abfcd40295e0" />
+
+A análise visual sugere a presença de alguns valores extremos em determinadas variáveis, indicados pelos pontos destacados fora das caixas. No entanto, essa abordagem não permite, por si só, confirmar se esses valores são outliers estatísticos.
+
+### Análise estatística (método IQR - Tukey)
+
+Para complementar a análise visual, foi aplicada uma função baseada no método do intervalo interquartil (IQR), que calcula limites formais para detecção de outliers:
+
+* Limite inferior: Q1 − 1,5 × IQR
+* Limite superior: Q3 + 1,5 × IQR
+
+A imagem a seguir apresenta os resultados obtidos para cada variável analisada:
+
+<img width="256" height="605" alt="Screen Shot 2026-04-21 at 22 22 13" src="https://github.com/user-attachments/assets/316dd164-e966-46ea-9f32-7bf0cd4be451" />
+<img width="202" height="579" alt="Screen Shot 2026-04-21 at 22 22 45" src="https://github.com/user-attachments/assets/02ba3f6e-d2ee-479a-8570-05d0a25ffc0f" />
+
+Os resultados indicam que a maioria das variáveis não apresenta outliers estatísticos, pois seus valores mínimos e máximos permanecem dentro dos limites calculados.
+
+### Caso específico: Experience_Years
+
+A variável Experience_Years foi a única que apresentou outliers estatísticos.
+
+De acordo com a análise:
+
+Q1 = 2,0
+Q3 = 12,0
+IQR = 10,0
+Limite superior = 27,0
+
+Foram identificados 424 registros acima desse limite, correspondendo aos valores:
+
+28, 29, 30, 31 e 32 anos
+
+Observa-se que esses valores estão concentrados em poucos níveis discretos, o que sugere um padrão específico de geração dos dados, possivelmente relacionado à natureza sintética do dataset.
+
+### Interpretação dos resultados
+
+Apesar de serem classificados como outliers pelo método estatístico, esses valores são plausíveis no contexto profissional; não representam erros ou inconsistências; podem ser relevantes para a análise do fenômeno de burnout.
+
+Além disso, algumas variáveis — como **Sleep_Hours** e **Screen_Time_Hours** — apresentam valores extremos do ponto de vista do domínio (por exemplo, poucas horas de sono ou alto tempo de exposição a telas), mas não são identificadas como outliers pelo método IQR. Isso evidencia a diferença entre:
+
+* Outliers estatísticos, definidos por critérios matemáticos
+* Valores críticos de domínio, relevantes para interpretação do problema
+
+### Decisão de tratamento
+
+Diante dos resultados, optou-se por não remover os outliers identificados, uma vez que:
+
+* Não há evidência de erro nos dados;
+* Os valores extremos são plausíveis e interpretáveis;
+* A remoção poderia comprometer a representatividade da amostra;
+* O dataset possui natureza sintética, podendo apresentar padrões artificiais.
+
+A utilização combinada de análise visual e métodos estatísticos permitiu uma avaliação mais robusta dos dados, evitando decisões baseadas exclusivamente em critérios automáticos.
 
 ## Distribuição das variáveis numéricas
 
@@ -88,26 +260,6 @@ A análise das distribuições revelou alguns padrões importantes:
 ``Screen_Time_Hours`` apresenta valores elevados, indicando alta exposição digital.
 
 Esses resultados refletem características comuns do ambiente de trabalho contemporâneo, marcado pela intensa utilização de dispositivos digitais.
-
-## Detecção de outliers
-
-Para identificar possíveis valores extremos foram utilizados gráficos de boxplot.
-
-```
-plt.figure(figsize=(12, 6))
-sns.boxplot(data=df[colsNum])
-plt.show()
-```
-
-<img width="1597" height="813" alt="image" src="https://github.com/user-attachments/assets/22b86637-ebca-4ddb-9998-e829fecdd85e" />
-
-A análise visual indica alguns valores extremos, como indivíduos que apresentam menos de 5 horas de sono por noite ou mais de 13 horas de exposição a telas. Esses casos podem representar perfis com maior vulnerabilidade ao estresse ocupacional.
-
-Entretanto, a análise estatística complementar pelo método IQR (Tukey) não identificou outliers formais em nenhuma das variáveis analisadas, conforme demonstrado na Tabela abaixo.
-
-<img width="414" height="601" alt="Screen Shot 2026-03-25 at 20 57 27" src="https://github.com/user-attachments/assets/3ea43106-d750-48f8-9bde-126d95c294cd" />
-
-Todos os valores observados encontram-se dentro dos limites de tolerância calculados (Q1 - 1,5×IQR e Q3 + 1,5×IQR). Isso indica que, embora existam perfis atípicos, eles não são suficientemente extremos para serem classificados como outliers segundo o critério estatístico adotado. Portanto, todos os casos serão mantidos para as análises subsequentes, uma vez que representam perfis potencialmente relevantes para o estudo do burnout ocupacional.
 
 ## Distribuição das variáveis categóricas
 
