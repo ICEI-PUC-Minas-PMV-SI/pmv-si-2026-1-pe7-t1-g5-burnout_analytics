@@ -108,59 +108,54 @@ Variáveis categóricas: utilizadas em análises de frequência e proporção, e
 
 Essa separação foi realizada automaticamente com base nos tipos de dados do DataFrame, garantindo maior consistência e escalabilidade da análise.
 
-## Estatísticas descritivas iniciais
+## Estatísticas descritivas
 
 Como etapa inicial da análise exploratória, foram calculadas estatísticas descritivas para todas as variáveis numéricas do dataset.
+
 ```
 df[colsNum].describe()
 ```
 
 <img width="1503" height="266" alt="Screen Shot 2026-04-21 at 21 42 50" src="https://github.com/user-attachments/assets/39c00223-246e-4a86-93bc-bb01a1cd0bca" />
 
-Essas estatísticas incluem, média (mean), desvio padrão (std), valores mínimos e máximos, quartis (25%, 50% e 75%). Essas medidas permitem uma visão geral da distribuição dos dados, auxiliando na identificação de padrões, dispersão e possíveis valores extremos. A análise das estatísticas descritivas revelou que:
+**Principais achados:**
 
-* A idade média dos indivíduos é de aproximadamente 38 anos, com distribuição relativamente equilibrada entre 22 e 54 anos.
-* O tempo médio de experiência profissional é de 8 anos, apresentando alta variabilidade, o que indica a presença de indivíduos tanto iniciantes quanto experientes.
-* A média de horas de trabalho diárias é de aproximadamente 7 horas, com baixa dispersão, sugerindo uma distribuição relativamente homogênea.
-* O tempo médio de sono é de 6,5 horas, abaixo da recomendação usual para adultos, o que pode estar associado a fatores de estresse e saúde ocupacional.
-* O tempo médio de exposição a telas é elevado (aproximadamente 9,5 horas), refletindo ambientes de trabalho altamente digitalizados.
-* A variável Burnout_Risk apresenta média de 0,197, indicando que cerca de 19,7% dos indivíduos estão classificados com risco de burnout, o que confirma o desbalanceamento da variável alvo.
+Idade (`Age`)
+- Média e mediana de aproximadamente 38 anos, indicando distribuição simétrica
+- Variação entre 22 e 54 anos, com desvio padrão de cerca de 8 anos
+- A população analisada é majoritariamente adulta em idade produtiva
 
-De forma geral, observa-se que variáveis relacionadas ao estilo de vida (sono, exercício, tempo de tela) apresentam maior dispersão em comparação com variáveis estruturais (idade, horas de trabalho), o que sugere maior heterogeneidade comportamental entre os indivíduos analisados.
+Experiência profissional (`Experience_Years`)
+- Média de 8 anos, mas mediana de apenas 6 anos (assimetria à direita)
+- Profissionais com muitos anos de experiência (até 32 anos) elevam a média
+- Desvio padrão elevado (~7,5 anos) indica grande heterogeneidade
 
-## Medidas de tendência central e dispersão
+Horas de trabalho (`Work_Hours_Per_Day`)
+- Média de aproximadamente 7 horas diárias
+- Baixa dispersão (desvio padrão ~1,7 horas)
+- Maioria concentrada entre 5,5 e 8,5 horas (intervalo interquartil)
 
-Para compreender o comportamento das variáveis numéricas, foram calculadas medidas de tendência central (média, mediana e moda) e medidas de dispersão (desvio padrão e intervalo interquartil).
+Horas de sono (`Sleep_Hours`)
+- Média de 6,5 horas, **abaixo da recomendação** (7-8 horas para adultos)
+- Mediana também em 6,5 horas (distribuição simétrica)
+- Variação entre 4 e 9 horas, com desvio padrão ~1,4 horas
 
-<img width="771" height="352" alt="Screen Shot 2026-04-21 at 21 47 41" src="https://github.com/user-attachments/assets/8517fb05-df84-4d49-a304-6c7970f3de59" />
+Tempo de tela (`Screen_Time_Hours`)
+- Média elevada de aproximadamente 9,5 horas diárias
+- Alta dispersão (desvio padrão ~2,9 horas), variando de 5 a 15 horas
+- Reflete ambientes de trabalho altamente digitalizados
 
-### Interpretação
+Produtividade (`Productivity_Score`)
+- Média em torno de 65 pontos (escala 0-100)
+- Ampla variação (30 a 100 pontos) com desvio padrão elevado (~20 pontos)
+- Grande diversidade de níveis de produtividade na amostra
 
-A análise das medidas descritivas permite identificar padrões importantes na distribuição das variáveis do dataset.
+Risco de burnout (`Burnout_Risk`)
+- Média de 0,197, significando que **19,7%** dos indivíduos apresentam risco
+- Confirma o **desbalanceamento** da variável alvo (classe minoritária em ~20%)
+- Mediana igual a 0, reforçando a predominância da classe "sem burnout"
 
-A variável **Age** apresenta média e mediana praticamente iguais (≈ 38 anos), indicando uma distribuição aproximadamente simétrica. O intervalo interquartil (30 a 46 anos) sugere concentração dos indivíduos em idade adulta intermediária.
-
-A variável **Experience_Years** apresenta média (8,0) superior à mediana (6,0), indicando assimetria à direita, ou seja, a presença de indivíduos com muitos anos de experiência que elevam a média. Isso é consistente com a cauda longa observada na distribuição.
-
-A variável **Work_Hours_Per_Day** apresenta baixa dispersão (desvio padrão ≈ 1,73), indicando que a maioria dos indivíduos trabalha em uma faixa relativamente homogênea entre 5,5 e 8,5 horas diárias.
-
-Já a variável **Meetings_Per_Day** apresenta maior variabilidade relativa, com valores distribuídos entre 0 e 7 reuniões diárias, indicando diferentes perfis de carga de reuniões entre os indivíduos.
-
-A variável **Sleep_Hours** apresenta média de aproximadamente 6,5 horas, abaixo da recomendação média para adultos (7 a 8 horas). Esse resultado pode indicar um padrão de privação de sono, frequentemente associado a fatores de estresse ocupacional.
-
-A variável **Screen_Time_Hours** apresenta média elevada (≈ 9,5 horas) e alta dispersão, refletindo a forte presença de atividades digitais no ambiente de trabalho analisado.
-
-As variáveis **Exercise_Hours_Per_Week** e **Sleep_Hours** apresentam dispersão moderada, sugerindo heterogeneidade nos hábitos de vida dos indivíduos.
-
-A variável **Productivity_Score** apresenta ampla variação (30 a 100), com desvio padrão elevado, indicando grande diversidade de níveis de produtividade na amostra.
-
-A variável **Internet_Speed_Mbps** também apresenta alta dispersão, o que pode refletir diferentes contextos de infraestrutura tecnológica entre os indivíduos analisados.
-
-A variável **Stress_Level**, embora representada numericamente, é de natureza ordinal, assumindo valores de 1 (baixo), 2 (médio) e 3 (alto). Sua média próxima de 2 indica predominância de níveis moderados de estresse na amostra.
-
-Por fim, a variável **Burnout_Risk** é binária e sua média (0,1977) deve ser interpretada como a proporção de indivíduos com risco de burnout, indicando que aproximadamente 19,7% da amostra pertence à classe positiva. Esse resultado confirma o desbalanceamento da variável alvo.
-
-De forma geral, observa-se que variáveis comportamentais, como sono, exercício físico e tempo de exposição a telas, apresentam maior variabilidade em comparação com variáveis estruturais, como idade e horas de trabalho. Esse padrão sugere que fatores relacionados ao estilo de vida podem ter maior heterogeneidade e potencial influência no risco de burnout.
+**Padrões gerais observados**: Variáveis comportamentais (sono, tempo de tela, produtividade) apresentam maior dispersão em comparação com variáveis estruturais (idade, horas de trabalho). Isso sugere maior heterogeneidade nos hábitos de vida dos indivíduos, indicando que fatores comportamentais podem ter maior potencial de influência sobre o risco de burnout do que características demográficas.
 
 ## Detecção de outliers
 
