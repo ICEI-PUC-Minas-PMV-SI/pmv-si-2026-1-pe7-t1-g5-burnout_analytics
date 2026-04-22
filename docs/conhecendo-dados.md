@@ -183,7 +183,7 @@ plt.show()
 
 <img width="1210" height="703" alt="Screen Shot 2026-04-21 at 21 58 23" src="https://github.com/user-attachments/assets/8c571aa6-7bf0-497d-88a6-abfcd40295e0" />
 
-A análise visual sugere a presença de alguns valores extremos em determinadas variáveis, indicados pelos pontos destacados fora das caixas. No entanto, essa abordagem não permite, por si só, confirmar se esses valores são outliers estatísticos.
+A análise visual sugere a presença de alguns valores extremos em determinadas variáveis, indicados pelos pontos destacados fora das caixas. Para confirmar se esses pontos são de fato outliers estatísticos, aplicou-se o método do intervalo interquartil (IQR).
 
 ### Análise estatística (método IQR - Tukey)
 
