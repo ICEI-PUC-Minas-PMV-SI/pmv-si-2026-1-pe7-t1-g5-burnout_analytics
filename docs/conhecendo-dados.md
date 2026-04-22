@@ -44,7 +44,6 @@ Foi observado que o conjunto de dados possui 30.000 registros e 17 colunas, cont
 
 A verificação inicial do tipo de cada variável mostrou que o dataset contém tanto variáveis numéricas (Sleep_Hours, Screen_Time_Hours, Age, etc.) quanto categóricas (Gender, Country, Job_Role, etc.)
 
-
 <img width="507" height="383" alt="Screen Shot 2026-03-23 at 20 53 43" src="https://github.com/user-attachments/assets/3f552957-cea1-4c37-8250-7e8cedf7efe4" />
 
 
@@ -139,27 +138,27 @@ Para compreender o comportamento das variáveis numéricas, foram calculadas med
 
 A análise das medidas descritivas permite identificar padrões importantes na distribuição das variáveis do dataset.
 
-A variável Age apresenta média e mediana praticamente iguais (≈ 38 anos), indicando uma distribuição aproximadamente simétrica. O intervalo interquartil (30 a 46 anos) sugere concentração dos indivíduos em idade adulta intermediária.
+A variável **Age** apresenta média e mediana praticamente iguais (≈ 38 anos), indicando uma distribuição aproximadamente simétrica. O intervalo interquartil (30 a 46 anos) sugere concentração dos indivíduos em idade adulta intermediária.
 
-A variável Experience_Years apresenta média (8,0) superior à mediana (6,0), indicando assimetria à direita, ou seja, a presença de indivíduos com muitos anos de experiência que elevam a média. Isso é consistente com a cauda longa observada na distribuição.
+A variável **Experience_Years** apresenta média (8,0) superior à mediana (6,0), indicando assimetria à direita, ou seja, a presença de indivíduos com muitos anos de experiência que elevam a média. Isso é consistente com a cauda longa observada na distribuição.
 
-A variável Work_Hours_Per_Day apresenta baixa dispersão (desvio padrão ≈ 1,73), indicando que a maioria dos indivíduos trabalha em uma faixa relativamente homogênea entre 5,5 e 8,5 horas diárias.
+A variável **Work_Hours_Per_Day** apresenta baixa dispersão (desvio padrão ≈ 1,73), indicando que a maioria dos indivíduos trabalha em uma faixa relativamente homogênea entre 5,5 e 8,5 horas diárias.
 
-Já a variável Meetings_Per_Day apresenta maior variabilidade relativa, com valores distribuídos entre 0 e 7 reuniões diárias, indicando diferentes perfis de carga de reuniões entre os indivíduos.
+Já a variável **Meetings_Per_Day** apresenta maior variabilidade relativa, com valores distribuídos entre 0 e 7 reuniões diárias, indicando diferentes perfis de carga de reuniões entre os indivíduos.
 
-A variável Sleep_Hours apresenta média de aproximadamente 6,5 horas, abaixo da recomendação média para adultos (7 a 8 horas). Esse resultado pode indicar um padrão de privação de sono, frequentemente associado a fatores de estresse ocupacional.
+A variável **Sleep_Hours** apresenta média de aproximadamente 6,5 horas, abaixo da recomendação média para adultos (7 a 8 horas). Esse resultado pode indicar um padrão de privação de sono, frequentemente associado a fatores de estresse ocupacional.
 
-A variável Screen_Time_Hours apresenta média elevada (≈ 9,5 horas) e alta dispersão, refletindo a forte presença de atividades digitais no ambiente de trabalho analisado.
+A variável **Screen_Time_Hours** apresenta média elevada (≈ 9,5 horas) e alta dispersão, refletindo a forte presença de atividades digitais no ambiente de trabalho analisado.
 
-As variáveis Exercise_Hours_Per_Week e Sleep_Hours apresentam dispersão moderada, sugerindo heterogeneidade nos hábitos de vida dos indivíduos.
+As variáveis **Exercise_Hours_Per_Week** e **Sleep_Hours** apresentam dispersão moderada, sugerindo heterogeneidade nos hábitos de vida dos indivíduos.
 
-A variável Productivity_Score apresenta ampla variação (30 a 100), com desvio padrão elevado, indicando grande diversidade de níveis de produtividade na amostra.
+A variável **Productivity_Score** apresenta ampla variação (30 a 100), com desvio padrão elevado, indicando grande diversidade de níveis de produtividade na amostra.
 
-A variável Internet_Speed_Mbps também apresenta alta dispersão, o que pode refletir diferentes contextos de infraestrutura tecnológica entre os indivíduos analisados.
+A variável **Internet_Speed_Mbps** também apresenta alta dispersão, o que pode refletir diferentes contextos de infraestrutura tecnológica entre os indivíduos analisados.
 
-A variável Stress_Level, embora representada numericamente, é de natureza ordinal, assumindo valores de 1 (baixo), 2 (médio) e 3 (alto). Sua média próxima de 2 indica predominância de níveis moderados de estresse na amostra.
+A variável **Stress_Level**, embora representada numericamente, é de natureza ordinal, assumindo valores de 1 (baixo), 2 (médio) e 3 (alto). Sua média próxima de 2 indica predominância de níveis moderados de estresse na amostra.
 
-Por fim, a variável Burnout_Risk é binária e sua média (0,1977) deve ser interpretada como a proporção de indivíduos com risco de burnout, indicando que aproximadamente 19,7% da amostra pertence à classe positiva. Esse resultado confirma o desbalanceamento da variável alvo.
+Por fim, a variável **Burnout_Risk** é binária e sua média (0,1977) deve ser interpretada como a proporção de indivíduos com risco de burnout, indicando que aproximadamente 19,7% da amostra pertence à classe positiva. Esse resultado confirma o desbalanceamento da variável alvo.
 
 De forma geral, observa-se que variáveis comportamentais, como sono, exercício físico e tempo de exposição a telas, apresentam maior variabilidade em comparação com variáveis estruturais, como idade e horas de trabalho. Esse padrão sugere que fatores relacionados ao estilo de vida podem ter maior heterogeneidade e potencial influência no risco de burnout.
 
@@ -241,75 +240,267 @@ Diante dos resultados, optou-se por não remover os outliers identificados, uma 
 
 A utilização combinada de análise visual e métodos estatísticos permitiu uma avaliação mais robusta dos dados, evitando decisões baseadas exclusivamente em critérios automáticos.
 
+## Análise bivariada: variáveis numéricas vs Burnout_Risk
+
+Com o objetivo de investigar a relação entre as variáveis numéricas e a variável alvo (Burnout_Risk), foram utilizados gráficos de boxplot, que permitem comparar a distribuição dos dados entre os grupos “com burnout” e “sem burnout”.
+
+```
+for col in colsNum:
+    sns.boxplot(x='Burnout_Risk', y=col, data=df)
+    plt.show()
+```
+
+<img width="562" height="433" alt="image" src="https://github.com/user-attachments/assets/f41083fb-51b8-4e0b-9896-92ee948df606" />
+<img width="563" height="433" alt="image" src="https://github.com/user-attachments/assets/fbf3ee4d-e85a-445a-9f6e-2cb204a929d9" />
+<img width="563" height="433" alt="image" src="https://github.com/user-attachments/assets/c044bc7b-f3c8-4730-84bd-71f99bc8e824" />
+<img width="554" height="433" alt="image" src="https://github.com/user-attachments/assets/3001a247-39c6-4848-a3cd-04143e663a65" />
+<img width="571" height="433" alt="image" src="https://github.com/user-attachments/assets/ca62aeb1-a66a-495f-b0e4-5b31d78bdc76" />
+<img width="554" height="433" alt="image" src="https://github.com/user-attachments/assets/e16da984-0a28-4a9d-bfab-a384adbf2a83" />
+<img width="554" height="433" alt="image" src="https://github.com/user-attachments/assets/c3998832-8b2c-419a-8939-0b698041131e" />
+<img width="563" height="433" alt="image" src="https://github.com/user-attachments/assets/6bb7833c-adc7-443d-9084-05dbc7e0d135" />
+<img width="576" height="433" alt="image" src="https://github.com/user-attachments/assets/62ccdcaf-9a0e-4b8e-84ab-272af49cbf57" />
+<img width="571" height="433" alt="image" src="https://github.com/user-attachments/assets/e86a49f7-49e7-4e30-a9d8-14a8894c1e03" />
+
+### Interpretação dos resultados
+
+A análise conjunta dos boxplots permite identificar padrões relevantes na relação entre as variáveis numéricas e o risco de burnout.
+
+As variáveis podem ser agrupadas em três categorias principais:
+
+1. Variáveis com diferença clara entre os grupos. Algumas variáveis apresentam distinção visível entre indivíduos com e sem burnout:
+
+* Sleep_Hours: indivíduos com burnout apresentam menor mediana de sono
+* Stress_Level: distribuição mais elevada no grupo com burnout
+* Screen_Time_Hours: maior concentração de valores altos no grupo com burnout
+
+Essas variáveis indicam associação mais evidente com o fenômeno estudado.
+
+2. Variáveis com diferença moderada. Outras variáveis apresentam alguma diferença, mas com sobreposição significativa:
+
+* Productivity_Score
+* Exercise_Hours_Per_Week
+* Meetings_Per_Day
+
+Esses resultados sugerem que essas variáveis podem ter influência indireta ou combinada com outros fatores.
+
+3. Variáveis com pouca ou nenhuma diferenciação. Algumas variáveis não apresentam diferenças relevantes entre os grupos:
+
+* Age
+* Work_Hours_Per_Day
+* Internet_Speed_Mbps
+* Experience_Years
+
+Em especial, a variável **Work_Hours_Per_Day** apresentou *comportamento contraintuitivo*, sem evidência clara de aumento de burnout com maior carga de trabalho. Esse resultado deve ser interpretado com cautela, podendo estar relacionado à *natureza sintética do dataset*.
+
+De forma geral, observa-se que variáveis comportamentais (sono, estresse, tempo de tela) apresentam maior capacidade de discriminação. As variáveis estruturais (idade, experiência, carga de trabalho) apresentam menor influência isolada. Nota-se uma sobreposição significativa entre os grupos, indicando que o burnout é um fenômeno multifatorial.
+
+Vale ressaltar as **limitações dessa análise**, já que ela é baseada em comparações visuais e não implica causalidade. A variável alvo é binária, limitando a granularidade da análise e o dataset é sintético, podendo apresentar padrões artificiais.
+
 ## Distribuição das variáveis numéricas
 
-Histogramas foram utilizados para visualizar a distribuição das variáveis numéricas.
+Para analisar o comportamento das variáveis numéricas, foram utilizados histogramas, que permitem visualizar a distribuição dos dados, identificar padrões de concentração, assimetrias e possíveis irregularidades.
 
 ```
-df[colsNum].hist(figsize=(12,10))
+df[colsNum].hist(figsize=(16,12))
 plt.show()
 ```
-<img width="994" height="836" alt="image" src="https://github.com/user-attachments/assets/8abf35e8-f5a2-461e-acc0-13cbff371a48" />
+<img width="894" height="665" alt="Screen Shot 2026-04-21 at 22 57 45" src="https://github.com/user-attachments/assets/e7236d86-2e2b-4898-bd7f-d17af63fa546" />
 
-A análise das distribuições revelou alguns padrões importantes:
+A análise dos histogramas revela diferentes padrões de distribuição entre as variáveis do dataset.
 
-``Work_Hours_Per_Day`` apresenta concentração entre 6 e 10 horas de trabalho diário.
+As variáveis podem ser agrupadas em três comportamentos principais:
 
-``Sleep_Hours`` apresenta distribuição levemente assimétrica, com menor frequência de indivíduos que dormem mais de 8 horas.
+1. Variáveis com distribuição aproximadamente simétrica
 
-``Screen_Time_Hours`` apresenta valores elevados, indicando alta exposição digital.
+Algumas variáveis apresentam distribuição relativamente equilibrada em torno da média, indicando ausência de forte assimetria:
 
-Esses resultados refletem características comuns do ambiente de trabalho contemporâneo, marcado pela intensa utilização de dispositivos digitais.
+``Age``
+``Work_Hours_Per_Day``
+``Sleep_Hours``
 
-## Distribuição das variáveis categóricas
+Essas variáveis apresentam concentração de valores próximos à mediana, sugerindo maior homogeneidade entre os indivíduos.
 
-A distribuição das variáveis categóricas também foi analisada utilizando gráficos de barras.
+2. Variáveis com assimetria (distribuição não uniforme)
+
+Algumas variáveis apresentam assimetria, especialmente à direita, indicando presença de valores mais elevados menos frequentes:
+
+``Experience_Years``: concentração em valores baixos e cauda longa à direita
+``Screen_Time_Hours``: maior concentração em valores elevados
+``Internet_Speed_Mbps``: ampla dispersão e distribuição assimétrica
+
+Esses padrões indicam maior heterogeneidade entre os indivíduos, especialmente em aspectos relacionados à experiência profissional e infraestrutura tecnológica.
+
+3. Variáveis discretas ou com valores limitados
+
+Algumas variáveis apresentam distribuições com poucos valores possíveis, caracterizando comportamento discreto:
+
+``Meetings_Per_Day``
+``Stress_Level``
+``Exercise_Hours_Per_Week``
+
+Nesses casos, os histogramas mostram picos em valores específicos, refletindo a natureza categórica ou ordinal dessas variáveis.
+
+### Destaques relevantes
+``Sleep_Hours`` apresenta concentração em torno de 6 a 7 horas, abaixo da recomendação média para adultos, o que pode estar associado a fatores de estresse ocupacional.
+``Screen_Time_Hours`` apresenta valores elevados (em torno de 9 a 10 horas), indicando alta exposição digital.
+``Work_Hours_Per_Day`` concentra-se entre 6 e 9 horas, com baixa variabilidade.
+``Productivity_Score`` apresenta ampla distribuição, indicando grande diversidade de níveis de produtividade.
+
+De forma geral, observa-se que variáveis comportamentais apresentam maior dispersão e variabilidade. Variáveis estruturais tendem a ser mais concentradas e algumas distribuições apresentam assimetria, o que deve ser considerado em análises estatísticas posteriores. Além disso, a presença de variáveis discretas e distribuições não normais indica que nem todos os métodos estatísticos paramétricos são adequados, sendo necessário cautela na escolha das técnicas analíticas.
+
+## Distribuição das variáveis numéricas por classe (Burnout_Risk)
+
+Com o objetivo de aprofundar a análise exploratória, foram construídos histogramas condicionados à variável alvo (``Burnout_Risk``), permitindo comparar a distribuição das variáveis numéricas entre os grupos com e sem risco de burnout.
 
 ```
-sns.countplot(x="Gender", data=df)
-plt.show()
+colsHist = colsNum.drop("Burnout_Risk")
+
+for col in colsHist:
+    plt.figure(figsize=(6, 4))
+
+    sns.histplot(
+        data=df,
+        x=col,                  # variável numérica que está sendo analisada
+        hue="Burnout_Risk",     # separa as distribuições por classe (0 e 1)
+        bins=20,                # divide os dados em 20 intervalos (bins)
+        element="step",         # evita sobreposição sólida
+        stat="density",         # normaliza o histograma
+        common_norm=False       # evita que a classe majoritária "domine" o gráfico
+    )
+
+    plt.title(f"Distribuição de {col} por Burnout_Risk")
+    plt.show()
 ```
 
-Observou-se uma distribuição relativamente equilibrada entre os gêneros, o que contribui para reduzir possíveis vieses relacionados a essa variável.
+Nessa abordagem, cada histograma apresenta duas distribuições sobrepostas:
 
-Outras variáveis categóricas analisadas incluem:
+* Indivíduos sem burnout (0)
+* Indivíduos com burnout (1)
 
-``Gender``
+A utilização de densidade (stat="density") e normalização independente (common_norm=False) permite comparar as formas das distribuições sem influência do desbalanceamento da variável alvo.
 
-<img width="589" height="455" alt="image" src="https://github.com/user-attachments/assets/5493e9a5-9d41-4074-9095-ee40d46721f4" />
+<img width="554" height="393" alt="image" src="https://github.com/user-attachments/assets/fafab252-442a-4b7b-abf9-a988af61db31" />
+<img width="545" height="393" alt="image" src="https://github.com/user-attachments/assets/c2befc14-1c99-4aff-b97e-563b7e94ac63" />
+<img width="545" height="393" alt="image" src="https://github.com/user-attachments/assets/43e3d1b6-d713-46ec-a526-cee362211c47" />
+<img width="536" height="393" alt="image" src="https://github.com/user-attachments/assets/361250dd-25f3-410b-87dd-d321574a0a9b" />
+<img width="553" height="393" alt="image" src="https://github.com/user-attachments/assets/f47ae2df-2805-4c09-9985-56d1fd67f88a" />
+<img width="536" height="393" alt="image" src="https://github.com/user-attachments/assets/bfddc12c-6977-4dc1-aa08-1a9ce6903e2a" />
+<img width="559" height="393" alt="image" src="https://github.com/user-attachments/assets/78772e44-ba28-428a-bbf6-89aa4c5b1ff2" />
+<img width="553" height="393" alt="image" src="https://github.com/user-attachments/assets/734ec57f-3625-48fb-b774-291ab05f1e4c" />
+<img width="536" height="393" alt="image" src="https://github.com/user-attachments/assets/f3d36301-bc32-48c2-8caf-c0bb8dbc7f75" />
+<img width="545" height="393" alt="image" src="https://github.com/user-attachments/assets/962a306a-e29d-4ccc-ac23-e7045df1c0f2" />
 
-``Country``
+### Análise dos resultados
 
-<img width="580" height="455" alt="image" src="https://github.com/user-attachments/assets/ab005dec-ef25-41a9-9533-68a389546e28" />
+A comparação entre as distribuições revelou diferentes comportamentos entre as variáveis:
 
-``Job_Role``
+1. Variáveis com separação mais evidente entre as classes. Algumas variáveis apresentam diferenças claras entre os grupos:
 
-<img width="598" height="455" alt="image" src="https://github.com/user-attachments/assets/d05383dd-adf7-4c33-a7e9-0aad6d85d100" />
+``Sleep_Hours``: indivíduos com burnout tendem a apresentar distribuição deslocada para valores menores
+``Stress_Level``: maior concentração de valores elevados no grupo com burnout
+``Screen_Time_Hours``: maior densidade em valores mais altos para indivíduos com burnout
 
-``Company_Size``
+Esses padrões indicam maior capacidade dessas variáveis em discriminar os grupos.
 
-<img width="580" height="455" alt="image" src="https://github.com/user-attachments/assets/340fcf7d-7aeb-4b10-8062-265e90402489" />
+2. Variáveis com sobreposição parcial
+
+Outras variáveis apresentam diferenças menos acentuadas, com sobreposição significativa entre as distribuições:
+
+``Productivity_Score``
+``Exercise_Hours_Per_Week``
+``Meetings_Per_Day``
+
+Esses resultados sugerem que essas variáveis podem ter influência indireta ou combinada com outros fatores.
+
+3. Variáveis com pouca diferenciação entre as classes. Algumas variáveis apresentam distribuições muito semelhantes entre os grupos:
+
+``Age``
+``Experience_Years``
+``Work_Hours_Per_Day``
+``Internet_Speed_Mbps``
+
+Em especial, a variável ``Work_Hours_Per_Day`` não apresenta o comportamento esperado, não evidenciando aumento do risco de burnout com maior carga de trabalho. Esse resultado deve ser interpretado com cautela, podendo estar relacionado à *natureza sintética do dataset*.
+
+De forma geral, observa-se que variáveis comportamentais apresentam maior poder de discriminação entre os grupos. Variáveis estruturais apresentam menor impacto isolado. Nota-se que existe forte sobreposição entre as distribuições, indicando que o fenômeno de burnout é multifatorial.
+
+Além disso, a análise evidencia que nenhuma variável isoladamente é suficiente para explicar o risco de burnout, reforçando a necessidade de abordagens multivariadas na etapa de modelagem.
+
+Novamente, há de se ressaltar as limitações da análise:
+* A análise é baseada em distribuição e não implica causalidade;
+* O desbalanceamento da variável alvo pode influenciar a interpretação visual;
+* O dataset é sintético, podendo apresentar padrões artificiais.
+
+## Análise das variáveis categóricas vs Burnout_Risk
+
+Com o objetivo de investigar a relação entre as variáveis categóricas e o risco de burnout, foram construídas tabelas de contingência normalizadas e gráficos de barras empilhadas.
+
+```
+for col in colsCat:
+    ct = pd.crosstab(df[col], df["Burnout_Risk"], normalize='index')    
+    ct.columns = ["Sem_Burnout", "Com_Burnout"]
+    ct = ct * 100
+    ct.plot(
+        kind='bar',
+        stacked=True
+    )
+    plt.title(f'{col} vs Burnout_Risk (proporção)')
+    plt.ylabel('Percentual (%)')
+    plt.show()
+```
+
+A normalização por linha (normalize='index') permite analisar a proporção de indivíduos com e sem burnout dentro de cada categoria, eliminando o efeito do tamanho absoluto dos grupos.
+
+<img width="571" height="491" alt="image" src="https://github.com/user-attachments/assets/b39e654e-bd9c-4ca7-a5b1-fc050c112fca" />
+<img width="571" height="525" alt="image" src="https://github.com/user-attachments/assets/c5896c22-8b10-4022-951d-6dfa5d2c0d11" />
+<img width="571" height="578" alt="image" src="https://github.com/user-attachments/assets/982a01b4-f5aa-4390-9906-7ed591f8d423" />
+<img width="571" height="496" alt="image" src="https://github.com/user-attachments/assets/b0a6583c-e346-4eb0-a1db-00fd1387d44e" />
+<img width="571" height="514" alt="image" src="https://github.com/user-attachments/assets/8e8ed472-65c8-434d-975e-234551b26482" />
+
+### Interpretação dos resultados
+
+A análise das proporções revelou padrões distintos entre as variáveis categóricas.
+
+1. Variáveis com diferença relevante entre categorias
+
+Algumas variáveis apresentam variação significativa na proporção de burnout entre suas categorias:
 
 ``Work_Environment``
+``Job_Role``
+``Company_Size``
 
-<img width="580" height="455" alt="image" src="https://github.com/user-attachments/assets/de4a5778-d5d0-4ad2-a58a-595a096dfcde" />
+Essas variáveis indicam que o contexto organizacional pode estar associado ao risco de burnout.
 
-Essas variáveis permitem analisar possíveis diferenças no risco de burnout entre diferentes contextos organizacionais.
+2. Variáveis com diferença moderada
 
-## Distribuição da variável alvo
+Outras variáveis apresentam variações menores, mas ainda perceptíveis:
 
-A variável alvo ``Burnout_Risk`` foi analisada para verificar o balanceamento das classes.
+``Gender``
+``Country``
+
+Esses resultados sugerem possível influência, mas com menor intensidade.
+
+3. Variáveis com pouca diferenciação
+
+Caso alguma variável mostre proporções muito semelhantes entre categorias, isso indica baixo poder explicativo isolado.
+
+De forma geral, observa-se que o risco de burnout varia entre diferentes contextos organizacionais; variáveis categóricas podem capturar aspectos não representados nas variáveis numéricas; a análise por proporção é mais adequada do que contagem absoluta, especialmente em datasets desbalanceados.
+
+Quanto às limitações da análise, nota-se que não foram realizados testes estatísticos formais (como qui-quadrado), sendo esta uma análise exploratória. As associações observadas não implicam causalidade e o dataset é sintético, podendo apresentar padrões artificiais.
+
+## Distribuição da variável alvo (Burnout_Risk)
+
+Para analisar o balanceamento da variável alvo, foi construída uma visualização da distribuição das classes de ``Burnout_Risk``, considerando valores absolutos e percentuais.
 
 ```
 counts = df["Burnout_Risk"].value_counts()
 percent = df["Burnout_Risk"].value_counts(normalize=True) * 100
 
-ax = sns.barplot(x=counts.index, y=counts.values)
-ax.set_xticks([0,1])
-ax.set_xticklabels(["No", "Yes"])
+x = sns.barplot(x=counts.index, y=counts.values)
+x.set_xticks([0,1])
+x.set_xticklabels(["No", "Yes"])
 
 for i, p in enumerate(ax.patches):
-    ax.text(p.get_x() + p.get_width()/2,
+    x.text(p.get_x() + p.get_width()/2,
             p.get_height(),
             f'{percent[i]:.1f}%',
             ha="center")
@@ -322,6 +513,21 @@ plt.show()
 Foi observado que aproximadamente **80% dos registros correspondem à classe "No" e 20% à classe "Yes"**.
 
 Essa distribuição caracteriza um desbalanceamento significativo, podendo impactar o desempenho de modelos de classificação, especialmente na identificação da classe minoritária.
+
+Entre os principais pontos de atenção, destacam-se:
+
+* Modelos podem apresentar alta acurácia apenas prevendo a classe majoritária;
+* Métricas como acurácia podem ser inadequadas para avaliação de desempenho;
+* A identificação correta da classe minoritária (burnout) torna-se mais desafiadora.
+
+Dessa forma, será necessário considerar técnicas específicas para lidar com o desbalanceamento, tais como:
+
+* uso de métricas apropriadas (precision, recall, F1-score, ROC-AUC);
+* técnicas de reamostragem (oversampling ou undersampling);
+* ajuste de pesos de classe em algoritmos de classificação.
+* Considerações adicionais
+
+A análise do balanceamento também é importante do ponto de vista aplicado, uma vez que a classe minoritária representa indivíduos em potencial situação de risco. Assim, erros de classificação (especialmente falsos negativos) podem ter implicações relevantes no contexto de uso do modelo.
 
 ## Análise de correlação
 
@@ -355,27 +561,60 @@ Esses resultados sugerem que maiores horas de sono estão associadas à reduçã
 
 ## Descrição dos achados
 
-A análise exploratória realizada permitiu identificar diversos padrões relevantes no dataset analisado.
+Para investigar as relações entre as variáveis numéricas, foi utilizada a correlação de Spearman, que mede associações monotônicas entre variáveis, sendo mais adequada em contextos onde não há garantia de linearidade ou normalidade dos dados.
 
-Entre os principais achados destacam-se:
+Essa escolha também se justifica pela presença de variáveis ordinais, como Stress_Level, e pela natureza potencialmente não linear das relações analisadas.
 
-- A média de horas de sono observada no dataset é inferior à recomendação média para adultos, o que pode estar associado ao aumento do estresse ocupacional.
+```
+corr_spearman = df[colsNum].corr(method='spearman')
+sns.heatmap(
+    corr_spearman,          # matriz de correlação
+    annot=True,             # exibe os valores numéricos dentro dos quadrados
+    cmap='coolwarm'         # paleta: azul (negativo) → vermelho (positivo)
+)
+plt.title("GRÁFICO DE CORRELAÇÃO")
+plt.show()
+```
 
-- O tempo médio de exposição a telas é elevado, refletindo a forte digitalização do ambiente de trabalho moderno.
+<img width="692" height="604" alt="image" src="https://github.com/user-attachments/assets/79485dc3-a68b-438e-8229-d16508a802d2" />
 
-- A análise de correlação indicou que não há associação linear significativa entre os níveis de estresse e o risco de burnout.
+### Interpretação dos resultados
 
-- Variáveis relacionadas à carga de trabalho, como número de horas trabalhadas, apresentaram correlação negativa moderada com o risco de burnout.
+A análise do mapa de calor permite identificar padrões de associação entre as variáveis, com destaque para aquelas relacionadas à variável alvo (``Burnout_Risk``).
 
-- Variáveis relacionadas ao estilo de vida saudável, como horas de sono e prática de exercícios físicos, apresentaram correlação negativa, com destaque para o sono, que demonstrou associação moderada com a redução do risco de burnout.
+Entre os principais achados destacam-se a relações com Burnout_Risk:
+- ``Sleep_Hours`` apresenta correlação negativa moderada com ``Burnout_Risk``, indicando que menores horas de sono estão associadas a maior risco de burnout.
+- ``Exercise_Hours_Per_Week`` apresenta correlação negativa fraca a moderada, sugerindo que a prática de exercícios pode estar associada à redução do risco.
+- ``Screen_Time_Hours`` apresenta correlação positiva (se aplicável ao seu gráfico), indicando possível associação entre maior exposição a telas e aumento do risco.
+- ``Stress_Level`` apresenta correlação fraca, sugerindo baixa associação monotônica direta com o risco de burnout.
+- ``Work_Hours_Per_Day`` apresenta correlação negativa moderada, indicando um comportamento contraintuitivo, no qual maiores cargas de trabalho estariam associadas a menor risco de burnout.
 
-Esses resultados indicam a presença de algumas associações entre as variáveis analisadas, especialmente relacionadas a hábitos de vida, porém devem ser interpretados com cautela, uma vez que não implicam relações de causa e efeito.
+## Discussão de resultados contraintuitivos
 
-A análise exploratória também mostrou que o dataset possui boa qualidade estrutural, sem valores ausentes e com distribuição desbalanceada da variável alvo, na qual aproximadamente 80% dos registros pertencem à classe “No” e 20% à classe “Yes”.
+O comportamento observado em variáveis como ``Work_Hours_Per_Day`` deve ser interpretado com cautela, pois contraria expectativas teóricas.
 
-Essas características tornam o conjunto de dados adequado para o treinamento de modelos de aprendizado de máquina supervisionado, embora o desbalanceamento entre as classes deva ser considerado nas etapas posteriores do projeto.
+Esse resultado pode estar relacionado a características artificiais do dataset sintético. Ausência de variáveis mediadoras relevantes. Possíveis relações indiretas não capturadas pela correlação bivariada e relações entre variáveis explicativas.
 
----
+Além da variável alvo, observa-se também, possíveis associações entre variáveis comportamentais (sono, exercício, tempo de tela). Verifica-se baixa correlação entre variáveis demográficas e comportamentais.
+
+Esses padrões sugerem que diferentes grupos de variáveis capturam aspectos distintos do fenômeno analisado.
+
+Ressalta-se as limitações da análise:
+* A correlação de Spearman mede associação monotônica, não implicando causalidade;
+* Relações não monotônicas não são capturadas por esse método;
+* A análise é bivariada e não considera interações entre múltiplas variáveis;
+* O dataset é sintético, podendo apresentar padrões artificiais.
+
+## Correlação entre variáveis numéricas contínuas (Pearson)
+
+Com o objetivo de analisar relações lineares entre variáveis numéricas contínuas, foi utilizada a correlação de Pearson.
+
+Esse método é adequado para variáveis contínuas, pois mede a intensidade e direção da relação linear entre pares de variáveis.
+
+Foram consideradas apenas variáveis com características numéricas contínuas, incluindo a variável alvo (``Burnout_Risk``, tratada como binária).
+
+
+
 
 ## Ferramentas utilizadas
 
