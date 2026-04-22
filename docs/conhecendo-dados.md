@@ -173,12 +173,13 @@ Para identificar possíveis valores extremos, foram utilizados duas abordagens c
 Inicialmente, foi gerado um boxplot considerando todas as variáveis numéricas, com exceção da variável Burnout_Risk, por se tratar de uma variável binária.
 
 ```
+colsOutliers = colsNum.drop("Burnout_Risk")
 plt.figure(figsize=(20, 10))
 sns.boxplot(data=df[colsOutliers],
     flierprops={
-        'marker': 'o',               # formato do marcador
-        'markerfacecolor': 'red',    # cor dos outliers
-        'markersize': 6              # tamanho dos pontos
+        'marker': 'o',               
+        'markerfacecolor': 'red',    
+        'markersize': 6              
     }
 )
 plt.xticks(rotation=45)
@@ -456,6 +457,39 @@ A normalização por linha (normalize='index') permite analisar a proporção de
 <img width="571" height="496" alt="image" src="https://github.com/user-attachments/assets/b0a6583c-e346-4eb0-a1db-00fd1387d44e" />
 <img width="571" height="514" alt="image" src="https://github.com/user-attachments/assets/8e8ed472-65c8-434d-975e-234551b26482" />
 
+
+
+
+
+
+
+
+### Medida de associação para variáveis categóricas (V de Cramér)
+
+### Força da associação (V de Cramér)
+
+Para quantificar a associação entre variáveis categóricas e burnout, calculou-se o coeficiente V de Cramér (0 = nenhuma associação, 1 = associação perfeita):
+
+| Variável | V de Cramér | Interpretação |
+| :--- | :--- | :--- |
+| Work_Environment | 0.031 | Muito fraca |
+| Job_Role | 0.029 | Muito fraca |
+| Company_Size | 0.025 | Muito fraca |
+| Gender | 0.019 | Desprezível |
+| Country | 0.016 | Desprezível |
+
+**Conclusão:** Todas as variáveis categóricas apresentam associação desprezível com o risco de burnout, confirmando que o fenômeno é explicado por fatores comportamentais, não demográficos.
+
+
+
+
+
+
+
+
+
+
+
 ### Interpretação dos resultados
 
 A análise das proporções revelou padrões distintos entre as variáveis categóricas.
@@ -655,6 +689,30 @@ for col in colsCat:
 
 As variáveis categóricas analisadas não apresentam associação estatisticamente significativa com o risco de burnout, indicando que o fenômeno observado no dataset é predominantemente explicado por fatores comportamentais contínuos, e não por características demográficas ou estruturais.
 
+## Força da associação (V de Cramér)
+
+```
+for col in colsCat:
+    table = pd.crosstab(df[col], df['Burnout_Risk'])
+    v_cramer = cramers_v(table.values)
+    
+    # Interpretação
+    if v_cramer < 0.05:
+        interp = "Desprezível"
+    elif v_cramer < 0.10:
+        interp = "Fraca"
+    else:
+        interp = "Moderada/Forte"
+    
+    print(f"{col}: V de Cramér = {v_cramer:.4f} ({interp})")
+```
+
+Complementando a análise do qui-quadrado, o coeficiente V de Cramér mede a intensidade da associação entre variáveis categóricas e o risco de burnout:
+
+<img width="461" height="136" alt="Screen Shot 2026-04-22 at 15 52 06" src="https://github.com/user-attachments/assets/45aeaf70-b6d3-41b0-9221-1588a57d6195" />
+
+Todas as variáveis categóricas apresentaram associação desprezível com o risco de burnout (V de Cramér < 0.05), confirmando que características demográficas e estruturais não são preditoras relevantes neste dataset. O fenômeno do burnout é explicado predominantemente por fatores comportamentais contínuos.
+
 ## Análise de Scatterplots
 
 ```
@@ -752,6 +810,14 @@ A aplicação prática de um modelo de predição de burnout deve ser orientada 
 - instrumento para melhoria do bem-estar organizacional;
 - base para ações de suporte, e não para controle ou punição.
 
+### Mitigação de Riscos
+
+| Risco | Mitigador Proposto |
+|-------|-------|
+|Uso punitivo do modelo |Modelo deve ser usado apenas por RH/gestão com supervisão humana, nunca como ferramenta automatizada de demissão.|
+|Falsos negativos (não identificar burnout real)|Implementar limiar de decisão ajustado para maximizar recall, com confirmação por profissional de saúde.|
+|Viés de gênero/raça/cargo|Auditoria periódica de métricas de desempenho por grupo.|
+
 
 ## Ferramentas utilizadas
 
@@ -759,11 +825,13 @@ A análise exploratória foi realizada utilizando a linguagem de programação P
 
 As principais bibliotecas utilizadas foram:
 
-| Ferramenta |	Aplicação |
-|---|---|
-| **Python** |	Linguagem de programação utilizada para análise dos dados |
-| **pandas** |	Manipulação e estruturação de dados em DataFrames |
-| **matplotlib** |	Criação de gráficos e visualizações |
-| **seaborn** | Visualização estatística avançada |
+| Ferramenta | Aplicação |
+| :--- | :--- |
+| Python 3.10+ | Linguagem de programação |
+| pandas 2.2.2 | Manipulação e estruturação de dados |
+| matplotlib 3.8.4 | Criação de gráficos e visualizações |
+| seaborn 0.13.2 | Visualização estatística avançada |
+| scipy 1.13.1 | Testes estatísticos (point-biserial, qui-quadrado) |
+| kagglehub 0.3.10 | Download do dataset do Kaggle |
 
-Essas ferramentas são amplamente utilizadas em projetos de ciência de dados por permitirem análises eficientes, reprodutíveis e escaláveis.
+> **Nota sobre reprodutibilidade**: O arquivo `requirements.txt` com as versões exatas de todas as dependências será disponibilizado na raiz do repositório GitHub na entrega final. A opção por não incluí-lo durante o desenvolvimento deve-se à natureza efêmera do ambiente Colab, que gerencia dinamicamente as bibliotecas a cada sessão. A versão consolidada do projeto conterá todos os artefatos necessários para reprodução integral da análise.
