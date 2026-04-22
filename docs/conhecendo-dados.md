@@ -454,34 +454,13 @@ A normalização por linha (normalize='index') permite analisar a proporção de
 
 ### Interpretação dos resultados
 
-A análise das proporções revelou padrões distintos entre as variáveis categóricas.
+A análise visual dos gráficos de barras empilhadas mostra que as proporções de burnout entre as diferentes categorias de cada variável são **muito semelhantes**, com diferenças percentuais pequenas e aparentemente não relevantes.
 
-1. Variáveis com diferença relevante entre categorias
+Não se observam variações expressivas em nenhuma das variáveis categóricas analisadas (Gender, Country, Job_Role, Company_Size, Work_Environment). As proporções de indivíduos com burnout permanecem estáveis em torno de 20% em praticamente todas as categorias.
 
-Algumas variáveis apresentam variação significativa na proporção de burnout entre suas categorias:
+Esta análise visual sugere que, isoladamente, as variáveis categóricas não apresentam forte discriminação do risco de burnout. No entanto, para uma conclusão rigorosa, serão aplicados testes estatísticos formais (qui-quadrado e V de Cramér) nas seções seguintes.
 
-``Work_Environment``
-``Job_Role``
-``Company_Size``
-
-Essas variáveis indicam que o contexto organizacional pode estar associado ao risco de burnout.
-
-2. Variáveis com diferença moderada
-
-Outras variáveis apresentam variações menores, mas ainda perceptíveis:
-
-``Gender``
-``Country``
-
-Esses resultados sugerem possível influência, mas com menor intensidade.
-
-3. Variáveis com pouca diferenciação
-
-Caso alguma variável mostre proporções muito semelhantes entre categorias, isso indica baixo poder explicativo isolado.
-
-De forma geral, observa-se que o risco de burnout varia entre diferentes contextos organizacionais; variáveis categóricas podem capturar aspectos não representados nas variáveis numéricas; a análise por proporção é mais adequada do que contagem absoluta, especialmente em datasets desbalanceados.
-
-Quanto às limitações da análise, os testes estatísticos formais (qui-quadrado e V de Cramér) realizados posteriormente confirmaram que as diferenças visuais observadas não são estatisticamente significativas.
+A normalização por linha (normalize='index') foi utilizada para eliminar o efeito do desbalanceamento da variável alvo, permitindo comparar proporções entre categorias de tamanhos diferentes.
 
 ## Distribuição da variável alvo (Burnout_Risk)
 
