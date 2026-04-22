@@ -532,48 +532,79 @@ A análise do balanceamento também é importante do ponto de vista aplicado, um
 
 ## Análise de correlação
 
-A tabela abaixo apresenta as variáveis mais associadas ao risco de burnout, ordenadas por intensidade da correlação:
+Foram aplicados três métodos complementares: Point-Biserial (variável alvo binária vs. contínuas), Spearman (associações monotônicas para todas as variáveis numéricas) e Pearson (relações lineares entre variáveis contínuas). A tabela abaixo resume os principais achados para a variável alvo.
 
 | Variável | Coeficiente | Método | Interpretação |
 | :--- | :--- | :--- | :--- |
-| Productivity_Score | **-0.62** | Point-Biserial | Forte (negativa) |
-| Sleep_Hours | **-0.42** | Point-Biserial | Moderada (negativa) |
-| Exercise_Hours_Per_Week | **-0.30** | Point-Biserial | Fraca a moderada |
-| Screen_Time_Hours | **0.29** | Point-Biserial | Fraca a moderada |
-| Stress_Level | **0.25** | Spearman | Fraca |
-| Work_Hours_Per_Day | **-0.16** | Point-Biserial | Fraca (contraintuitivo*) |
+| Productivity_Score | **-0.69** | Point-Biserial | Forte (negativa) |
+| Sleep_Hours | **-0.44** | Point-Biserial | Moderada (negativa) |
+| Work_Hours_Per_Day | **-0.34** | Point-Biserial | Fraca a moderada (contraintuitivo*) |
+| Exercise_Hours_Per_Week | **-0.27** | Point-Biserial | Fraca (negativa) |
+| Meetings_Per_Day | **0.18** | Point-Biserial | Fraca (positiva) |
+| Screen_Time_Hours | **0.14** | Point-Biserial | Fraca (positiva) |
 
 *O resultado contraintuitivo de `Work_Hours_Per_Day` (mais horas = menos burnout) pode ser um artefato do dataset sintético e será investigado na modelagem.
 
-As demais variáveis (Age, Experience_Years, Internet_Speed_Mbps) apresentam correlação desprezível (< |0.05|).
+As demais variáveis (Age, Experience_Years, Internet_Speed_Mbps, Stress_Level) apresentam correlação desprezível (< |0.05|).
+
+### Correlação de Spearman
 
 Para investigar as relações entre as variáveis numéricas, foi utilizada a correlação de Spearman, que mede associações monotônicas entre variáveis, sendo mais adequada em contextos onde não há garantia de linearidade ou normalidade dos dados.
-
-Essa escolha também se justifica pela presença de variáveis ordinais, como Stress_Level, e pela natureza potencialmente não linear das relações analisadas.
 
 ```
 corr_spearman = df[colsNum].corr(method='spearman')
 sns.heatmap(
     corr_spearman,          # matriz de correlação
     annot=True,             # exibe os valores numéricos dentro dos quadrados
-    cmap='coolwarm'         # paleta: azul (negativo) → vermelho (positivo)
+    cmap='coolwarm',        # paleta: azul (negativo) → vermelho (positivo)
+    annot_kws={"size": 6}   # tamanho dos valores
 )
-plt.title("GRÁFICO DE CORRELAÇÃO")
+plt.title("Correlação de Spearman - Todas as Variáveis Numéricas")
 plt.show()
 ```
+<img width="692" height="601" alt="image" src="https://github.com/user-attachments/assets/152fa16a-d4b9-43e2-abce-b67110b37b59" />
 
-<img width="692" height="604" alt="image" src="https://github.com/user-attachments/assets/79485dc3-a68b-438e-8229-d16508a802d2" />
+**Interpretação dos resultados**
 
-### Interpretação dos resultados
+A análise do mapa de calor permite identificar padrões de associação entre as variáveis, com destaque para aquelas relacionadas à variável alvo (Burnout_Risk):
 
-A análise do mapa de calor permite identificar padrões de associação entre as variáveis, com destaque para aquelas relacionadas à variável alvo (``Burnout_Risk``).
+- **Productivity_Score** apresenta correlação negativa forte (-0.69) com Burnout_Risk, indicando que menores níveis de produtividade estão fortemente associados a maior risco de burnout.
+- **Sleep_Hours** apresenta correlação negativa moderada (-0.44), indicando que menos horas de sono estão associadas a maior risco.
+- **Work_Hours_Per_Day** apresenta correlação negativa fraca a moderada (-0.34), um resultado contraintuitivo que será investigado na modelagem.
+- **Exercise_Hours_Per_Week** apresenta correlação negativa fraca (-0.27), sugerindo que a prática de exercícios pode estar associada à redução do risco.
+- **Meetings_Per_Day** e **Screen_Time_Hours** apresentam correlações positivas fracas (0.18 e 0.14, respectivamente).
+- **Stress_Level** apresenta correlação desprezível (-0.0042) com Burnout_Risk na análise de Spearman.
 
-Entre os principais achados destacam-se a relações com Burnout_Risk:
-- ``Sleep_Hours`` apresenta correlação negativa moderada com ``Burnout_Risk``, indicando que menores horas de sono estão associadas a maior risco de burnout.
-- ``Exercise_Hours_Per_Week`` apresenta correlação negativa fraca a moderada, sugerindo que a prática de exercícios pode estar associada à redução do risco.
-- ``Screen_Time_Hours`` apresenta correlação positiva (se aplicável ao seu gráfico), indicando possível associação entre maior exposição a telas e aumento do risco.
-- ``Stress_Level`` apresenta correlação fraca, sugerindo baixa associação monotônica direta com o risco de burnout.
-- ``Work_Hours_Per_Day`` apresenta correlação negativa fraca (-0.16), indicando um comportamento contraintuitivo, no qual maiores cargas de trabalho estariam associadas a menor risco de burnout.
+### Correlação de Pearson (variáveis contínuas)
+
+Com o objetivo de analisar relações lineares entre variáveis numéricas contínuas, foi utilizada a correlação de Pearson.
+
+```
+colsNumCont = [
+    "Age",
+    "Work_Hours_Per_Day",
+    "Sleep_Hours",
+    "Experience_Years",
+    "Screen_Time_Hours",
+    "Exercise_Hours_Per_Week",
+    "Internet_Speed_Mbps",
+    "Meetings_Per_Day",
+    "Burnout_Risk"
+]
+
+corr_pearson = df[colsNumCont].corr(method='pearson')
+
+sns.heatmap(corr_pearson, annot=True, cmap='coolwarm', annot_kws={"size": 6})
+plt.title("Correlação de Pearson - Variáveis Contínuas")
+plt.show()
+```
+<img width="692" height="601" alt="image" src="https://github.com/user-attachments/assets/63e76804-4d87-459a-8b30-0f7e7bb19f77" />
+
+**Interpretação dos resultados**
+
+A matriz de Pearson confirma os padrões observados na análise de Spearman, com destaque para:
+- **Productivity_Score** (-0.62) e **Sleep_Hours** (-0.42) como as variáveis com maior associação linear com burnout.
+- **Work_Hours_Per_Day** (-0.16) apresenta correlação mais fraca em termos lineares, sugerindo que a relação pode não ser estritamente linear.
 
 ## Discussão de resultados contraintuitivos
 
@@ -590,47 +621,6 @@ Ressalta-se as limitações da análise:
 * Relações não monotônicas não são capturadas por esse método;
 * A análise é bivariada e não considera interações entre múltiplas variáveis;
 * O dataset é sintético, podendo apresentar padrões artificiais.
-
-## Correlação entre variáveis numéricas contínuas (Pearson)
-
-Com o objetivo de analisar relações lineares entre variáveis numéricas contínuas, foi utilizada a correlação de Pearson.
-
-Esse método é adequado para variáveis contínuas, pois mede a intensidade e direção da relação linear entre pares de variáveis.
-
-Foram consideradas apenas variáveis com características numéricas contínuas, incluindo a variável alvo (``Burnout_Risk``, tratada como binária).
-
-```
-colsNumCont = [
-    "Age",
-    "Work_Hours_Per_Day",
-    "Sleep_Hours",
-    "Experience_Years",
-    "Screen_Time_Hours",
-    "Exercise_Hours_Per_Week",
-    "Internet_Speed_Mbps",
-    "Meetings_Per_Day",
-    "Burnout_Risk"
-]
-corr_pearson = df[colsNumCont].corr(method='pearson')
-
-sns.heatmap(corr_pearson, annot=True, cmap='coolwarm')
-plt.title("Correlação de Pearson")
-plt.show()
-```
-
-<img width="692" height="601" alt="image" src="https://github.com/user-attachments/assets/c4312254-288a-492a-ac2f-88409ffbc0fb" />
-
-### Interpretação dos resultados
-
-A análise da matriz de correlação de Pearson permite identificar relações lineares entre as variáveis, com destaque para aquelas associadas à variável alvo (``Burnout_Risk``).
-
-Relações com Burnout_Risk
-- ``Sleep_Hours`` apresenta correlação negativa moderada, indicando que menores níveis de sono estão associados a maior risco de burnout.
-- ``Exercise_Hours_Per_Week`` apresenta correlação negativa fraca a moderada, sugerindo possível efeito protetivo.
-- ``Screen_Time_Hours`` (se aparecer no seu mapa) pode apresentar correlação positiva, indicando associação com maior risco.
-- ``Work_Hours_Per_Day`` apresenta correlação negativa moderada, configurando um resultado contraintuitivo.
-
-<img width="692" height="601" alt="image" src="https://github.com/user-attachments/assets/d57c9b3d-bc99-4578-943c-cd1f326bafeb" />
 
 ## Análise do Point-Biserial para Burnout
 
