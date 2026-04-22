@@ -531,36 +531,6 @@ A análise do balanceamento também é importante do ponto de vista aplicado, um
 
 ## Análise de correlação
 
-Para investigar relações entre as variáveis numéricas foi utilizada a correlação de Pearson.
-
-```
-cols = ["Burnout_Risk", "Work_Hours_Per_Day", "Stress_Level", "Sleep_Hours", "Exercise_Hours_Per_Week", "Productivity_Score", "Screen_Time_Hours"]
-corr = df[cols].corr()
-
-sns.heatmap(corr, annot=True, cmap="coolwarm")
-plt.show()
-```
-
-<img width="692" height="584" alt="image" src="https://github.com/user-attachments/assets/c874b8b2-a0e7-4c30-a7c2-b43b5f0edada" />
-
-A análise do mapa de calor permitiu identificar algumas relações relevantes entre as variáveis do dataset.
-
-Entre as correlações mais relevantes destacam-se:
-
-``Stress_Level`` e ``Burnout_Risk`` apresentam correlação praticamente nula (-0,0042), indicando ausência de relação linear significativa entre as variáveis.
-
-``Work_Hours_Per_Day`` e ``Burnout_Risk`` apresentam correlação negativa moderada (-0,34), sugerindo que o aumento das horas de trabalho está associado a uma leve redução no risco de burnout.
-
-``Sleep_Hours`` e ``Burnout_Risk`` apresentam correlação negativa moderada (-0,44), indicando que maiores horas de sono estão relacionadas à diminuição do risco de burnout.
-
-``Exercise_Hours_Per_Week`` e ``Burnout_Risk`` apresentam correlação negativa fraca (-0,27), sugerindo uma leve tendência de redução do burnout com o aumento da prática de exercícios.
-
-Esses resultados sugerem que maiores horas de sono estão associadas à redução do risco de burnout, enquanto outras variáveis apresentaram relações fracas ou inexistentes. No entanto, essas associações devem ser interpretadas com cautela, uma vez que não indicam causalidade.
-
----
-
-## Descrição dos achados
-
 Para investigar as relações entre as variáveis numéricas, foi utilizada a correlação de Spearman, que mede associações monotônicas entre variáveis, sendo mais adequada em contextos onde não há garantia de linearidade ou normalidade dos dados.
 
 Essa escolha também se justifica pela presença de variáveis ordinais, como Stress_Level, e pela natureza potencialmente não linear das relações analisadas.
@@ -613,7 +583,174 @@ Esse método é adequado para variáveis contínuas, pois mede a intensidade e d
 
 Foram consideradas apenas variáveis com características numéricas contínuas, incluindo a variável alvo (``Burnout_Risk``, tratada como binária).
 
+```
+colsNumCont = [
+    "Age",
+    "Work_Hours_Per_Day",
+    "Sleep_Hours",
+    "Experience_Years",
+    "Screen_Time_Hours",
+    "Exercise_Hours_Per_Week",
+    "Internet_Speed_Mbps",
+    "Meetings_Per_Day",
+    "Burnout_Risk"
+]
+corr_pearson = df[colsNumCont].corr(method='pearson')
 
+sns.heatmap(corr_pearson, annot=True, cmap='coolwarm')
+plt.title("Correlação de Pearson")
+plt.show()
+```
+
+<img width="692" height="601" alt="image" src="https://github.com/user-attachments/assets/c4312254-288a-492a-ac2f-88409ffbc0fb" />
+
+### Interpretação dos resultados
+
+A análise da matriz de correlação de Pearson permite identificar relações lineares entre as variáveis, com destaque para aquelas associadas à variável alvo (``Burnout_Risk``).
+
+Relações com Burnout_Risk
+- ``Sleep_Hours`` apresenta correlação negativa moderada, indicando que menores níveis de sono estão associados a maior risco de burnout.
+- ``Exercise_Hours_Per_Week`` apresenta correlação negativa fraca a moderada, sugerindo possível efeito protetivo.
+- ``Screen_Time_Hours`` (se aparecer no seu mapa) pode apresentar correlação positiva, indicando associação com maior risco.
+- ``Work_Hours_Per_Day`` apresenta correlação negativa moderada, configurando um resultado contraintuitivo.
+
+[...]
+
+<img width="692" height="601" alt="image" src="https://github.com/user-attachments/assets/d57c9b3d-bc99-4578-943c-cd1f326bafeb" />
+
+
+
+
+
+
+## Análise do Point-Biserial para Burnout
+
+
+```
+from scipy.stats import pointbiserialr
+for col in colsNum:
+    corr, _ = pointbiserialr(df['Burnout_Risk'], df[col])
+    print(col, corr)
+```
+
+<img width="379" height="205" alt="Screen Shot 2026-04-22 at 00 17 17" src="https://github.com/user-attachments/assets/01904cb5-0272-42fe-8e8a-1fc9c788f79d" />
+
+O risco de burnout está fortemente associado a queda de produtividade e piora de hábitos de recuperação (sono e exercício). Fatores demográficos como idade e experiência são irrelevantes. O modelo sugere que burnout é um fenômeno predominantemente comportamental e operacional.
+
+
+
+## Análise do teste Qui-quadrado para variáveis categóricas
+
+
+```
+from scipy.stats import chi2_contingency
+for col in colsCat:
+    table = pd.crosstab(df[col], df['Burnout_Risk'])
+    chi2, p, _, _ = chi2_contingency(table)
+    print(col, "p-value:", p)
+```
+
+
+<img width="396" height="93" alt="Screen Shot 2026-04-22 at 00 19 35" src="https://github.com/user-attachments/assets/f24b3af4-4d15-4e2a-a79a-6845b04eec0b" />
+
+As variáveis categóricas analisadas não apresentam associação estatisticamente significativa com o risco de burnout, indicando que o fenômeno observado no dataset é predominantemente explicado por fatores comportamentais contínuos, e não por características demográficas ou estruturais.
+
+## Análise de Scatterplots
+
+```
+cols_Scatterplots = colsNum.drop("Burnout_Risk")
+
+for col in cols_Scatterplots:
+    if col != "Burnout_Risk":
+        sns.scatterplot(
+            x=col,
+            y="Burnout_Risk",
+            data=df
+        )
+        plt.title(f"{col} vs Burnout_Risk")
+        plt.show()
+```
+
+<img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/88d7e66e-7a40-436f-a78b-6f3415f21104" />
+<img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/d8feaac3-8d23-4df1-af1d-968337687af1" />
+<img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/b14147c5-1a83-4b00-bacd-82ccab0ff49c" />
+<img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/5ffb3304-091e-422c-96ed-df64c08db15b" />
+<img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/ea456e4d-bd00-4f66-8d99-6567e1dede3c" />
+<img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/84952a6c-298b-4efe-8de1-17ce53091be2" />
+<img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/22205b89-3857-4702-80dd-2d0f4019980a" />
+<img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/bb841689-ede5-44d3-b2c3-df6b94a83b87" />
+<img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/3ef3bea1-3105-4840-bd4c-83976629b455" />
+<img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/d6719e77-2073-42a4-a263-bed475613805" />
+
+O burnout no conjunto analisado está fortemente associado a um padrão de piora em indicadores de recuperação e desempenho, especialmente:
+
+- redução expressiva da produtividade
+- menor duração do sono
+- menor atividade física
+- aumento de reuniões e tempo de tela
+
+Em contraste, características demográficas não apresentam poder explicativo relevante. Isso sugere que o fenômeno é predominantemente comportamental e operacional, não estrutural.
+
+
+
+## Considerações éticas e adequação à LGPD
+
+Embora o dataset utilizado seja sintético, a análise envolve variáveis relacionadas a comportamento, saúde e contexto profissional, o que exige atenção a aspectos éticos e às diretrizes da Lei Geral de Proteção de Dados (LGPD).
+
+### Sensibilidade dos dados
+
+Algumas variáveis presentes no dataset podem ser consideradas sensíveis ou potencialmente sensíveis no contexto real, tais como:
+
+- Stress_Level (nível de estresse)
+- Sleep_Hours (hábitos de sono)
+- Exercise_Hours_Per_Week (hábitos de saúde)
+- Burnout_Risk (indicador de saúde mental)
+
+Em um cenário real, essas informações poderiam ser classificadas como dados pessoais sensíveis, pois estão relacionadas à saúde e ao bem-estar do indivíduo.
+
+### Riscos no uso dos dados e do modelo
+
+Caso esse tipo de análise fosse aplicada em dados reais, alguns riscos importantes deveriam ser considerados:
+
+- Uso punitivo do modelo: identificação de indivíduos com alto risco de burnout poderia ser utilizada para penalização ou discriminação no ambiente de trabalho;
+- Estigmatização: funcionários classificados como “alto risco” poderiam ser tratados de forma desigual;
+- Privacidade: exposição indevida de informações relacionadas à saúde e comportamento;
+- Decisões automatizadas: uso do modelo sem supervisão humana pode gerar interpretações incorretas.
+- Falsos positivos e falsos negativos
+
+### Em modelos preditivos de burnout:
+
+- Falsos positivos (indicar burnout quando não existe) podem gerar preocupação desnecessária ou impacto na reputação profissional;
+- Falsos negativos (não identificar burnout quando existe) podem impedir intervenções preventivas importantes.
+
+Ambos os casos podem causar impactos negativos, reforçando a necessidade de uso responsável.
+
+### Viés e equidade
+
+A análise exploratória indicou que variáveis categóricas como gênero, país e cargo apresentam distribuições semelhantes em relação ao burnout.
+
+No entanto, em um cenário real, seria fundamental avaliar:
+
+- possíveis viéses discriminatórios;
+- diferenças de desempenho do modelo entre grupos;
+- impacto desigual das decisões automatizadas.
+- Limitações do dataset
+
+O dataset utilizado é sintético, o que implica:
+
+- ausência de dados pessoais reais;
+- redução de riscos diretos à privacidade;
+- possível presença de padrões artificiais.
+
+Dessa forma, os resultados obtidos não devem ser generalizados diretamente para contextos reais sem validação adicional.
+
+### Uso responsável da solução
+
+A aplicação prática de um modelo de predição de burnout deve ser orientada por princípios éticos, sendo utilizada como:
+
+- ferramenta de apoio à prevenção;
+- instrumento para melhoria do bem-estar organizacional;
+- base para ações de suporte, e não para controle ou punição.
 
 
 ## Ferramentas utilizadas
