@@ -576,9 +576,15 @@ plt.show()
 
 **Interpretação dos resultados**
 
-A matriz de Pearson confirma os padrões observados na análise de Spearman, com destaque para:
-- **Productivity_Score** (-0.62) e **Sleep_Hours** (-0.42) como as variáveis com maior associação linear com burnout.
-- **Work_Hours_Per_Day** (-0.16) apresenta correlação mais fraca em termos lineares, sugerindo que a relação pode não ser estritamente linear.
+A matriz de Pearson confirma os padrões observados na análise de Spearman para as variáveis contínuas, com destaque para:
+
+- **Sleep_Hours** (-0.44) apresenta a maior correlação linear negativa com burnout, indicando que menos horas de sono estão associadas a maior risco.
+- **Work_Hours_Per_Day** (-0.34) apresenta correlação negativa fraca a moderada, confirmando o comportamento contraintuitivo observado na análise de Spearman.
+- **Exercise_Hours_Per_Week** (-0.27) e **Internet_Speed_Mbps** (-0.20) apresentam correlações negativas fracas.
+- **Meetings_Per_Day** (0.18) e **Screen_Time_Hours** (0.14) apresentam correlações positivas fracas.
+- **Age** e **Experience_Years** apresentam correlações desprezíveis com burnout.
+
+A variável **Productivity_Score**, por ser discreta (escala 0-100), não foi incluída nesta matriz de correlação de Pearson, que é específica para relações lineares entre variáveis contínuas. Sua correlação com burnout (-0.69) foi analisada via Point-Biserial e Spearman, conforme apresentado anteriormente.
 
 ## Discussão de resultados contraintuitivos
 
