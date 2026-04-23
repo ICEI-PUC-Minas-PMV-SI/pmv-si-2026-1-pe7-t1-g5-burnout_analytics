@@ -1,4 +1,4 @@
-# Etapa 2: Conhecendo os dados
+# Conhecendo os dados
 
 Nesta seção é apresentada uma análise descritiva e exploratória da base de dados **Work Productivity & Burnout Risk Dataset**. O objetivo dessa análise é compreender a estrutura dos dados, identificar possíveis outliers e investigar relações existentes entre as variáveis presentes no dataset.
 
