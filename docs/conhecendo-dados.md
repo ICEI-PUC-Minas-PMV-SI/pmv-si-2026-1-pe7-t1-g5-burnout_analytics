@@ -584,8 +584,6 @@ A matriz de Pearson confirma os padrões observados na análise de Spearman para
 - **Meetings_Per_Day** (0.18) e **Screen_Time_Hours** (0.14) apresentam correlações positivas fracas.
 - **Age** e **Experience_Years** apresentam correlações desprezíveis com burnout.
 
-A variável **Productivity_Score**, por ser discreta (escala 0-100), não foi incluída nesta matriz de correlação de Pearson, que é específica para relações lineares entre variáveis contínuas. Sua correlação com burnout (-0.69) foi analisada via Point-Biserial e Spearman, conforme apresentado anteriormente.
-
 ## Discussão de resultados contraintuitivos
 
 O comportamento observado em variáveis como ``Work_Hours_Per_Day`` deve ser interpretado com cautela, pois contraria expectativas teóricas.
