@@ -197,6 +197,39 @@ A escolha está alinhada ao objetivo central do projeto, que consiste na identif
 
 Ressalva importante: O desempenho perfeito obtido (100% em todas as métricas) é um fenômeno extremamente raro em dados reais. Este resultado reflete a natureza sintética do dataset (gerado por IA) e não deve ser generalizado para contextos reais sem validação adicional.
 
+## Análise de Interpretabilidade: Fatores que Influenciam o Burnout
+
+Um dos principais diferenciais da Regressão Logística é sua capacidade de fornecer coeficientes interpretáveis, permitindo identificar quais variáveis mais contribuem para o aumento ou redução do risco de burnout. A tabela a seguir apresenta as 10 variáveis com maior impacto absoluto no modelo final (C=5,0, threshold=0,7).
+
+<img width="545" height="202" alt="Screen Shot 2026-04-29 at 20 01 21" src="https://github.com/user-attachments/assets/cf4f584d-e3ad-4993-8ecc-39ad05c407e0" />
+
+### Análise dos Resultados
+
+**Fatores Protetivos (Reduzem o Risco):**
+- **Productivity_Score** (coeficiente -22,67): O fator mais importante do modelo. Quanto maior a produtividade, menor o risco de burnout. Este achado sugere que profissionais engajados e produtivos apresentam maior resiliência ao estresse ocupacional.
+
+- **Sleep_Hours** (coeficiente -0,84): Dormir bem é o segundo fator protetivo mais relevante. Cada hora adicional de sono está associada à redução significativa do risco, corroborando a literatura sobre a importância do descanso para a saúde mental.
+
+- **Exercise_Hours_Per_Week** (coeficiente -0,53): A prática regular de atividades físicas demonstra efeito protetivo, reforçando a importância de hábitos saudáveis.
+
+- **Internet_Speed_Mbps** (coeficiente -0,38): Velocidades mais altas de internet associam-se a menor risco, possivelmente refletindo melhores condições de infraestrutura e menor estresse tecnológico.
+
+**Fatores de Risco (Aumentam o Risco):**
+- **Screen_Time_Hours** (coeficiente +0,27): Maior tempo de exposição a telas está associado ao aumento do risco, sugerindo a necessidade de pausas regulares.
+
+- **Meetings_Per_Day** (coeficiente +0,23): Reuniões excessivas contribuem para o burnout, indicando que a otimização do tempo coletivo é uma estratégia de prevenção.
+
+- **Países (UK, USA, China)**: Fatores geográficos apresentam associação com o risco, possivelmente refletindo diferenças culturais ou organizacionais.
+
+### Resultado Contraintuitivo
+
+**Work_Hours_Per_Day** apresentou coeficiente negativo (-0,68), sugerindo que trabalhar mais horas reduziria o risco de burnout. Este resultado **contradiz a literatura especializada** e é provavelmente um **artefato da natureza sintética do dataset** (gerado por IA). Recomenda-se cautela na interpretação e validação com dados reais antes de qualquer decisão organizacional baseada neste achado.
+
+### Variáveis com Baixo Impacto (< 1% de contribuição)
+
+As seguintes variáveis apresentaram impacto desprezível no modelo, podendo ser consideradas para remoção em versões futuras:
+- Age, Experience_Years, diversas categorias de países e cargos com coeficientes próximos a zero.
+
 # Pipeline de pesquisa e análise de dados
 
 O pipeline de pesquisa e análise de dados adotado neste projeto foi estruturado de forma a garantir coerência metodológica, reprodutibilidade e alinhamento com boas práticas em ciência de dados.
