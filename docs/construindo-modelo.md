@@ -37,7 +37,7 @@ O modelo selecionado para esta etapa foi a **Regressão Logística**, amplamente
 A escolha da Regressão Logística fundamenta-se em três pilares principais:
 | Critério | Justificativa |
 |-------|-------|
-| Interpretabilidade | Os coeficientes indicam diretamente a direção e intensionalidade do impacto de cada variável no risco de burnout |
+| Interpretabilidade | Os coeficientes indicam diretamente a direção e intensidade do impacto de cada variável no risco de burnout |
 | Eficiência Computacional | Treinamento rápido mesmo com 30.000 registros e 38 variáveis após encoding |
 | Probabilidades Calibradas | Fornece estimativas de probabilidade, essenciais para tomada de decisão em saúde organizacional |
 
