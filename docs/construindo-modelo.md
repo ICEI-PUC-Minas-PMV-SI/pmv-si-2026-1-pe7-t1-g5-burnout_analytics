@@ -38,7 +38,7 @@ A escolha da Regressão Logística fundamenta-se em três pilares principais:
 | Critério | Justificativa |
 |-------|-------|
 | Interpretabilidade | Os coeficientes indicam diretamente a direção e intensionalidade do impacto de cada variável no risco de burnout |
-| Eficiência Computacional | Treinamento rápido mesmo com 30.000 registros e 16 variáveis após encoding |
+| Eficiência Computacional | Treinamento rápido mesmo com 30.000 registros e 38 variáveis após encoding |
 | Probabilidades Calibradas | Fornece estimativas de probabilidade, essenciais para tomada de decisão em saúde organizacional |
 
 Do ponto de vista conceitual, a Regressão Logística modela a relação entre as variáveis preditoras e a variável resposta por meio da função sigmoide, possibilitando a interpretação probabilística dos resultados. Essa característica a torna particularmente adequada para problemas em que a tomada de decisão depende da estimativa de risco, como no caso da predição de burnout.
