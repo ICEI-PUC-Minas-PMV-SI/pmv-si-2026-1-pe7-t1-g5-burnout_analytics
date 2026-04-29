@@ -58,23 +58,44 @@ Todas as tarefas realizadas nesta etapa deverão ser registradas em formato de t
 
 Nesta etapa, foram aplicadas técnicas de pré-processamento com o objetivo de adequar o conjunto de dados ao treinamento do modelo de aprendizado de máquina, garantindo consistência, robustez e reprodutibilidade dos resultados.
 
-Inicialmente, foi realizada a etapa de limpeza dos dados, na qual se confirmou a ausência de valores faltantes no dataset, conforme identificado na análise exploratória. Embora o dataset original não apresente valores ausentes, optou-se por manter etapas de imputação no pipeline, utilizando a mediana para variáveis numéricas e a moda para variáveis categóricas. Essa decisão foi adotada visando aumentar a robustez do modelo e sua capacidade de generalização para cenários futuros com dados incompletos. Em relação à detecção de valores extremos, embora tenham sido observados alguns perfis atípicos — como indivíduos com baixa quantidade de horas de sono ou elevado tempo de exposição a telas —, a análise pelo método do intervalo interquartil (IQR) indicou que tais valores não configuram outliers estatísticos. Assim, optou-se por manter todos os registros, considerando sua relevância potencial para o fenômeno estudado.
+## Limpeza dos Dados
+Inicialmente, foi realizada a etapa de limpeza dos dados, na qual se confirmou a ausência de valores faltantes no dataset, conforme identificado na análise exploratória. Embora o dataset original não apresente valores ausentes, optou-se por manter etapas de imputação no pipeline, utilizando a mediana para variáveis numéricas e a moda para variáveis categóricas. Essa decisão foi adotada visando aumentar a robustez do modelo e sua capacidade de generalização para cenários futuros com dados incompletos. 
 
-Na sequência, foi realizada a transformação dos dados, com foco na preparação das variáveis para uso em algoritmos de aprendizado supervisionado. As variáveis categóricas — `Gender`, `Country`, `Job_Role`, `Company_Size` e `Work_Environment` — foram convertidas em formato numérico por meio da técnica de **One-Hot Encoding**, utilizando a classe `OneHotEncoder` da biblioteca scikit-learn com parâmetro `handle_unknown='ignore'`. Esse procedimento permite representar categorias qualitativas em forma binária, além de garantir que categorias não vistas durante o treinamento não comprometam o funcionamento do modelo.
+Em relação à detecção de valores extremos, embora tenham sido observados alguns perfis atípicos — como indivíduos com baixa quantidade de horas de sono ou elevado tempo de exposição a telas —, a análise pelo método do intervalo interquartil (IQR) indicou que tais valores não configuram outliers estatísticos. Assim, optou-se por manter todos os registros, considerando sua relevância potencial para o fenômeno estudado.
+
+## Transformação dos Dados
+
+As variáveis categóricas — `Gender`, `Country`, `Job_Role`, `Company_Size` e `Work_Environment` — foram convertidas em formato numérico por meio da técnica de **One-Hot Encoding**, utilizando a classe `OneHotEncoder` da biblioteca scikit-learn com parâmetro `handle_unknown='ignore'`. Esse procedimento permite representar categorias qualitativas em forma binária, além de garantir que categorias não vistas durante o treinamento não comprometam o funcionamento do modelo.
 
 Adicionalmente, procedeu-se à remoção da variável `Employee_ID`, por se tratar de um identificador único sem relevância preditiva. Em seguida, os dados foram organizados em variáveis preditoras (X) e variável alvo (y), sendo esta última representada pela variável `Burnout_Risk`, codificada em formato binário.
 
+## Padronização das Variáveis Numéricas
+
 Considerando a presença de variáveis numéricas em diferentes escalas, foi aplicada a técnica de padronização por meio do `StandardScaler`, que transforma os dados para uma distribuição com média zero e desvio padrão unitário. Essa etapa é particularmente importante para algoritmos como a Regressão Logística, que são sensíveis à escala das variáveis.
+
+## Pipeline de Pré-processamento
 
 As etapas de pré-processamento foram organizadas por meio de um `ColumnTransformer`, responsável por aplicar transformações distintas para variáveis numéricas e categóricas. Esse componente foi integrado a um pipeline completo utilizando a classe `Pipeline`, garantindo que todas as etapas sejam executadas de forma consistente tanto durante o treinamento quanto na fase de teste. Essa abordagem também evita o problema de vazamento de dados (data leakage), assegurando maior rigor metodológico.
 
+## Tratamento do Desbalanceamento
+
 Outro aspecto relevante do pré-processamento refere-se ao desbalanceamento da variável alvo, no qual aproximadamente 80% dos registros pertencem à classe “No” e 20% à classe “Yes”. Para lidar com esse cenário, foi adotada a estratégia de ajuste de pesos das classes (`class_weight='balanced'`), permitindo que o modelo atribua maior importância à classe minoritária durante o treinamento, sem a necessidade de técnicas adicionais como oversampling.
+
+## Divisão Treino-Teste
 
 Por fim, o conjunto de dados foi dividido em subconjuntos de treinamento (80%) e teste (20%), utilizando uma estratégia estratificada da variável alvo (`stratify=y`), de modo a preservar a proporção original das classes. A utilização de um valor fixo de random_state garantiu a reprodutibilidade dos experimentos.
 
-# Descrição do modelo
+# Descrição do modelo escolhido
 
 O modelo selecionado para esta etapa foi a **Regressão Logística**, amplamente utilizada em problemas de classificação binária. Esse algoritmo baseia-se na aplicação da função logística, que transforma uma combinação linear das variáveis independentes em uma probabilidade entre 0 e 1, permitindo estimar a chance de ocorrência do evento de interesse. A decisão de classificação é realizada a partir de um limiar de probabilidade, geralmente definido como 0,5, a partir do qual o modelo classifica a observação como pertencente à classe positiva.
+
+## Justificativa da escolha
+A escolha da Regressão Logística fundamenta-se em três pilares principais:
+| Critério | Justificativa |
+|-------|-------|
+| Interpretabilidade | Os coeficientes indicam diretamente a direção e intensionalidade do impacto de cada variável no risco de burnout |
+| Eficiência Computacional | Treinamento rápido mesmo com 30.000 registros e 16 variáveis após encoding |
+| Probabilidades Calibradas | Fornece estimativas de probabilidade, essenciais para tomada de decisão em saúde organizacional |
 
 Do ponto de vista conceitual, a Regressão Logística modela a relação entre as variáveis preditoras e a variável resposta por meio da função sigmoide, possibilitando a interpretação probabilística dos resultados. Essa característica a torna particularmente adequada para problemas em que a tomada de decisão depende da estimativa de risco, como no caso da predição de burnout.
 
@@ -82,41 +103,52 @@ A escolha desse modelo fundamenta-se, sobretudo, em sua elevada interpretabilida
 
 Além disso, o modelo foi adotado como baseline, servindo como referência inicial para comparação com abordagens mais sofisticadas em etapas posteriores do projeto. A utilização de um modelo baseline é uma prática consolidada em ciência de dados, pois permite avaliar se o aumento de complexidade em modelos futuros resulta, de fato, em ganhos significativos de desempenho.
 
+## Implementação do modelo
+
 A implementação foi realizada utilizando a biblioteca `scikit-learn`, com destaque para o ajuste do parâmetro `max_iter=1000`, visando garantir a convergência do algoritmo, e a utilização de `class_weight='balanced'`, com o objetivo de mitigar os efeitos do desbalanceamento entre as classes.
+
+<img width="816" height="190" alt="Screen Shot 2026-04-29 at 15 54 51" src="https://github.com/user-attachments/assets/50ba2ffa-2461-4232-87dd-ac6041e03d68" />
+
+## Limitações do Modelo
 
 Como principal limitação, destaca-se o fato de que a Regressão Logística assume relações lineares entre as variáveis independentes e o logaritmo da razão de chances (`log-odds`), o que pode restringir sua capacidade de capturar padrões mais complexos presentes nos dados. Ainda assim, sua simplicidade e interpretabilidade justificam sua utilização como ponto de partida.
 
 Adicionalmente, o modelo permite a análise direta dos coeficientes estimados, possibilitando a identificação dos fatores que mais contribuem para o aumento ou redução do risco de burnout, reforçando sua aplicabilidade no contexto organizacional.
 
 # Avaliação do modelo criado
+
 ## Métricas utilizadas
 
 A avaliação do modelo foi realizada por meio de múltiplas métricas, com o objetivo de obter uma visão abrangente de seu desempenho. Foram consideradas as métricas de *acurácia (accuracy)*, *precisão (precision)*, *revocação (recall)*, *F1-score* e área sob a *curva ROC (AUC-ROC)*.
 
-A **acurácia** foi utilizada para medir a proporção geral de acertos do modelo. No entanto, devido ao desbalanceamento das classes, essa métrica isoladamente não é suficiente para avaliar adequadamente a performance.
+**Acurácia** proporção geral de acertos do modelo. Devido ao desbalanceamento das classes, esta métrica isoladamente não é suficiente para avaliar adequadamente a performance.
 
-A **precisão** indica a proporção de previsões positivas que estão corretas, sendo relevante para avaliar a confiabilidade das predições. Já o recall mede a capacidade do modelo de identificar corretamente os casos positivos, sendo particularmente importante em cenários nos quais o custo de não detectar um evento é elevado.
+**Precisão** proporção de previsões positivas que estão corretas, sendo relevante para avaliar a confiabilidade das predições.
 
-O **F1-score** foi utilizado como medida de equilíbrio entre precisão e recall, enquanto a AUC-ROC permitiu avaliar a capacidade do modelo de discriminar entre as classes ao longo de diferentes limiares de decisão.
+**Recall (Revocação)**: capacidade do modelo de identificar corretamente os casos positivos. Esta métrica é particularmente importante em cenários nos quais o custo de não detectar um evento é elevado.
 
-Dentre essas métricas, o **recall** foi definido como o principal critério de avaliação, uma vez que, no contexto do problema, o erro mais crítico consiste na ocorrência de falsos negativos — ou seja, situações em que o modelo deixa de identificar indivíduos em risco de burnout. Tal falha pode comprometer ações preventivas e impactar negativamente a saúde dos trabalhadores e o desempenho organizacional.
+**F1-score** média harmônica entre precisão e recall, utilizada como medida de equilíbrio entre ambas.
+
+**AUC-ROC**: capacidade do modelo de discriminar entre as classes ao longo de diferentes limiares de decisão.
+
+Dentre essas métricas, o **recall foi definido como o principal critério de avaliação**, uma vez que, no contexto do problema, o erro mais crítico consiste na ocorrência de falsos negativos — ou seja, situações em que o modelo deixa de identificar indivíduos em risco de burnout. Tal falha pode comprometer ações preventivas e impactar negativamente a saúde dos trabalhadores e o desempenho organizacional.
 
 ## Resultados dos experimentos com diferentes configurações
 
-Com o objetivo de avaliar o impacto de diferentes configurações do modelo no desempenho preditivo, foram realizados experimentos controlados variando-se parâmetros-chave da Regressão Logística. Especificamente, foram analisados: (i) o uso ou não de balanceamento de classes, (ii) o tipo de penalização aplicada (L1 e L2) e (iii) a intensidade da regularização, controlada pelo parâmetro C.
+Com o objetivo de avaliar o impacto de diferentes configurações do modelo no desempenho preditivo, foram realizados experimentos controlados variando-se parâmetros-chave da Regressão Logística. Especificamente, foram analisados: (i) o uso ou não de balanceamento de classes, (ii) o tipo de penalização aplicada (L1 e L2) e (iii) a intensidade da regularização (parâmetro C), e (iv) o limiar de decisão (threshold).
 
 A realização desses testes permite compreender a sensibilidade do modelo a diferentes configurações, além de fornecer embasamento empírico para a escolha da configuração final adotada.
 
 Tabela I – Resultados dos testes experimentais da Regressão Logística
 
-| Teste           | Class Weight | Penalização | C    | Accuracy | Precision | Recall  | F1-Score | AUC-ROC  |
-|-----------------|-------------|-------------|------|----------|-----------|---------|----------|----------|
-| Baseline        | None        | L2          | 1.0  | 0.999000 | 0.997470  | 0.997470| 0.997470 | 0.999990 |
-| Balanced L2     | Balanced    | L2          | 1.0  | 0.990167 | 0.952610  | 1.000000| 0.975730 | 0.999993 |
-| L2 C=0.1        | Balanced    | L2          | 0.1  | 0.978333 | 0.901216  | 1.000000| 0.948042 | 0.999651 |
-| L2 C=10         | Balanced    | L2          | 10.0 | 0.999667 | 0.998316  | 1.000000| 0.999158 | 1.000000 |
-| L1 C=1.0        | Balanced    | L1          | 1.0  | 1.000000 | 1.000000  | 1.000000| 1.000000 | 1.000000 |
-| Threshold 0.3   | Balanced    | L2          | 1.0  | 0.981000 | 0.912308  | 1.000000| 0.954143 | 0.999993 |
+| Teste           | Class Weight | Penalização | C  | Threshold | Accuracy | Precision | Recall  | F1-Score | AUC-ROC  |
+|-----------------|-------------|-------------|-----|----------|-----------|---------|----------|----------|----------|
+| Baseline        | None        | L2          | 1.0 |      0.5 | 0.999000 | 0.997470  | 0.997470| 0.997470 | 0.999990 |
+| Balanced L2     | Balanced    | L2          | 1.0 |      0.5 | 0.990167 | 0.952610  | 1.000000| 0.975730 | 0.999993 |
+| L2 C=0.1        | Balanced    | L2          | 0.1 |      0.5 | 0.978333 | 0.901216  | 1.000000| 0.948042 | 0.999651 |
+| L2 C=10         | Balanced    | L2          | 10.0|      0.5 | 0.999667 | 0.998316  | 1.000000| 0.999158 | 1.000000 |
+| L1 C=1.0        | Balanced    | L1          | 1.0 |      0.5 | 1.000000 | 1.000000  | 1.000000| 1.000000 | 1.000000 |
+| Threshold: 0.3  | Balanced    | L2          | 1.0 |      0.5 | 0.990167 | 0.952610  | 1.000000| 0.975730 | 0.999993 |
 
 A análise dos resultados evidencia que o modelo apresenta desempenho extremamente elevado em todas as configurações testadas, com valores de recall próximos ou iguais a 1.0 na maioria dos experimentos. Esse comportamento indica que o modelo já possui alta capacidade de identificação da classe positiva, independentemente da configuração adotada.
 
@@ -126,9 +158,13 @@ Observa-se que as principais variações entre os testes ocorreram na precisão,
 
 Adicionalmente, a variação do parâmetro de regularização (C) e do tipo de penalização (L1 e L2) não resultou em mudanças significativas no desempenho global, indicando que o problema apresenta alta separabilidade entre as classes. Esse resultado sugere que o dataset, possivelmente por sua natureza sintética, apresenta padrões facilmente capturáveis pelo modelo.
 
-Todos os experimentos foram executados utilizando o mesmo pipeline de pré-processamento e divisão de dados, garantindo comparabilidade entre os testes. As variações foram aplicadas exclusivamente nos parâmetros do modelo, mantendo-se constantes os demais elementos do processo. Essa abordagem assegura que as diferenças observadas nos resultados sejam decorrentes apenas das configurações testadas.
+## Resultados dos experimentos com diferentes configurações
 
-## Discussão dos resultados obtidos
+Com o objetivo de avaliar o impacto de diferentes configurações do modelo no desempenho preditivo, foram realizados experimentos controlados variando-se parâmetros-chave da Regressão Logística. Especificamente, foram analisados: (i) o uso ou não de balanceamento de classes, (ii) o tipo de penalização aplicada (L1 e L2), (iii) a intensidade da regularização (parâmetro C), e (iv) o limiar de decisão (threshold) .
+
+A realização desses testes permite compreender a sensibilidade do modelo a diferentes configurações, além de fornecer embasamento empírico para a escolha da configuração final adotada.
+
+## Discussão dos resultados obtidos Inicialmente
 
 Os resultados obtidos indicam que o modelo de Regressão Logística apresenta desempenho satisfatório, servindo como uma base sólida para a modelagem do problema.
 
@@ -159,6 +195,50 @@ No contexto da questão de pesquisa — que busca verificar a possibilidade de p
 Entretanto, é importante destacar que algumas relações identificadas diferem da literatura, possivelmente em função da **natureza sintética do dataset** (produzido por Inteligência Artificial) conforme explicitado pelo autor. Dessa forma, os resultados devem ser interpretados com cautela, especialmente no que se refere à generalização para contextos reais.
 
 A análise dos coeficientes do modelo permitiu identificar que variáveis relacionadas ao estilo de vida, como horas de sono e prática de exercícios físicos, apresentam associação com a redução do risco de burnout. Destaca-se também o forte impacto da variável de produtividade, que apresentou coeficiente negativo de alta magnitude. Por outro lado, observou-se que a variável de carga horária apresentou relação inversa ao esperado, indicando que maiores jornadas de trabalho estariam associadas à redução do risco de burnout. Esse resultado contraria evidências da literatura e sugere uma limitação decorrente da **natureza sintética do dataset**, devendo ser interpretado com cautela.
+
+## Testes Adicionais para Verificação da Melhor Confirguração
+
+### Teste de Thresholds (0,3 a 0,7)
+
+Para avaliar o impacto do limiar de decisão no desempenho do modelo, foram testados diferentes thresholds, mantendo-se `class_weight='balanced'`, `C=1.0` e `penalty='l2'`.
+
+<img width="689" height="652" alt="Screen Shot 2026-04-29 at 16 30 40" src="https://github.com/user-attachments/assets/be70ff0c-4c01-49d9-863c-ae8eb8c7901f" />
+
+Análise: O threshold de 0,70 apresentou o melhor F1-Score (0,9975) e será utilizado na configuração final do modelo.
+
+### Teste de Regularização (C de 0,1 a 5,0)
+
+Para avaliar o impacto do parâmetro de regularização C, foram testados diferentes valores, mantendo-se `class_weight='balanced'`, `threshold=0,5` e `penalty='l2'`.
+
+<img width="692" height="595" alt="Screen Shot 2026-04-29 at 16 34 00" src="https://github.com/user-attachments/assets/6883d885-ecd4-4e7b-bbbe-56fe9215653d" />
+
+Análise: Observa-se que quanto maior o valor de C (menos regularização), melhor o desempenho do modelo. O valor C=5.0 foi selecionado para a configuração final.
+
+### Experimentos Combinados ( C + Threshold )
+
+Para identificar a melhor combinação possível, foi realizada uma busca sistemática variando C e threshold simultaneamente:
+
+<img width="348" height="287" alt="Screen Shot 2026-04-29 at 16 39 51" src="https://github.com/user-attachments/assets/177d74df-9fd6-4440-8aca-8703c717e791" />
+
+### Modelo Final Otimizado
+
+Dessa forma, a configuração baseada na melhor combinação encontrada foi:
+
+<img width="436" height="466" alt="Screen Shot 2026-04-29 at 16 42 32" src="https://github.com/user-attachments/assets/1a3c42ec-9f28-4298-890a-f626babf7733" />
+
+Melhor combinação encontrada: C = 5,0 e Threshold = 0,7 (F1-Score ≈ 1,0000).
+
+Todos os experimentos foram executados utilizando o mesmo pipeline de pré-processamento e divisão de dados, garantindo comparabilidade entre os testes. As variações foram aplicadas exclusivamente nos parâmetros do modelo, mantendo-se constantes os demais elementos do processo. Essa abordagem assegura que as diferenças observadas nos resultados sejam decorrentes apenas das configurações testadas.
+
+### Avaliação da Curva ROC no Modelo Final
+
+<img width="560" height="440" alt="Screen Shot 2026-04-29 at 16 50 32" src="https://github.com/user-attachments/assets/0c9aeb3b-1e54-458a-8d43-2b7efffc2496" />
+
+### Resumo das Variáveis Mais Importantes
+
+<img width="532" height="204" alt="Screen Shot 2026-04-29 at 16 51 09" src="https://github.com/user-attachments/assets/fce1433b-f860-4c0d-af77-339bec029748" />
+
+
 
 ## Decisão do Modelo
 
