@@ -147,7 +147,6 @@ A utilização de `class_weight='balanced'` não resultou em ganhos expressivos 
 
 A variação do parâmetro de regularização (C) e o tipo de penalização (L1 e L2) não resultou em mudanças drásticas do desempenho global, indicando que o problema apresenta alta separabilidade entre as classes. Este resultado sugere que o dataset, possivelmente por sua natureza sintética, apresenta padrões facilmente capturáveis pelo modelo.
 
-
 ## Otimização de parâmetros - testes Adicionais
 
 ### Teste de Thresholds (0,3 a 0,7)
@@ -158,31 +157,31 @@ Para avaliar o impacto do limiar de decisão no desempenho do modelo, foram test
 
 **Análise**: O threshold de 0,70 apresentou o melhor F1-Score (0,9975) e será utilizado na configuração final do modelo.
 
-### Teste de Regularização (C de 0,1 a 0,5)
+### Teste de Regularização (C de 0,1 a 0,9)
 
 Para avaliar o impacto do parâmetro de regularização C, foram testados diferentes valores, mantendo-se `class_weight='balanced'`, `threshold=0,5` e `penalty='l2'`.
 
-<img width="770" height="636" alt="Screen Shot 2026-04-29 at 21 32 59" src="https://github.com/user-attachments/assets/f8779aa9-93d6-4bd8-870d-f38f3d7d1254" />
+<img width="695" height="620" alt="Screen Shot 2026-04-29 at 22 51 16" src="https://github.com/user-attachments/assets/574de72c-8012-404a-b9ef-38c225e262d4" />
 
-**Análise**: Observa-se uma tendência clara: **quanto maior o valor de C (menos regularização), melhor o desempenho do modelo**. O valor testado mais alto, **C=0,5**, apresentou o melhor F1-Score (0,9705) e será utilizado como referência para os experimentos combinados com threshold.
+**Análise**: Observa-se uma tendência clara: **quanto maior o valor de C (menos regularização), melhor o desempenho do modelo**. O valor testado mais alto, **C=0,9**, apresentou o melhor F1-Score (0,9749) e será utilizado como referência para os experimentos combinados com threshold.
 
 ### Experimentos Combinados ( C + Threshold )
 
 Para identificar a melhor combinação possível, foi realizada uma busca sistemática variando C e threshold simultaneamente:
 
-<img width="384" height="312" alt="Screen Shot 2026-04-29 at 21 37 20" src="https://github.com/user-attachments/assets/288ae274-55b2-4302-bd21-a0041b4be58d" />
+<img width="353" height="335" alt="Screen Shot 2026-04-29 at 23 01 26" src="https://github.com/user-attachments/assets/4594f4f2-b224-4504-a0ae-3e5d536e6eae" />
 
-**Melhor combinação encontrada**: C = 5,0 e Threshold = 0,7 (F1-Score ≈ 0,9941).
+**Melhor combinação encontrada**: C = 0,9 e Threshold = 0,7 (F1-Score ≈ 0,9971).
 
 ### Modelo Final Otimizado
 
 Dessa forma, a configuração final adotada foi:
 
-<img width="488" height="521" alt="Screen Shot 2026-04-29 at 21 44 10" src="https://github.com/user-attachments/assets/5060c3ed-a769-4904-a517-f64ed700b1ec" />
+<img width="435" height="466" alt="Screen Shot 2026-04-29 at 23 00 37" src="https://github.com/user-attachments/assets/86fcebe6-f7bb-4c9e-adc5-0a6e1891f184" />
 
 ### Interpretação do Modelo Final
 
-O modelo final otimizado (C=0,5, threshold=0,7) apresenta desempenho excepcional no dataset de teste, com recall de 0,9975 (apenas 3 casos de burnout não detectados em 1.200) e precisão de 0,9908 (apenas 1% de falsos positivos). 
+O modelo final otimizado (C=0,9, threshold=0,7) apresenta desempenho excepcional no dataset de teste, com recall de 0,9975 (apenas 3 casos de burnout não detectados em 1.200) e precisão de 0,9966 (apenas 0,34% de falsos positivos). 
 
 A escolha do threshold 0,7 (acima do padrão 0,5) reflete uma decisão consciente de priorizar a **redução de falsos positivos** em detrimento de uma pequena perda de sensibilidade (de 100% para 99,75%). Esta configuração é mais adequada para cenários com recursos limitados para intervenção.
 
@@ -192,7 +191,7 @@ Todos os experimentos foram executados utilizando o mesmo pipeline de pré-proce
 
 ### Avaliação da Curva ROC no Modelo Final
 
-<img width="643" height="494" alt="Screen Shot 2026-04-29 at 21 53 53" src="https://github.com/user-attachments/assets/93782af5-5928-492f-b941-e505f1f6df8a" />
+<img width="564" height="439" alt="Screen Shot 2026-04-29 at 23 10 11" src="https://github.com/user-attachments/assets/40164178-a799-4b42-9da9-448599f09bc8" />
 
 O modelo final atingiu AUC = 1,0000, indicando separabilidade perfeita entre as classes no conjunto de teste.
 
@@ -220,17 +219,17 @@ Principais variáveis que REDUZEM o risco de burnout (coeficiente negativo):
 
 ## Decisão do Modelo
 
-Com base nos resultados obtidos, optou-se por utilizar a configuração com class_weight='balanced', penalização L2, C=5,0 e threshold=0,7, considerando seu desempenho superior em todas as métricas avaliadas (100% em acurácia, precisão, recall, F1 e AUC-ROC).
+Com base nos resultados obtidos, optou-se por utilizar a configuração com class_weight='balanced', penalização L2, C=0,9 e threshold=0,7, considerando seu desempenho superior nas métricas avaliadas (acima de 99,6% em todas as métricas, com AUC-ROC perfeito de 1,0000).
 
 A escolha está alinhada ao objetivo central do projeto, que consiste na identificação de indivíduos em risco de burnout, minimizando a ocorrência de falsos negativos.
 
 **Avaliação final:** O modelo apresentou uma performance excelente como ferramenta de triagem e prevenção, desde que utilizado com supervisão humana e validação prévia em dados reais da organização.
 
-Ressalva importante: O desempenho perfeito obtido (100% em todas as métricas) é um fenômeno extremamente raro em dados reais. Este resultado reflete a natureza sintética do dataset (gerado por IA) e não deve ser generalizado para contextos reais sem validação adicional.
+Ressalva importante: O desempenho quase perfeito obtido (acima de 99,6% em todas as métricas) é um fenômeno extremamente raro em dados reais. Este resultado reflete a natureza sintética do dataset (gerado por IA) e não deve ser generalizado para contextos reais sem validação adicional.
 
 ## Análise de Interpretabilidade: Fatores que Influenciam o Burnout
 
-Um dos principais diferenciais da Regressão Logística é sua capacidade de fornecer coeficientes interpretáveis, permitindo identificar quais variáveis mais contribuem para o aumento ou redução do risco de burnout. A tabela a seguir apresenta as 10 variáveis com maior impacto absoluto no modelo final (C=5,0, threshold=0,7).
+Um dos principais diferenciais da Regressão Logística é sua capacidade de fornecer coeficientes interpretáveis, permitindo identificar quais variáveis mais contribuem para o aumento ou redução do risco de burnout. A tabela a seguir apresenta as 10 variáveis com maior impacto absoluto no modelo final (C=0,9, threshold=0,7).
 
 <img width="545" height="202" alt="Screen Shot 2026-04-29 at 20 01 21" src="https://github.com/user-attachments/assets/cf4f584d-e3ad-4993-8ecc-39ad05c407e0" />
 
