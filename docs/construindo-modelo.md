@@ -51,11 +51,11 @@ Além disso, o modelo foi adotado como baseline, servindo como referência inici
 
 A implementação foi realizada utilizando a biblioteca `scikit-learn`, com destaque para o ajuste do parâmetro `max_iter=1000`, visando garantir a convergência do algoritmo, e a utilização de `class_weight='balanced'`, com o objetivo de mitigar os efeitos do desbalanceamento entre as classes.
 
-<img width="816" height="190" alt="Screen Shot 2026-04-29 at 15 54 51" src="https://github.com/user-attachments/assets/50ba2ffa-2461-4232-87dd-ac6041e03d68" />
+<img width="1579" height="190" alt="Screen Shot 2026-04-29 at 20 39 51" src="https://github.com/user-attachments/assets/c98ba357-0468-47fd-b106-53eed7bf75e3" />
 
 ## Limitações do Modelo
 
-Como principal limitação, destaca-se o fato de que a Regressão Logística assume relações lineares entre as variáveis independentes e o logaritmo da razão de chances (`log-odds`), o que pode restringir sua capacidade de capturar padrões mais complexos presentes nos dados. Ainda assim, sua simplicidade e interpretabilidade justificam sua utilização como ponto de partida.
+Como principal limitação, destaca-se o fato de que a Regressão Logística assume relações lineares entre as variáveis independentes e o logaritmo da razão de chances, o que pode restringir sua capacidade de capturar padrões mais complexos presentes nos dados. Ainda assim, sua simplicidade e interpretabilidade justificam sua utilização como ponto de partida.
 
 Adicionalmente, o modelo permite a análise direta dos coeficientes estimados, possibilitando a identificação dos fatores que mais contribuem para o aumento ou redução do risco de burnout, reforçando sua aplicabilidade no contexto organizacional.
 
@@ -75,39 +75,35 @@ A avaliação do modelo foi realizada por meio de múltiplas métricas, com o ob
 
 Dentre essas métricas, o **recall foi definido como o principal critério de avaliação**, uma vez que, no contexto do problema, o erro mais crítico consiste na ocorrência de falsos negativos — ou seja, situações em que o modelo deixa de identificar indivíduos em risco de burnout. Tal falha pode comprometer ações preventivas e impactar negativamente a saúde dos trabalhadores e o desempenho organizacional.
 
-## Resultados dos experimentos preliminares
+## Modelo Baseline (Configuração Inicial)
 
-Com o objetivo de avaliar o impacto de diferentes configurações do modelo no desempenho preditivo, foram realizados experimentos controlados variando-se parâmetros-chave da Regressão Logística. Especificamente, foram analisados: (i) o uso ou não de balanceamento de classes, (ii) o tipo de penalização aplicada (L1 e L2) e (iii) a intensidade da regularização (parâmetro C). Nestes experimentos preliminares, o threshold foi mantido fixo em 0,5.
+Antes de realizar a otimização sistemática dos hiperparâmetros, foi estabelecido um modelo baseline como referência inicial. Este modelo utiliza a configuração padrão da Regressão Logística, que trouxe os seguintes resultados:
 
-A realização desses testes permite compreender a sensibilidade do modelo a diferentes configurações, além de fornecer embasamento empírico para a escolha da configuração final adotada.
+<img width="313" height="122" alt="Screen Shot 2026-04-29 at 20 46 43" src="https://github.com/user-attachments/assets/f6233ca6-a657-4eff-ba57-af2fa07628e1" />
 
-Tabela I – Resultados dos testes preliminares (Threshold fixo = 0,5)
+## Análise do Baseline
 
-| Teste           | Class Weight | Penalização | C  | Threshold | Accuracy | Precision | Recall  | F1-Score | AUC-ROC  |
-|-----------------|-------------|-------------|-----|----------|-----------|---------|----------|----------|----------|
-| Baseline        | None        | L2          | 1.0 |      0.5 | 0.999000 | 0.997470  | 0.997470| 0.997470 | 0.999990 |
-| Balanced L2     | Balanced    | L2          | 1.0 |      0.5 | 0.990167 | 0.952610  | 1.000000| 0.975730 | 0.999993 |
-| L2 C=0.1        | Balanced    | L2          | 0.1 |      0.5 | 0.978333 | 0.901216  | 1.000000| 0.948042 | 0.999651 |
-| L2 C=10         | Balanced    | L2          | 10.0|      0.5 | 0.999667 | 0.998316  | 1.000000| 0.999158 | 1.000000 |
-| L1 C=1.0        | Balanced    | L1          | 1.0 |      0.5 | 1.000000 | 1.000000  | 1.000000| 1.000000 | 1.000000 |
+O modelo baseline já apresenta desempenho excepcional:
 
-### Análise dos resultados preliminares
+**Recall** = 1,0: Nenhum indivíduo em risco de burnout deixou de ser identificado. Este é o resultado mais importante, dado que falsos negativos são o erro mais crítico no contexto do problema.
 
-O modelo apresenta desempenho extremamente elevado em todas as configurações testadas, com valores de recall próximos ou iguais a 1.0 na maioria dos experimentos. Esse comportamento indica que o modelo já possui alta capacidade de identificação da classe positiva, independentemente da configuração adotada.
+**AUC-ROC** = 0,99999: O modelo distingue quase perfeitamente as classes, indicando alta separabilidade dos dados.
 
-A utilização de `class_weight='balanced'` não resultou em ganhos expressivos de recall, mas impactou negativamente a precisão, indicando aumento na ocorrência de falsos positivos. Esse comportamento é esperado, uma vez que o balanceamento torna o modelo mais sensível à classe minoritária.
+**Precisão** = 0,9526: Apesar do recall perfeito, há uma pequena taxa de falsos positivos (aproximadamente 4,74% das predições positivas estão incorretas).
 
-A variação do parâmetro de regularização (C) e o tipo de penalização (L1 e L2) não resultou em mudanças drásticas do desempenho global, indicando que o problema apresenta alta separabilidade entre as classes. Este resultado sugere que o dataset, possivelmente por sua natureza sintética, apresenta padrões facilmente capturáveis pelo modelo.
+## Limitações do Baseline
+
+Embora o baseline já apresente resultados muito bons, identificou-se oportunidade de melhoria na precisão e no equilíbrio geral das métricas. A partir deste baseline, partiu-se para a otimização sistemática dos hiperparâmetros ao longo desse trabalho.
 
 ## Discussão dos resultados preliminares
 
 A Figura I apresenta a matriz de confusão do modelo (configuração Balanced L2, C=1,0, threshold=0,5), que evidencia a distribuição das previsões realizadas. 
 
-<img width="518" height="393" alt="image" src="https://github.com/user-attachments/assets/a11bb841-da76-44a9-a15a-3baa938f9d7c" />
+<img width="518" height="393" alt="image" src="https://github.com/user-attachments/assets/04f26046-daf7-4565-a452-1c44e153c7d7" />
 
 Figura I - Matriz de Confusão do Modelo (Balanced L2, C=1,0, threshold=0,5) 
 
-A análise da matriz de confusão evidencia que o modelo apresenta elevada capacidade de identificação da classe positiva, não sendo observados falsos negativos. Esse resultado indica que todos os indivíduos em risco de burnout foram corretamente classificados pelo modelo. Por outro lado, observa-se a presença de falsos positivos (64 casos), indicando que alguns indivíduos foram classificados como em risco quando, na realidade, não pertenciam a essa classe. Embora esse tipo de erro possa gerar intervenções desnecessárias, ele é menos crítico no contexto do problema, quando comparado aos falsos negativos.
+A análise da matriz de confusão evidencia que o modelo apresenta elevada capacidade de identificação da classe positiva, não sendo observados falsos negativos. Esse resultado indica que todos os indivíduos em risco de burnout foram corretamente classificados pelo modelo. Por outro lado, observa-se a presença de falsos positivos (59 casos), indicando que alguns indivíduos foram classificados como em risco quando, na realidade, não pertenciam a essa classe. Embora esse tipo de erro possa gerar intervenções desnecessárias, ele é menos crítico no contexto do problema, quando comparado aos falsos negativos.
 
 A Figura II apresenta a curva ROC para a mesma configuração.
 
@@ -127,6 +123,31 @@ Entretanto, é importante destacar que algumas relações identificadas diferem 
 
 A análise dos coeficientes do modelo permitiu identificar que variáveis relacionadas ao estilo de vida, como horas de sono e prática de exercícios físicos, apresentam associação com a redução do risco de burnout. Destaca-se também o forte impacto da variável de produtividade, que apresentou coeficiente negativo de alta magnitude. Por outro lado, observou-se que a variável de carga horária apresentou relação inversa ao esperado, indicando que maiores jornadas de trabalho estariam associadas à redução do risco de burnout. Esse resultado contraria evidências da literatura e sugere uma limitação decorrente da **natureza sintética do dataset**, devendo ser interpretado com cautela.
 
+## Testes com hiperparâmetros ajustados
+
+Com o objetivo de avaliar o impacto de diferentes configurações do modelo no desempenho preditivo, foram realizados experimentos controlados variando-se parâmetros-chave da Regressão Logística. Especificamente, foram analisados: (i) o uso ou não de balanceamento de classes, (ii) o tipo de penalização aplicada (L1 e L2) e (iii) a intensidade da regularização (parâmetro C). Nestes experimentos preliminares, o threshold foi mantido fixo em 0,5.
+
+A realização desses testes permite compreender a sensibilidade do modelo a diferentes configurações, além de fornecer embasamento empírico para a escolha da configuração final adotada.
+
+Tabela I – Resultados dos testes preliminares (Threshold fixo = 0,5)
+
+| Teste           | Class Weight | Penalização | C  | Threshold | Accuracy | Precision | Recall  | F1-Score | AUC-ROC  |
+|-----------------|-------------|-------------|-----|----------|-----------|---------|----------|----------|----------|
+| No Balanced     | None        | L2          | 1.0 |      0.5 | 0.999000 | 0.997470  | 0.997470| 0.997470 | 0.999990 |
+| Balanced L2     | Balanced    | L2          | 1.0 |      0.5 | 0.990167 | 0.952610  | 1.000000| 0.975730 | 0.999993 |
+| L2 C=0.1        | Balanced    | L2          | 0.1 |      0.5 | 0.978333 | 0.901216  | 1.000000| 0.948042 | 0.999651 |
+| L2 C=10         | Balanced    | L2          | 10.0|      0.5 | 0.999667 | 0.998316  | 1.000000| 0.999158 | 1.000000 |
+| L1 C=1.0        | Balanced    | L1          | 1.0 |      0.5 | 1.000000 | 1.000000  | 1.000000| 1.000000 | 1.000000 |
+
+### Análise dos resultados preliminares
+
+O modelo apresenta desempenho extremamente elevado em todas as configurações testadas, com valores de recall próximos ou iguais a 1.0 na maioria dos experimentos. Esse comportamento indica que o modelo já possui alta capacidade de identificação da classe positiva, independentemente da configuração adotada.
+
+A utilização de `class_weight='balanced'` não resultou em ganhos expressivos de recall, mas impactou negativamente a precisão, indicando aumento na ocorrência de falsos positivos. Esse comportamento é esperado, uma vez que o balanceamento torna o modelo mais sensível à classe minoritária.
+
+A variação do parâmetro de regularização (C) e o tipo de penalização (L1 e L2) não resultou em mudanças drásticas do desempenho global, indicando que o problema apresenta alta separabilidade entre as classes. Este resultado sugere que o dataset, possivelmente por sua natureza sintética, apresenta padrões facilmente capturáveis pelo modelo.
+
+
 ## Otimização de parâmetros - testes Adicionais
 
 ### Teste de Thresholds (0,3 a 0,7)
@@ -137,33 +158,41 @@ Para avaliar o impacto do limiar de decisão no desempenho do modelo, foram test
 
 **Análise**: O threshold de 0,70 apresentou o melhor F1-Score (0,9975) e será utilizado na configuração final do modelo.
 
-### Teste de Regularização (C de 0,1 a 5,0)
+### Teste de Regularização (C de 0,1 a 0,5)
 
 Para avaliar o impacto do parâmetro de regularização C, foram testados diferentes valores, mantendo-se `class_weight='balanced'`, `threshold=0,5` e `penalty='l2'`.
 
-<img width="692" height="595" alt="Screen Shot 2026-04-29 at 16 34 00" src="https://github.com/user-attachments/assets/6883d885-ecd4-4e7b-bbbe-56fe9215653d" />
+<img width="770" height="636" alt="Screen Shot 2026-04-29 at 21 32 59" src="https://github.com/user-attachments/assets/f8779aa9-93d6-4bd8-870d-f38f3d7d1254" />
 
-**Análise**: Observa-se que quanto maior o valor de C (menos regularização), melhor o desempenho do modelo. O valor C=5.0 foi selecionado para a configuração final.
+**Análise**: Observa-se uma tendência clara: **quanto maior o valor de C (menos regularização), melhor o desempenho do modelo**. O valor testado mais alto, **C=0,5**, apresentou o melhor F1-Score (0,9705) e será utilizado como referência para os experimentos combinados com threshold.
 
 ### Experimentos Combinados ( C + Threshold )
 
 Para identificar a melhor combinação possível, foi realizada uma busca sistemática variando C e threshold simultaneamente:
 
-<img width="348" height="287" alt="Screen Shot 2026-04-29 at 16 39 51" src="https://github.com/user-attachments/assets/177d74df-9fd6-4440-8aca-8703c717e791" />
+<img width="384" height="312" alt="Screen Shot 2026-04-29 at 21 37 20" src="https://github.com/user-attachments/assets/288ae274-55b2-4302-bd21-a0041b4be58d" />
 
-**Melhor combinação encontrada**: C = 5,0 e Threshold = 0,7 (F1-Score ≈ 1,0000).
+**Melhor combinação encontrada**: C = 5,0 e Threshold = 0,7 (F1-Score ≈ 0,9941).
 
 ### Modelo Final Otimizado
 
 Dessa forma, a configuração final adotada foi:
 
-<img width="436" height="466" alt="Screen Shot 2026-04-29 at 16 42 32" src="https://github.com/user-attachments/assets/1a3c42ec-9f28-4298-890a-f626babf7733" />
+<img width="488" height="521" alt="Screen Shot 2026-04-29 at 21 44 10" src="https://github.com/user-attachments/assets/5060c3ed-a769-4904-a517-f64ed700b1ec" />
+
+### Interpretação do Modelo Final
+
+O modelo final otimizado (C=0,5, threshold=0,7) apresenta desempenho excepcional no dataset de teste, com recall de 0,9975 (apenas 3 casos de burnout não detectados em 1.200) e precisão de 0,9908 (apenas 1% de falsos positivos). 
+
+A escolha do threshold 0,7 (acima do padrão 0,5) reflete uma decisão consciente de priorizar a **redução de falsos positivos** em detrimento de uma pequena perda de sensibilidade (de 100% para 99,75%). Esta configuração é mais adequada para cenários com recursos limitados para intervenção.
+
+O AUC-ROC de 1,0 indica separabilidade perfeita entre as classes, mas este resultado deve ser interpretado com cautela, pois reflete a **natureza sintética do dataset**. Em contextos reais, o desempenho tende a ser inferior.
 
 Todos os experimentos foram executados utilizando o mesmo pipeline de pré-processamento e divisão de dados, garantindo comparabilidade entre os testes. As variações foram aplicadas exclusivamente nos parâmetros do modelo, mantendo-se constantes os demais elementos do processo. Essa abordagem assegura que as diferenças observadas nos resultados sejam decorrentes apenas das configurações testadas.
 
 ### Avaliação da Curva ROC no Modelo Final
 
-<img width="560" height="440" alt="Screen Shot 2026-04-29 at 16 50 32" src="https://github.com/user-attachments/assets/0c9aeb3b-1e54-458a-8d43-2b7efffc2496" />
+<img width="643" height="494" alt="Screen Shot 2026-04-29 at 21 53 53" src="https://github.com/user-attachments/assets/93782af5-5928-492f-b941-e505f1f6df8a" />
 
 O modelo final atingiu AUC = 1,0000, indicando separabilidade perfeita entre as classes no conjunto de teste.
 
@@ -194,6 +223,8 @@ Principais variáveis que REDUZEM o risco de burnout (coeficiente negativo):
 Com base nos resultados obtidos, optou-se por utilizar a configuração com class_weight='balanced', penalização L2, C=5,0 e threshold=0,7, considerando seu desempenho superior em todas as métricas avaliadas (100% em acurácia, precisão, recall, F1 e AUC-ROC).
 
 A escolha está alinhada ao objetivo central do projeto, que consiste na identificação de indivíduos em risco de burnout, minimizando a ocorrência de falsos negativos.
+
+**Avaliação final:** O modelo apresentou uma performance excelente como ferramenta de triagem e prevenção, desde que utilizado com supervisão humana e validação prévia em dados reais da organização.
 
 Ressalva importante: O desempenho perfeito obtido (100% em todas as métricas) é um fenômeno extremamente raro em dados reais. Este resultado reflete a natureza sintética do dataset (gerado por IA) e não deve ser generalizado para contextos reais sem validação adicional.
 
