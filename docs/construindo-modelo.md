@@ -34,6 +34,7 @@ Por fim, o conjunto de dados foi dividido em subconjuntos de treinamento (80%) e
 O modelo selecionado para esta etapa foi a **Regressão Logística**, amplamente utilizada em problemas de classificação binária. Esse algoritmo baseia-se na aplicação da função logística, que transforma uma combinação linear das variáveis independentes em uma probabilidade entre 0 e 1, permitindo estimar a chance de ocorrência do evento de interesse. A decisão de classificação é realizada a partir de um limiar de probabilidade, geralmente definido como 0,5, a partir do qual o modelo classifica a observação como pertencente à classe positiva.
 
 ## Justificativa da escolha
+
 A escolha da Regressão Logística fundamenta-se em três pilares principais:
 | Critério | Justificativa |
 |-------|-------|
@@ -42,8 +43,6 @@ A escolha da Regressão Logística fundamenta-se em três pilares principais:
 | Probabilidades Calibradas | Fornece estimativas de probabilidade, essenciais para tomada de decisão em saúde organizacional |
 
 Do ponto de vista conceitual, a Regressão Logística modela a relação entre as variáveis preditoras e a variável resposta por meio da função sigmoide, possibilitando a interpretação probabilística dos resultados. Essa característica a torna particularmente adequada para problemas em que a tomada de decisão depende da estimativa de risco, como no caso da predição de burnout.
-
-A escolha desse modelo fundamenta-se, sobretudo, em sua elevada interpretabilidade. Diferentemente de algoritmos mais complexos, a Regressão Logística permite analisar diretamente os coeficientes associados a cada variável, indicando tanto a direção quanto a intensidade de sua influência sobre o risco de burnout. Essa propriedade é especialmente relevante no contexto organizacional, no qual a transparência e a explicabilidade dos modelos são fundamentais para sua adoção por profissionais de recursos humanos e gestores.
 
 Além disso, o modelo foi adotado como baseline, servindo como referência inicial para comparação com abordagens mais sofisticadas em etapas posteriores do projeto. A utilização de um modelo baseline é uma prática consolidada em ciência de dados, pois permite avaliar se o aumento de complexidade em modelos futuros resulta, de fato, em ganhos significativos de desempenho.
 
@@ -119,9 +118,9 @@ A análise conjunta das métricas evidencia que o modelo consegue equilibrar a t
 
 No contexto da questão de pesquisa — que busca verificar a possibilidade de prever o risco de burnout a partir de variáveis ocupacionais e comportamentais —, os resultados obtidos reforçam a viabilidade da abordagem proposta. O modelo demonstra que, mesmo utilizando uma técnica relativamente simples, é possível extrair padrões preditivos relevantes a partir dos dados disponíveis.
 
-Entretanto, é importante destacar que algumas relações identificadas diferem da literatura, possivelmente em função da **natureza sintética do dataset** (produzido por Inteligência Artificial) conforme explicitado pelo autor. Dessa forma, os resultados devem ser interpretados com cautela, especialmente no que se refere à generalização para contextos reais.
+Entretanto, é importante destacar que algumas relações identificadas diferem da literatura, possivelmente em função da **natureza sintética do dataset** (produzido por Inteligência Artificial). Um exemplo é a variável `Work_Hours_Per_Day`, que apresentou coeficiente negativo (indicando que maiores jornadas reduziriam o risco de burnout), contradizendo evidências da literatura. Esse artefato, decorrente da natureza sintética dos dados, deve ser interpretado com cautela, especialmente quanto à generalização para contextos reais.
 
-A análise dos coeficientes do modelo permitiu identificar que variáveis relacionadas ao estilo de vida, como horas de sono e prática de exercícios físicos, apresentam associação com a redução do risco de burnout. Destaca-se também o forte impacto da variável de produtividade, que apresentou coeficiente negativo de alta magnitude. Por outro lado, observou-se que a variável de carga horária apresentou relação inversa ao esperado, indicando que maiores jornadas de trabalho estariam associadas à redução do risco de burnout. Esse resultado contraria evidências da literatura e sugere uma limitação decorrente da **natureza sintética do dataset**, devendo ser interpretado com cautela.
+A análise dos coeficientes do modelo será apresentada na seção **Análise dos Coeficientes do Modelo Final**.
 
 ## Testes com hiperparâmetros ajustados
 
@@ -211,7 +210,7 @@ Principais variáveis que REDUZEM o risco de burnout (coeficiente negativo):
 |----|----|----|
 | Productivity_Score |	-22,6676 |	Fator protetivo mais forte |
 | Sleep_Hours	| -0,8385	| Dormir bem reduz significativamente o risco |
-| Work_Hours_Per_Day |	-0,6795	| **Contraintuitivo** (discutido abaixo) |
+| Work_Hours_Per_Day |	-0,6795	| **Contraintuitivo** (ver seção dedicada) |
 | Exercise_Hours_Per_Week |	-0,5282 |	Atividade física protege contra burnout |
 | Internet_Speed_Mbps	| -0,3811 |	Boa conexão reduz estresse |
 
@@ -341,10 +340,13 @@ Para garantir a reprodutibilidade dos experimentos, foram adotadas as seguintes 
 - **Semente aleatória fixa:** `random_state=42` em todas as funções que envolvem aleatoriedade (divisão treino-teste, inicialização do modelo)
 - **Pipeline documentado:** Todo o código de pré-processamento, modelagem e avaliação está disponível na pasta `src/` do repositório
 - **Dependências versionadas:** O arquivo `requirements.txt` na raiz do repositório especifica as versões exatas de todas as bibliotecas utilizadas (Python 3.10+, pandas 2.2.2, scikit-learn 1.4.2, etc.)
-- **Ambiente de execução:** Os experimentos foram realizados em Google Colab, com código disponível em formato notebook (`.ipynb`) e/ou script (`.py`)
+- **Ambiente de execução:** Os experimentos foram realizados em Google Colab, com código disponível em formato notebook (`.ipynb`).
 - **Download automatizado dos dados:** O dataset é obtido via `kagglehub` no próprio código de análise, garantindo que a mesma versão seja utilizada em novas execuções
 
-As instruções detalhadas para replicação do ambiente e execução dos códigos encontram-se no arquivo `README.md` do repositório.
+Para replicar os resultados em novo ambiente:
+1. Instalar as dependências listadas no `requirements.txt`
+2. Executar o notebook `src/Colab_Burnout_2.ipynb` em ordem sequencial
+3. O download do dataset ocorrerá automaticamente na primeira célula do notebook
 
 ### 7. Limitações críticas e recomendações para generalização
 
@@ -352,21 +354,21 @@ Os resultados obtidos (AUC=1,0000, recall=0,9975) são excepcionalmente elevados
 
 **Ausência de ruído real**: Dados gerados por IA apresentam padrões mais limpos e separabilidade mais nítida entre classes do que dados coletados com humanos.
 
-**Relações artificialmente lineares**: A correlação de -0,69 entre Productivity_Score e burnout é raramente observada em pesquisas empíricas.
+**Relações artificialmente lineares**: A correlação de -0,69 entre `Productivity_Score` e `Burnout` é raramente observada em pesquisas empíricas.
 
-**Artefatos contraintuitivos**: O coeficiente negativo de Work_Hours_Per_Day contradiz a literatura especializada, evidenciando limitações do gerador sintético.
+**Artefatos contraintuitivos**: Exemplo é o coeficiente negativo de `Work_Hours_Per_Day` que contradiz a literatura especializada.
 
 Recomendações para aplicação em contexto real:
 
-Reavaliar o pipeline com dados reais e anonimizados da organização
+- Reavaliar o pipeline com dados reais e anonimizados da organização
 
-Expectativa realista de métricas significativamente inferiores (AUC 0,70-0,80; recall 0,65-0,75)
+- Expectativa realista de métricas significativamente inferiores (AUC 0,70-0,80; recall 0,65-0,75)
 
-Implementar validação cruzada estratificada k-fold
+- Implementar validação cruzada estratificada k-fold
 
-Realizar auditoria de viés por grupos demográficos
+- Realizar auditoria de viés por grupos demográficos
 
-Estabelecer comitê de ética para supervisão do uso do modelo
+- Estabelecer comitê de ética para supervisão do uso do modelo
 
 ### 8. Síntese e próximos passos
 
@@ -381,6 +383,5 @@ O pipeline desenvolvido demonstra a viabilidade de predição do risco de burnou
 **Intervenções propostas**: Adoção do modelo como ferramenta de triagem preventiva, com threshold ajustável conforme recursos disponíveis para intervenção, sempre sob supervisão humana e validação prévia com dados reais da organização.
 
 # Observações importantes
-Todas as etapas de modelagem, avaliação e análise foram implementadas utilizando a linguagem Python 3.10+, com suporte das bibliotecas pandas, scikit-learn, matplotlib, seaborn e scipy.
 
 Os códigos desenvolvidos encontram-se documentados e disponibilizados integralmente na pasta src/ do repositório, garantindo transparência, reprodutibilidade e aderência às boas práticas de desenvolvimento em projetos de ciência de dados.
