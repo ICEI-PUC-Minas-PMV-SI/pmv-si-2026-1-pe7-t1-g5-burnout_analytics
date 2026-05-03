@@ -345,7 +345,7 @@ Para garantir a reprodutibilidade dos experimentos, foram adotadas as seguintes 
 
 Para replicar os resultados em novo ambiente:
 1. Instalar as dependências listadas no `requirements.txt`
-2. Executar o notebook `src/Colab_Burnout_2.ipynb` em ordem sequencial
+2. Executar o notebook `src/Burnout_Analytics.ipynb` em ordem sequencial
 3. O download do dataset ocorrerá automaticamente na primeira célula do notebook
 
 ### 7. Limitações críticas e recomendações para generalização
