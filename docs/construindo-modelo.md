@@ -262,18 +262,125 @@ As seguintes variáveis apresentaram impacto desprezível no modelo, podendo ser
 
 # Pipeline de pesquisa e análise de dados
 
-O pipeline de pesquisa e análise de dados adotado neste projeto foi estruturado de forma a garantir coerência metodológica, reprodutibilidade e alinhamento com boas práticas em ciência de dados.
+O pipeline de pesquisa e análise de dados adotado neste projeto foi estruturado de forma a garantir coerência metodológica, reprodutibilidade, conformidade com a LGPD e alinhamento com boas práticas em ciência de dados.
 
-O processo teve início com a definição do problema, caracterizado como uma tarefa de classificação binária voltada à predição do risco de burnout. Em seguida, foi realizada a análise exploratória dos dados, permitindo compreender a distribuição das variáveis e identificar padrões iniciais.
+### 1. Especificação do problema
 
-Na etapa de preparação dos dados, foram aplicadas técnicas de limpeza, transformação e padronização, bem como estratégias para lidar com o desbalanceamento das classes. Posteriormente, os dados foram divididos em conjuntos de treinamento e teste, possibilitando a avaliação da capacidade de generalização do modelo.
+O problema foi caracterizado como uma tarefa de **classificação binária supervisionada** voltada à predição do risco de burnout, a partir de variáveis ocupacionais, demográficas e comportamentais. A variável alvo é `Burnout_Risk` (Yes/No), com classe minoritária representando aproximadamente 20% dos registros.
 
-A fase de modelagem consistiu na implementação da Regressão Logística, seguida pela avaliação do desempenho utilizando múltiplas métricas. Por fim, os resultados foram interpretados à luz do problema proposto, buscando extrair insights relevantes para aplicação no contexto organizacional.
+**Questão de pesquisa:** É possível prever o risco de burnout a partir de variáveis comportamentais e ocupacionais utilizando um modelo interpretável?
 
-Esse pipeline não apenas organiza o fluxo de trabalho, mas também permite sua replicação em diferentes cenários, contribuindo para a robustez, replicabilidade e potencial generalização da solução desenvolvida.
+### 2. Coleta e preparação dos dados
+
+**Fonte dos dados:** Dataset "Work Productivity & Burnout Risk Dataset" obtido via Kaggle, gerado por agente de inteligência artificial (natureza sintética).
+
+**Etapas de pré-processamento:**
+- Remoção da variável `Employee_ID` (identificador único, sem valor preditivo)
+- Conversão da variável alvo para formato binário (Yes→1, No→0)
+- Codificação ordinal da variável `Stress_Level` (Low→1, Medium→2, High→3)
+- One-Hot Encoding para variáveis categóricas nominais (Gender, Country, Job_Role, Company_Size, Work_Environment) com `handle_unknown='ignore'`
+- Padronização das variáveis numéricas com `StandardScaler` (média zero e desvio unitário)
+- Organização das transformações em `ColumnTransformer` e `Pipeline` para evitar data leakage
+
+**Tratamento do desbalanceamento:** Adoção de `class_weight='balanced'` na Regressão Logística, atribuindo maior peso à classe minoritária.
+
+**Divisão treino-teste:** 80/20 com estratificação pela variável alvo (`stratify=y`) e `random_state=42` para reprodutibilidade.
+
+### 3. Metodologia de modelagem e validação
+
+**Modelo selecionado:** Regressão Logística com penalização L2, justificada por sua alta interpretabilidade, eficiência computacional e capacidade de fornecer probabilidades calibradas.
+
+**Estratégia de validação adotada:** 
+- Divisão treino-teste estratificada única (80/20) foi considerada adequada para este contexto específico devido a:
+  - Alta separabilidade entre classes (AUC > 0,99 no baseline)
+  - Dataset de 30.000 registros, onde overfitting é improvável dada a simplicidade do modelo
+  - Objetivo de estabelecer um baseline replicável e comparável
+- **Recomendação para trabalhos futuros:** Em cenários com dados reais ou modelos mais complexos, implementar validação cruzada estratificada com k=5 ou k=10 para maior robustez.
+
+**Otimização de hiperparâmetros:** Busca sistemática variando:
+- Parâmetro de regularização (C = 0,1 a 0,9)
+- Tipo de penalização (L1 e L2)
+- Limiar de decisão (threshold = 0,3 a 0,7)
+
+**Configuração final adotada:** `class_weight='balanced'`, `penalty='l2'`, `C=0,9`, `threshold=0,7`, `max_iter=1000`.
+
+### 4. Avaliação do modelo
+
+**Métricas utilizadas:** Acurácia, Precisão, Recall, F1-Score e AUC-ROC.
+
+**Métrica principal:** Recall, justificada pelo custo assimétrico dos erros – falsos negativos (deixar de identificar um indivíduo em risco de burnout) são considerados mais críticos do que falsos positivos no contexto de prevenção e saúde ocupacional.
+
+**Resultados da configuração final:**
+- Recall: 0,9975 (apenas 3 casos de burnout não detectados em 1.200)
+- Precisão: 0,9966
+- F1-Score: 0,9971
+- AUC-ROC: 1,0000
+
+### 5. Conformidade Ética e LGPD (Lei nº 13.709/2018)
+
+O pipeline foi estruturado em conformidade com os princípios da LGPD desde a especificação do problema:
+
+| Princípio LGPD | Implementação no pipeline |
+|----------------|---------------------------|
+| **Minimização de dados** | Remoção da variável `Employee_ID` (identificador direto) antes de qualquer análise |
+| **Finalidade específica** | Modelo destinado exclusivamente à prevenção e suporte organizacional, nunca para decisões automatizadas individuais ou punição |
+| **Transparência** | Regressão Logística garante coeficientes interpretáveis e auditáveis por stakeholders não técnicos |
+| **Não discriminação** | Análise de viés realizada via teste qui-quadrado e V de Cramér para variáveis categóricas (gênero, país, cargo) |
+| **Supervisão humana** | Pipeline exige validação por profissionais de RH/saúde antes de qualquer intervenção baseada nas predições |
+| **Responsabilidade (accountability)** | Pipeline documentado, reproduzível e com `random_state` fixo para auditoria externa |
+
+**Mitigação de riscos específicos:**
+- **Falsos negativos** (não identificar burnout real): threshold ajustado para maximizar recall, com recomendação de confirmação por profissional de saúde.
+- **Uso punitivo do modelo:** Documentação explicita que o modelo é ferramenta de apoio à prevenção, não para controle ou demissão.
+- **Generalização indevida:** Ressalvas explícitas sobre a natureza sintética do dataset impedem extrapolação ingênua para contextos reais.
+
+### 6. Reprodutibilidade e transparência
+
+Para garantir a reprodutibilidade dos experimentos, foram adotadas as seguintes práticas:
+
+- **Semente aleatória fixa:** `random_state=42` em todas as funções que envolvem aleatoriedade (divisão treino-teste, inicialização do modelo)
+- **Pipeline documentado:** Todo o código de pré-processamento, modelagem e avaliação está disponível na pasta `src/` do repositório
+- **Dependências versionadas:** O arquivo `requirements.txt` na raiz do repositório especifica as versões exatas de todas as bibliotecas utilizadas (Python 3.10+, pandas 2.2.2, scikit-learn 1.4.2, etc.)
+- **Ambiente de execução:** Os experimentos foram realizados em Google Colab, com código disponível em formato notebook (`.ipynb`) e/ou script (`.py`)
+- **Download automatizado dos dados:** O dataset é obtido via `kagglehub` no próprio código de análise, garantindo que a mesma versão seja utilizada em novas execuções
+
+As instruções detalhadas para replicação do ambiente e execução dos códigos encontram-se no arquivo `README.md` do repositório.
+
+### 7. Limitações críticas e recomendações para generalização
+
+Os resultados obtidos (AUC=1,0000, recall=0,9975) são excepcionalmente elevados e não devem ser esperados em contextos reais de predição de burnout. Este fenômeno decorre da natureza sintética do dataset:
+
+**Ausência de ruído real**: Dados gerados por IA apresentam padrões mais limpos e separabilidade mais nítida entre classes do que dados coletados com humanos.
+
+**Relações artificialmente lineares**: A correlação de -0,69 entre Productivity_Score e burnout é raramente observada em pesquisas empíricas.
+
+**Artefatos contraintuitivos**: O coeficiente negativo de Work_Hours_Per_Day contradiz a literatura especializada, evidenciando limitações do gerador sintético.
+
+Recomendações para aplicação em contexto real:
+
+Reavaliar o pipeline com dados reais e anonimizados da organização
+
+Expectativa realista de métricas significativamente inferiores (AUC 0,70-0,80; recall 0,65-0,75)
+
+Implementar validação cruzada estratificada k-fold
+
+Realizar auditoria de viés por grupos demográficos
+
+Estabelecer comitê de ética para supervisão do uso do modelo
+
+### 8. Síntese e próximos passos
+
+O pipeline desenvolvido demonstra a viabilidade de predição do risco de burnout utilizando um modelo interpretável, mesmo em um cenário controlado (dados sintéticos). Os principais insights para tomada de decisão organizacional incluem:
+
+* Fatores protetivos identificados: Horas de sono, atividade física e produtividade elevada
+
+* Fatores de risco identificados: Tempo excessivo de tela e reuniões frequentes
+
+* Fatores sem impacto relevante: Idade, experiência profissional e gênero
+
+**Intervenções propostas**: Adoção do modelo como ferramenta de triagem preventiva, com threshold ajustável conforme recursos disponíveis para intervenção, sempre sob supervisão humana e validação prévia com dados reais da organização.
 
 # Observações importantes
+Todas as etapas de modelagem, avaliação e análise foram implementadas utilizando a linguagem Python 3.10+, com suporte das bibliotecas pandas, scikit-learn, matplotlib, seaborn e scipy.
 
-Todas as etapas de modelagem, avaliação e análise foram implementadas utilizando a linguagem Python, com suporte das bibliotecas pandas e scikit-learn.
-
-Os códigos desenvolvidos encontram-se documentados e devem ser disponibilizados integralmente na pasta "src" do repositório, garantindo transparência, reprodutibilidade e aderência às boas práticas de desenvolvimento em projetos de ciência de dados.
+Os códigos desenvolvidos encontram-se documentados e disponibilizados integralmente na pasta src/ do repositório, garantindo transparência, reprodutibilidade e aderência às boas práticas de desenvolvimento em projetos de ciência de dados.
