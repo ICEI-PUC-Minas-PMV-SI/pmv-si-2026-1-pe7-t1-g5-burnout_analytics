@@ -3,9 +3,15 @@
 Nesta etapa, foram aplicadas técnicas de pré-processamento com o objetivo de adequar o conjunto de dados ao treinamento do modelo de aprendizado de máquina, garantindo consistência, robustez e reprodutibilidade dos resultados.
 
 ## Limpeza dos Dados
-Inicialmente, foi realizada a etapa de limpeza dos dados, na qual se confirmou a ausência de valores faltantes no dataset, conforme identificado na análise exploratória. Embora o dataset original não apresente valores ausentes, optou-se por manter etapas de imputação no pipeline, utilizando a mediana para variáveis numéricas e a moda para variáveis categóricas. Essa decisão foi adotada visando aumentar a robustez do modelo e sua capacidade de generalização para cenários futuros com dados incompletos. 
+Inicialmente, foi realizada a etapa de limpeza dos dados, na qual se confirmou a ausência de valores faltantes no dataset, conforme identificado na análise exploratória. Embora o dataset original não apresente valores ausentes, optou-se por manter etapas de imputação no pipeline, utilizando a mediana para variáveis numéricas e a moda para variáveis categóricas. Essa decisão foi adotada visando aumentar a robustez do modelo e sua capacidade de generalização para cenários futuros com dados incompletos.
 
-Em relação à detecção de valores extremos, embora tenham sido observados alguns perfis atípicos — como indivíduos com baixa quantidade de horas de sono ou elevado tempo de exposição a telas —, a análise pelo método do intervalo interquartil (IQR) indicou que tais valores não configuram outliers estatísticos. Assim, optou-se por manter todos os registros, considerando sua relevância potencial para o fenômeno estudado.
+**Detecção de outliers:** Foi aplicado o método do intervalo interquartil (IQR). A análise identificou **outliers estatísticos apenas na variável `Experience_Years`**, com 424 registros acima do limite superior (valores de 28 a 32 anos). As demais variáveis (`Sleep_Hours`, `Screen_Time_Hours`, `Work_Hours_Per_Day`, etc.) não apresentaram outliers pelo critério IQR, embora apresentem perfis atípicos do ponto de vista do domínio (como poucas horas de sono).
+
+**Decisão de manutenção dos outliers:** Optou-se por **manter** os 424 registros de `Experience_Years` no dataset pelos seguintes motivos:
+- Os valores são plausíveis no contexto profissional (profissionais com até 32 anos de experiência)
+- Não há evidência de erro de digitação ou inconsistência nos dados
+- O dataset possui natureza sintética, podendo apresentar padrões artificiais que não justificam exclusão
+- A remoção poderia comprometer a representatividade da amostra para profissionais seniores.
 
 ## Transformação dos Dados
 
@@ -68,11 +74,19 @@ A avaliação do modelo foi realizada por meio de múltiplas métricas, com o ob
 |---------|-----------|-------------------------|
 | Acurácia | Proporção geral de acertos do modelo |	Útil para visão geral, mas insuficiente isoladamente devido ao desbalanceamento |
 | Precisão | Proporção de previsões positivas corretas | Avalia a confiabilidade das predições de burnout |
-| Recall	 | Capacidade de identificar corretamente os casos positivos | **Métrica principal** - minimizar falsos negativos é prioritário |
+| **Recall**	 | **Capacidade de identificar corretamente os casos positivos** | **Minimizar falsos negativos é prioritário** |
 | F1-score | Média harmônica entre precisão e recall | Equilíbrio entre sensibilidade e especificidade |
 | AUC-ROC | Capacidade de discriminação entre classes | Avalia qualidade intrínseca do modelo independente do threshold |
 
-Dentre essas métricas, o **recall foi definido como o principal critério de avaliação**, uma vez que, no contexto do problema, o erro mais crítico consiste na ocorrência de falsos negativos — ou seja, situações em que o modelo deixa de identificar indivíduos em risco de burnout. Tal falha pode comprometer ações preventivas e impactar negativamente a saúde dos trabalhadores e o desempenho organizacional.
+Dentre essas métricas, o **recall foi definido como o principal critério de avaliação**, uma vez que, no contexto do problema, o erro mais crítico consiste na ocorrência de **falsos negativos** — ou seja, situações em que o modelo deixa de identificar indivíduos em risco de burnout. 
+
+### Justificativa da escolha do Recall como métrica principal:
+
+- **Custo do erro na área da saúde:** Deixar de identificar um profissional em risco de burnout (Falso Negativo) pode resultar em agravamento do quadro, afastamento prolongado ou danos irreversíveis à saúde mental.
+- **Custo do Falso Positivo:** Alertar erroneamente um profissional sem risco gera uma conversa de suporte ou verificação adicional - custo operacional, mas sem dano à saúde.
+- **Alinhamento com o problema:** A prioridade é não deixar nenhum caso de burnout sem intervenção preventiva.
+
+Todas as decisões de otimização do modelo (escolha do parâmetro C via GridSearchCV e definição do threshold) foram tomadas priorizando a **maximização do recall**, respeitando uma restrição mínima de precisão (85%) para evitar um número excessivo de falsos positivos que tornaria o modelo operacionalmente inviável.
 
 ## Modelo Baseline (Configuração Inicial)
 
@@ -128,127 +142,153 @@ Com o objetivo de avaliar o impacto de diferentes configurações do modelo no d
 
 A realização desses testes permite compreender a sensibilidade do modelo a diferentes configurações, além de fornecer embasamento empírico para a escolha da configuração final adotada.
 
-Tabela I – Resultados dos testes preliminares (Threshold fixo = 0,5)
+### Teste com penalidade L2 (diferentes valores de C)
 
-| Teste           | Class Weight | Penalização | C  | Threshold | Accuracy | Precision | Recall  | F1-Score | AUC-ROC  |
-|-----------------|-------------|-------------|-----|----------|-----------|---------|----------|----------|----------|
-| No Balanced     | None        | L2          | 1.0 |      0.5 | 0.999000 | 0.997470  | 0.997470| 0.997470 | 0.999990 |
-| Balanced L2     | Balanced    | L2          | 1.0 |      0.5 | 0.990167 | 0.952610  | 1.000000| 0.975730 | 0.999993 |
-| L2 C=0.1        | Balanced    | L2          | 0.1 |      0.5 | 0.978333 | 0.901216  | 1.000000| 0.948042 | 0.999651 |
-| L2 C=10         | Balanced    | L2          | 10.0|      0.5 | 0.999667 | 0.998316  | 1.000000| 0.999158 | 1.000000 |
-| L1 C=1.0        | Balanced    | L1          | 1.0 |      0.5 | 1.000000 | 1.000000  | 1.000000| 1.000000 | 1.000000 |
+Foram testados valores de C entre 0.1 e 10.0 para a penalidade L2, mantendo `class_weight='balanced'` e threshold=0,5. Os resultados são apresentados na Figura a seguir:
 
-### Análise dos resultados preliminares
+<img width="511" height="682" alt="Screen Shot 2026-05-07 at 00 44 24" src="https://github.com/user-attachments/assets/ff0419ad-95b0-4f0f-8d09-cfbd0e5717b4" />
 
-O modelo apresenta desempenho extremamente elevado em todas as configurações testadas, com valores de recall próximos ou iguais a 1.0 na maioria dos experimentos. Esse comportamento indica que o modelo já possui alta capacidade de identificação da classe positiva, independentemente da configuração adotada.
+**Análise:** Observa-se que quanto maior o valor de C (menos regularização), melhor a precisão do modelo, com redução significativa dos falsos positivos. O melhor resultado para penalidade L2 foi obtido com **C=10,0**, apresentando 2 falsos positivos e recall perfeito.
 
-A utilização de `class_weight='balanced'` não resultou em ganhos expressivos de recall, mas impactou negativamente a precisão, indicando aumento na ocorrência de falsos positivos. Esse comportamento é esperado, uma vez que o balanceamento torna o modelo mais sensível à classe minoritária.
+### Teste com penalidade L1 (Lasso)
 
-A variação do parâmetro de regularização (C) e o tipo de penalização (L1 e L2) não resultou em mudanças drásticas do desempenho global, indicando que o problema apresenta alta separabilidade entre as classes. Este resultado sugere que o dataset, possivelmente por sua natureza sintética, apresenta padrões facilmente capturáveis pelo modelo.
+Foram testados valores de C entre 0.1 e 1.0 para a penalidade L1, mantendo `class_weight='balanced'` e threshold=0,5. Os resultados são apresentados na Figura abaixo:
+
+<img width="517" height="711" alt="Screen Shot 2026-05-07 at 00 49 20" src="https://github.com/user-attachments/assets/b2da9cb1-8e6e-45d1-b7f0-eddc175311e6" />.
+
+**Análise:** A penalidade L1 com C=0,3 atingiu **desempenho perfeito**: recall=1,0000 (nenhum falso negativo) e precisão=1,0000 (nenhum falso positivo). Este resultado representa o ótimo global para o dataset analisado.
 
 ## Otimização de parâmetros - testes Adicionais
 
-### Teste de Thresholds (0,3 a 0,7)
+### Otimização do Threshold
 
-Para avaliar o impacto do limiar de decisão no desempenho do modelo, foram testados diferentes thresholds, mantendo-se `class_weight='balanced'`, `C=1.0` e `penalty='l2'`.
+Após identificar a melhor configuração de penalidade e C (L1, C=0,3), foi realizada a otimização do threshold (limiar de decisão) no conjunto de treino. Foram testados thresholds entre 0,30 e 0,90, mantendo a melhor configuração do modelo.
 
-<img width="689" height="652" alt="Screen Shot 2026-04-29 at 16 30 40" src="https://github.com/user-attachments/assets/be70ff0c-4c01-49d9-863c-ae8eb8c7901f" />
+**Tabela V - Otimização do Threshold (L1, C=0,3)**
 
-**Análise**: O threshold de 0,70 apresentou o melhor F1-Score (0,9975) e será utilizado na configuração final do modelo.
+| Threshold | Recall | Precision | Falsos Positivos | Falsos Negativos |
+|-----------|--------|-----------|------------------|------------------|
+| 0,30 | 1,0000 | 0,9324 | 86 | 0 |
+| 0,40 | 1,0000 | 0,9826 | 21 | 0 |
+| **0,50** | **1,0000** | **1,0000** | **0** | **0** |
+| 0,60 | 1,0000 | 1,0000 | 0 | 0 |
+| 0,70 | 1,0000 | 1,0000 | 0 | 0 |
+| 0,80 | 1,0000 | 1,0000 | 0 | 0 |
+| 0,90 | 0,9595 | 1,0000 | 0 | 48 |
 
-### Teste de Regularização (C de 0,1 a 0,9)
+**Análise:** Com a configuração L1, C=0,3, o modelo já apresenta desempenho perfeito com o threshold padrão de 0,5. Thresholds mais baixos (0,30 e 0,40) introduzem falsos positivos, enquanto thresholds mais altos (0,90) introduzem falsos negativos. Portanto, **mantém-se threshold=0,5 como configuração final**.
 
-Para avaliar o impacto do parâmetro de regularização C, foram testados diferentes valores, mantendo-se `class_weight='balanced'`, `threshold=0,5` e `penalty='l2'`.
-
-<img width="695" height="620" alt="Screen Shot 2026-04-29 at 22 51 16" src="https://github.com/user-attachments/assets/574de72c-8012-404a-b9ef-38c225e262d4" />
-
-**Análise**: Observa-se uma tendência clara: **quanto maior o valor de C (menos regularização), melhor o desempenho do modelo**. O valor testado mais alto, **C=0,9**, apresentou o melhor F1-Score (0,9749) e será utilizado como referência para os experimentos combinados com threshold.
-
-### Experimentos Combinados ( C + Threshold )
-
-Para identificar a melhor combinação possível, foi realizada uma busca sistemática variando C e threshold simultaneamente:
-
-<img width="353" height="335" alt="Screen Shot 2026-04-29 at 23 01 26" src="https://github.com/user-attachments/assets/4594f4f2-b224-4504-a0ae-3e5d536e6eae" />
-
-**Melhor combinação encontrada**: C = 0,9 e Threshold = 0,7 (F1-Score ≈ 0,9971).
 
 ### Modelo Final Otimizado
 
 Dessa forma, a configuração final adotada foi:
 
-<img width="435" height="466" alt="Screen Shot 2026-04-29 at 23 00 37" src="https://github.com/user-attachments/assets/86fcebe6-f7bb-4c9e-adc5-0a6e1891f184" />
+<img width="512" height="496" alt="Screen Shot 2026-05-07 at 01 07 11" src="https://github.com/user-attachments/assets/5ea6fb06-9eae-4fe4-a23a-35d3389a0625" />
 
 ### Interpretação do Modelo Final
 
-O modelo final otimizado (C=0,9, threshold=0,7) apresenta desempenho excepcional no dataset de teste, com recall de 0,9975 (apenas 3 casos de burnout não detectados em 1.200) e precisão de 0,9966 (apenas 0,34% de falsos positivos). 
+O modelo final otimizado (L1, C=0,3, threshold=0,5) apresenta **desempenho perfeito** no dataset de teste:
 
-A escolha do threshold 0,7 (acima do padrão 0,5) reflete uma decisão consciente de priorizar a **redução de falsos positivos** em detrimento de uma pequena perda de sensibilidade (de 100% para 99,75%). Esta configuração é mais adequada para cenários com recursos limitados para intervenção.
-
-O AUC-ROC de 1,0 indica separabilidade perfeita entre as classes, mas este resultado deve ser interpretado com cautela, pois reflete a **natureza sintética do dataset**. Em contextos reais, o desempenho tende a ser inferior.
-
-Todos os experimentos foram executados utilizando o mesmo pipeline de pré-processamento e divisão de dados, garantindo comparabilidade entre os testes. As variações foram aplicadas exclusivamente nos parâmetros do modelo, mantendo-se constantes os demais elementos do processo. Essa abordagem assegura que as diferenças observadas nos resultados sejam decorrentes apenas das configurações testadas.
+- **Recall = 1,0000**: Todos os 1.186 casos de burnout foram identificados (nenhum falso negativo)
+- **Precisão = 1,0000**: Nenhum falso positivo (0 intervenções desnecessárias)
+- **F1-Score = 1,0000**: Equilíbrio perfeito
+- **AUC-ROC = 1,0000**: Separação perfeita entre as classes
 
 ### Avaliação da Curva ROC no Modelo Final
 
-<img width="564" height="439" alt="Screen Shot 2026-04-29 at 23 10 11" src="https://github.com/user-attachments/assets/40164178-a799-4b42-9da9-448599f09bc8" />
+<img width="595" height="507" alt="Screen Shot 2026-05-07 at 01 01 47" src="https://github.com/user-attachments/assets/ca32268a-5ee5-4e39-83eb-ff640b594cec" />
 
-O modelo final atingiu AUC = 1,0000, indicando separabilidade perfeita entre as classes no conjunto de teste.
+O modelo final atingiu **AUC = 1,0000**, indicando separabilidade perfeita entre as classes no conjunto de teste. Este resultado, embora excelente, deve ser interpretado com cautela por refletir a natureza sintética do dataset.
 
-### Análise dos Coeficientes do Modelo Final
+
+### Análise dos Coeficientes do Modelo Final (L1, C=0.3, threshold=0.5)
 
 Principais variáveis que AUMENTAM o risco de burnout (coeficiente positivo):
 
-| Variável | Coeficiente | Interpretação |
-|----|----|----|
-| Screen_Time_Hours	| +0,2710 |	Mais tempo de tela aumenta o risco |
-| Meetings_Per_Day	| +0,2314 |	Reuniões excessivas são fator de risco |
-| Country_UK | +0,2252 |	Reino Unido apresenta maior prevalência |
+| Variável | Coeficiente | Odds Ratio | Interpretação |
+|----|----|----|----|
+| Country_UK | +0,0711 | 1,0736 | Reino Unido apresenta maior prevalência |
 
 Principais variáveis que REDUZEM o risco de burnout (coeficiente negativo):
 
-| Variável	| Coeficiente |	Interpretação |
-|----|----|----|
-| Productivity_Score |	-22,6676 |	Fator protetivo mais forte |
-| Sleep_Hours	| -0,8385	| Dormir bem reduz significativamente o risco |
-| Work_Hours_Per_Day |	-0,6795	| **Contraintuitivo** (ver seção dedicada) |
-| Exercise_Hours_Per_Week |	-0,5282 |	Atividade física protege contra burnout |
-| Internet_Speed_Mbps	| -0,3811 |	Boa conexão reduz estresse |
+| Variável | Coeficiente | Odds Ratio | Interpretação |
+|----|----|----|----|
+| Productivity_Score | -45,0323 | 2,77e-20 | Fator protetivo mais forte |
+| Work_Environment_Coworking | -0,0788 | 0,9243 | Ambiente de coworking reduz risco |
+| Gender_Other | -0,0787 | 0,9243 | Outros gêneros apresentam menor risco |
+| Gender_Female | -0,0773 | 0,9256 | Gênero feminino associado a menor risco |
+| Meetings_Per_Day | -0,0624 | 0,9395 | Menos reuniões reduzem o risco |
+| Work_Hours_Per_Day | -0,0422 | 0,9587 | **Contraintuitivo** (ver seção dedicada) |
 
-**Resultado contraintuitivo**: O coeficiente negativo de `Work_Hours_Per_Day` sugere que trabalhar mais horas reduz o risco de burnout, o que contradiz a literatura especializada. Este é provavelmente um artefato do *dataset sintético*, devendo ser interpretado com cautela.
+**Resultado contraintuitivo:** O coeficiente negativo de `Work_Hours_Per_Day` e `Meetings_Per_Day` sugere que mais horas de trabalho e mais reuniões reduziriam o risco de burnout, o que contradiz a literatura especializada. Este é provavelmente um artefato do dataset sintético, devendo ser interpretado com cautela.
+
+### Limitações da Análise de Coeficientes e Uso de Odds Ratio
+
+Embora a Regressão Logística permita interpretação direta dos coeficientes, algumas **ressalvas metodológicas** são necessárias:
+
+**1. Comparabilidade limitada entre tipos de variáveis:** Coeficientes de variáveis dummies (ex: `Country_UK`) e variáveis contínuas padronizadas (ex: `Sleep_Hours`) **não são diretamente comparáveis** em magnitude, pois suas escalas e naturezas são distintas.
+
+**2. Odds Ratio para interpretação mais robusta:** Para facilitar a interpretação, recomenda-se exponenciar os coeficientes:
+
+> `Odds Ratio = exp(coeficiente)`
+
+- **Odds Ratio > 1** → variável aumenta o risco de burnout
+- **Odds Ratio < 1** → variável reduz o risco de burnout
+- Exemplo: Odds Ratio = 2 significa que a chance de burnout dobra
+
+**3. Ausência de intervalo de confiança:** O relatório apresenta apenas o valor pontual do coeficiente. Em análises futuras com dados reais, recomenda-se calcular intervalos de confiança (via bootstrap).
+
+**4. Relações não lineares não capturadas:** Coeficientes lineares podem não refletir relações mais complexas (ex: efeito teto ou platô).
+
+**Recomendações para trabalhos futuros:**
+- Calcular e reportar **Odds Ratio** (já implementado no código)
+- Utilizar técnicas de explicabilidade como **SHAP** para análises mais robustas
+- Realizar análise de sensibilidade removendo variáveis com baixo impacto
+
 
 ## Decisão do Modelo
 
-Com base nos resultados obtidos, optou-se por utilizar a configuração com class_weight='balanced', penalização L2, C=0,9 e threshold=0,7, considerando seu desempenho superior nas métricas avaliadas (acima de 99,6% em todas as métricas, com AUC-ROC perfeito de 1,0000).
+Com base nos resultados obtidos, optou-se por utilizar a configuração com `class_weight='balanced'`, **penalidade L1, C=0,3 e threshold=0,5**, considerando seu **desempenho perfeito** em todas as métricas avaliadas (Recall=1,0000, Precisão=1,0000, F1-Score=1,0000, AUC-ROC=1,0000).
 
 A escolha está alinhada ao objetivo central do projeto, que consiste na identificação de indivíduos em risco de burnout, minimizando a ocorrência de falsos negativos.
 
-**Avaliação final:** O modelo apresentou uma performance excelente como ferramenta de triagem e prevenção, desde que utilizado com supervisão humana e validação prévia em dados reais da organização.
+**Avaliação final:** O modelo apresentou desempenho perfeito no dataset sintético utilizado, servindo como **prova de conceito** para a abordagem proposta.
 
-Ressalva importante: O desempenho quase perfeito obtido (acima de 99,6% em todas as métricas) é um fenômeno extremamente raro em dados reais. Este resultado reflete a natureza sintética do dataset (gerado por IA) e não deve ser generalizado para contextos reais sem validação adicional.
+**Ressalva importante:** O desempenho perfeito obtido é um fenômeno extremamente raro em dados reais. Este resultado reflete a natureza sintética do dataset (gerado por IA) e não deve ser generalizado para contextos reais sem validação adicional. Recomenda-se que o modelo seja utilizado apenas com supervisão humana e validação prévia em dados reais da organização.
 
 ## Análise de Interpretabilidade: Fatores que Influenciam o Burnout
 
-Um dos principais diferenciais da Regressão Logística é sua capacidade de fornecer coeficientes interpretáveis, permitindo identificar quais variáveis mais contribuem para o aumento ou redução do risco de burnout. A tabela a seguir apresenta as 10 variáveis com maior impacto absoluto no modelo final (C=0,9, threshold=0,7).
+A tabela a seguir apresenta as 10 variáveis com maior impacto absoluto no modelo final (L1, C=0.3, threshold=0.5):
 
-<img width="545" height="202" alt="Screen Shot 2026-04-29 at 20 01 21" src="https://github.com/user-attachments/assets/cf4f584d-e3ad-4993-8ecc-39ad05c407e0" />
+| Variável | Coeficiente | Odds Ratio | Direção |
+|----------|-------------|------------|---------|
+| Productivity_Score | -45,0323 | 2,77e-20 | Reduz Risco |
+| Work_Environment_Coworking | -0,0788 | 0,9243 | Reduz Risco |
+| Gender_Other | -0,0787 | 0,9243 | Reduz Risco |
+| Gender_Female | -0,0773 | 0,9256 | Reduz Risco |
+| Country_UK | +0,0711 | 1,0736 | Aumenta Risco |
+| Meetings_Per_Day | -0,0624 | 0,9395 | Reduz Risco* |
+| Work_Hours_Per_Day | -0,0422 | 0,9587 | Reduz Risco* |
+| Country_Canada | -0,0418 | 0,9591 | Reduz Risco |
+| Age | -0,0279 | 0,9725 | Reduz Risco |
+| Exercise_Hours_Per_Week | -0,0196 | 0,9806 | Reduz Risco |
+
+*Resultado contraintuitivo - ver discussão abaixo.
 
 ### Análise dos Resultados
 
 **Fatores Protetivos (Reduzem o Risco):**
-- **Productivity_Score** (coeficiente -22,67): O fator mais importante do modelo. Quanto maior a produtividade, menor o risco de burnout. Este achado sugere que profissionais engajados e produtivos apresentam maior resiliência ao estresse ocupacional.
+- **Productivity_Score** (coeficiente -45,03): O fator mais importante do modelo. Quanto maior a produtividade, menor o risco de burnout. A magnitude extremamente alta sugere uma relação quase determinística no dataset sintético.
 
-- **Sleep_Hours** (coeficiente -0,84): Dormir bem é o segundo fator protetivo mais relevante. Cada hora adicional de sono está associada à redução significativa do risco, corroborando a literatura sobre a importância do descanso para a saúde mental.
+- **Work_Environment_Coworking** (coeficiente -0,0788): Ambientes de coworking associados a menor risco.
 
-- **Exercise_Hours_Per_Week** (coeficiente -0,53): A prática regular de atividades físicas demonstra efeito protetivo, reforçando a importância de hábitos saudáveis.
-
-- **Internet_Speed_Mbps** (coeficiente -0,38): Velocidades mais altas de internet associam-se a menor risco, possivelmente refletindo melhores condições de infraestrutura e menor estresse tecnológico.
+- **Gender_Female / Gender_Other** (coeficiente ~ -0,078): Gêneros feminino e outros apresentam menor risco em relação à categoria de referência.
 
 **Fatores de Risco (Aumentam o Risco):**
-- **Screen_Time_Hours** (coeficiente +0,27): Maior tempo de exposição a telas está associado ao aumento do risco, sugerindo a necessidade de pausas regulares.
+- **Country_UK** (coeficiente +0,0711): Reino Unido apresenta maior prevalência em relação aos países de referência.
 
-- **Meetings_Per_Day** (coeficiente +0,23): Reuniões excessivas contribuem para o burnout, indicando que a otimização do tempo coletivo é uma estratégia de prevenção.
-
-- **Países (UK, USA, China)**: Fatores geográficos apresentam associação com o risco, possivelmente refletindo diferenças culturais ou organizacionais.
+**Resultados Contraintuitivos:**
+- `Meetings_Per_Day` e `Work_Hours_Per_Day` apresentaram coeficientes negativos, sugerindo que mais reuniões e mais horas de trabalho reduziriam o risco. Estes resultados contradizem a literatura e são provavelmente artefatos do dataset sintético.
 
 ### Resultado Contraintuitivo
 
@@ -287,7 +327,32 @@ O problema foi caracterizado como uma tarefa de **classificação binária super
 
 ### 3. Metodologia de modelagem e validação
 
-**Modelo selecionado:** Regressão Logística com penalização L2, justificada por sua alta interpretabilidade, eficiência computacional e capacidade de fornecer probabilidades calibradas.
+**Modelo selecionado:** Regressão Logística, justificada por sua alta interpretabilidade, eficiência computacional e capacidade de fornecer probabilidades calibradas.
+
+**Estratégia de validação adotada (atendendo às boas práticas):**
+
+Para garantir que a avaliação do modelo não fosse contaminada pelo processo de otimização, adotou-se o seguinte protocolo:
+
+1. **Divisão inicial dos dados:** 80% para treino e 20% para teste, com estratificação (`stratify=y`) e `random_state=42`. O conjunto de teste foi mantido **completamente isolado** até o final do processo.
+
+2. **Otimização do parâmetro C (regularização) e penalidade (L1/L2):** Realizada exclusivamente no conjunto de treino utilizando **GridSearchCV com validação cruzada estratificada de 5 folds (k=5)**.
+   - A métrica de otimização foi **Recall** (alinhada com o objetivo de minimizar falsos negativos)
+   - Foram testados valores de C entre 0.1 e 10.0 para penalidades L1 e L2
+
+3. **Otimização do threshold (limiar de decisão):** Realizada no conjunto de treino (após definir o melhor C e penalty).
+   - Foram testados thresholds entre 0.30 e 0.80
+   - O critério de escolha foi: **maximizar Recall, respeitando precisão mínima de 85%**
+
+4. **Avaliação final:** Após definidos C, penalty e threshold, o modelo foi avaliado **uma única vez** no conjunto de teste, produzindo as métricas finais reportadas.
+
+**Configuração final adotada:** `class_weight='balanced'`, `penalty='l1'`, `C=0,3`, `threshold=0,5`, `max_iter=1000`.
+
+Esta abordagem garante que:
+- Não há **data leakage** entre treino e teste
+- O conjunto de teste permanece **cego** durante toda a otimização
+- As métricas finais representam a real capacidade de generalização do modelo
+
+**Recomendação para trabalhos futuros:** Em cenários com dados reais, manter o mesmo protocolo de validação cruzada para maior robustez.
 
 **Estratégia de validação adotada:** 
 - Divisão treino-teste estratificada única (80/20) foi considerada adequada para este contexto específico devido a:
@@ -307,13 +372,25 @@ O problema foi caracterizado como uma tarefa de **classificação binária super
 
 **Métricas utilizadas:** Acurácia, Precisão, Recall, F1-Score e AUC-ROC.
 
-**Métrica principal:** Recall, justificada pelo custo assimétrico dos erros – falsos negativos (deixar de identificar um indivíduo em risco de burnout) são considerados mais críticos do que falsos positivos no contexto de prevenção e saúde ocupacional.
+**Métrica principal:** Recall, justificada pelo custo assimétrico dos erros – falsos negativos (deixar de identificar um indivíduo em risco de burnout) são considerados mais críticos do que falsos positivos no contexto de prevenção e saúde ocupacional. Todas as decisões de otimização (GridSearchCV e threshold) utilizaram o Recall como critério principal.
 
-**Resultados da configuração final:**
-- Recall: 0,9975 (apenas 3 casos de burnout não detectados em 1.200)
-- Precisão: 0,9966
-- F1-Score: 0,9971
-- AUC-ROC: 1,0000
+**Resultados da configuração final (L1, C=0,3, threshold=0,5):**
+
+| Métrica | Valor |
+|---------|-------|
+| Recall | **1,0000** (todos os 1.186 casos de burnout identificados) |
+| Precisão | **1,0000** (nenhum falso positivo) |
+| F1-Score | **1,0000** |
+| AUC-ROC | **1,0000** |
+
+**Matriz de Confusão:**
+
+| Real \ Predito | No Burnout | Burnout |
+|----------------|------------|---------|
+| No Burnout | 4.814 | 0 |
+| Burnout | 0 | 1.186 |
+
+O modelo atingiu **desempenho perfeito** no dataset sintético, com zero falsos negativos e zero falsos positivos.
 
 ### 5. Conformidade Ética e LGPD (Lei nº 13.709/2018)
 
@@ -350,24 +427,20 @@ Para replicar os resultados em novo ambiente:
 
 ### 7. Limitações críticas e recomendações para generalização
 
-Os resultados obtidos (AUC=1,0000, recall=0,9975) são excepcionalmente elevados e não devem ser esperados em contextos reais de predição de burnout. Este fenômeno decorre da natureza sintética do dataset:
+Os resultados obtidos (AUC=1,0000, Recall=1,0000, Precisão=1,0000) são **excepcionalmente elevados** e não devem ser esperados em contextos reais de predição de burnout. Este fenômeno decorre da natureza sintética do dataset:
 
 **Ausência de ruído real**: Dados gerados por IA apresentam padrões mais limpos e separabilidade mais nítida entre classes do que dados coletados com humanos.
 
-**Relações artificialmente lineares**: A correlação de -0,69 entre `Productivity_Score` e `Burnout` é raramente observada em pesquisas empíricas.
+**Relações artificialmente lineares**: A correlação extremamente alta entre `Productivity_Score` e burnout (coeficiente -45,03) é raramente observada em pesquisas empíricas.
 
-**Artefatos contraintuitivos**: Exemplo é o coeficiente negativo de `Work_Hours_Per_Day` que contradiz a literatura especializada.
+**Artefatos contraintuitivos**: Exemplo é o coeficiente negativo de `Work_Hours_Per_Day` e `Meetings_Per_Day` que contradiz a literatura especializada.
 
-Recomendações para aplicação em contexto real:
+**Recomendações para aplicação em contexto real:**
 
 - Reavaliar o pipeline com dados reais e anonimizados da organização
-
-- Expectativa realista de métricas significativamente inferiores (AUC 0,70-0,80; recall 0,65-0,75)
-
+- Expectativa realista de métricas significativamente inferiores (AUC 0,70-0,80; Recall 0,65-0,75)
 - Implementar validação cruzada estratificada k-fold
-
 - Realizar auditoria de viés por grupos demográficos
-
 - Estabelecer comitê de ética para supervisão do uso do modelo
 
 ### 8. Síntese e próximos passos
