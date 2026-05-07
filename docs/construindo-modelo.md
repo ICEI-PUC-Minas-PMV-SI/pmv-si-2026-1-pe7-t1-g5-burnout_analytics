@@ -354,20 +354,6 @@ Esta abordagem garante que:
 
 **Recomendação para trabalhos futuros:** Em cenários com dados reais, manter o mesmo protocolo de validação cruzada para maior robustez.
 
-**Estratégia de validação adotada:** 
-- Divisão treino-teste estratificada única (80/20) foi considerada adequada para este contexto específico devido a:
-  - Alta separabilidade entre classes (AUC > 0,99 no baseline)
-  - Dataset de 30.000 registros, onde overfitting é improvável dada a simplicidade do modelo
-  - Objetivo de estabelecer um baseline replicável e comparável
-- **Recomendação para trabalhos futuros:** Em cenários com dados reais ou modelos mais complexos, implementar validação cruzada estratificada com k=5 ou k=10 para maior robustez.
-
-**Otimização de hiperparâmetros:** Busca sistemática variando:
-- Parâmetro de regularização (C = 0,1 a 0,9)
-- Tipo de penalização (L1 e L2)
-- Limiar de decisão (threshold = 0,3 a 0,7)
-
-**Configuração final adotada:** `class_weight='balanced'`, `penalty='l2'`, `C=0,9`, `threshold=0,7`, `max_iter=1000`.
-
 ### 4. Avaliação do modelo
 
 **Métricas utilizadas:** Acurácia, Precisão, Recall, F1-Score e AUC-ROC.
