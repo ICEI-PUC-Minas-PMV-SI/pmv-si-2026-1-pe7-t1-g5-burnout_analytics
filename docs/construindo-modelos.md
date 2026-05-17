@@ -48,7 +48,17 @@ O XGBoost é uma implementação altamente eficiente da técnica de *Gradient Bo
 
 ## Métricas utilizadas
 
-Nesta seção, as métricas utilizadas para avaliar os modelos desenvolvidos deverão ser apresentadas (p. ex.: acurácia, precisão, recall, F1-Score, MSE etc.). A escolha de cada métrica deverá ser justificada, pois esta escolha é essencial para avaliar de forma mais assertiva a qualidade do modelo construído. 
+Devido à natureza desbalanceada do *Work Productivity & Burnout Risk Dataset*, a avaliação focou em métricas que capturam o desempenho da classe minoritária (Com Burnout):
+
+- **Acurácia (Accuracy)**: Mede a proporção geral de acertos. Foi utilizada apenas para controle, pois em um dataset desbalanceado (80/20), um modelo "ingênuo" que preveja que ninguém tem burnout já teria 80% de acurácia.
+
+- **Precisão (Precision)**: Indica a proporção de verdadeiros positivos dentre todos que o modelo previu como positivos. Importante para mensurar o "custo do alarme falso", embora não seja o foco principal do projeto.
+
+- **Recall (Sensibilidade)**: Esta foi a métrica principal de negócio. Ela mensura a capacidade do modelo de encontrar todos os casos reais de burnout. No contexto de saúde ocupacional, o custo de um Falso Negativo (deixar um profissional adoecer sem aviso) é drasticamente superior ao custo de um Falso Positivo (intervenção de suporte preventivo desnecessária).
+
+- **F1-Score**: Média harmônica entre Precisão e Recall. Utilizada para buscar o melhor equilíbrio entre não errar quem está doente e não apontar o risco para toda a empresa.
+
+- **ROC-AUC (Área Sob a Curva ROC)**: Avalia a capacidade global do modelo em separar as duas classes independentemente do limiar (threshold) de probabilidade adotado.
 
 ## Discussão dos resultados obtidos
 
