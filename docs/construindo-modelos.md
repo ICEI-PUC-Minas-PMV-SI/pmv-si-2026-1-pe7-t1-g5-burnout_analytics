@@ -1,36 +1,48 @@
 # Preparação dos dados
 
-Nesta etapa, deverão ser descritas todas as técnicas utilizadas para pré-processamento/tratamento dos dados.
+Nesta etapa, foram aplicadas técnicas de pré-processamento para garantir que o conjunto de dados estivesse em formato ideal para o treinamento dos algoritmos de aprendizado de máquina. O uso de boas práticas, como a prevenção de vazamento de dados (data leakage), foi priorizado por meio da construção de Pipelines de transformação.
 
-Algumas das etapas podem estar relacionadas à:
+* **Limpeza de Dados**: Conforme identificado na Análise Exploratória (EDA), o dataset original não possuía valores nulos. No entanto, para garantir a robustez do modelo em um ambiente de produção (onde novos dados podem vir incompletos), foram incluídos *SimpleImputers* no pipeline: preenchimento com a mediana para numéricos e com a moda (most_frequent) para categóricos. Além disso, a coluna *Employee_ID* foi removida, pois atua apenas como identificador e não possui poder preditivo. Os outliers da variável *Experience_Years* foram mantidos intencionalmente por serem valores plausíveis no domínio corporativo e característicos da geração sintética do dataset.
 
-* Limpeza de Dados: trate valores ausentes: decida como lidar com dados faltantes, seja removendo linhas, preenchendo com médias, medianas ou usando métodos mais avançados; remova _outliers_: identifique e trate valores que se desviam significativamente da maioria dos dados.
+* **Transformação e Codificação de Dados**:
 
-* Transformação de Dados: normalize/padronize: torne os dados comparáveis, normalizando ou padronizando os valores para uma escala específica; codifique variáveis categóricas: converta variáveis categóricas em uma forma numérica, usando técnicas como _one-hot encoding_.
+  - **Variáveis Alvo e Ordinais**: A variável alvo  *Burnout_Risk* foi mapeada para binário (Yes = 1, No = 0). A variável *Stress_Level* foi codificada ordinalmente (Low = 1, Medium = 2, High = 3) para preservar a hierarquia de intensidade.
 
-* _Feature Engineering_: crie novos atributos que possam ser mais informativos para o modelo; selecione características relevantes e descarte as menos importantes.
+  - **Variáveis Categóricas Nominais**: O algoritmo *OneHotEncoder* foi aplicado (com handle_unknown='ignore') em colunas como *Gender, Country, Job_Role, Company_Size e Work_Environment*, transformando representações textuais em matrizes binárias interpretáveis pelos modelos.
 
-* Tratamento de dados desbalanceados: se as classes de interesse forem desbalanceadas, considere técnicas como _oversampling_, _undersampling_ ou o uso de algoritmos que lidam naturalmente com desbalanceamento.
+  - **Padronização**: As variáveis numéricas contínuas passaram pelo *StandardScaler*, que transforma os dados para possuírem média zero e desvio padrão igual a um. Isso é crucial para algoritmos sensíveis à escala, como a Regressão Logística.
+ 
+* **Separação dos Dados**: Os dados foram divididos em conjunto de **treino (80%)** e **teste (20%**) utilizando a função *train_test_split*.
 
-* Separação de dados: divida os dados em conjuntos de treinamento, validação e teste para avaliar o desempenho do modelo de maneira adequada.
-  
-* Manuseio de Dados Temporais: se lidar com dados temporais, considere a ordenação adequada e técnicas específicas para esse tipo de dado.
-  
-* Redução de Dimensionalidade: aplique técnicas como PCA (Análise de Componentes Principais) se a dimensionalidade dos dados for muito alta.
+* **Tratamento de Dados Desbalanceados**: A variável alvo apresentou um desbalanceamento de aproximadamente 80% (Sem Burnout) contra 20% (Com Burnout). Para mitigar esse efeito, aplicou-se a técnica de estratificação *(stratify=y)* durante a divisão de treino/teste, garantindo que a proporção de 80/20 se mantivesse em ambos os conjuntos. Nos modelos aplicáveis (como a Regressão Logística), utilizou-se o parâmetro *class_weight='balanced'* para penalizar erros na classe minoritária.
 
-* Validação Cruzada: utilize validação cruzada para avaliar o desempenho do modelo de forma mais robusta.
-
-* Monitoramento Contínuo: atualize e adapte o pré-processamento conforme necessário ao longo do tempo, especialmente se os dados ou as condições do problema mudarem.
-
-* Entre outras....
-
-Avalie quais etapas são importantes para o contexto dos dados que você está trabalhando, pois a qualidade dos dados e a eficácia do pré-processamento desempenham um papel fundamental no sucesso de modelo(s) de aprendizado de máquina. É importante entender o contexto do problema e ajustar as etapas de preparação de dados de acordo com as necessidades específicas de cada projeto.
+* **Sistematização (ColumnTransformer)**: Todas essas transformações foram encapsuladas em um ColumnTransformer dentro de um Pipeline do Scikit-Learn. Isso garante que as mesmas regras matemáticas aplicadas aos dados de treino sejam rigorosamente aplicadas aos dados de teste (e a dados futuros), evitando contaminações.
 
 # Descrição dos modelos
 
-Nesta seção, conhecendo os dados e de posse dos dados preparados, é hora de descrever os outros dois algoritmos de aprendizado de máquina selecionados para a construção dos modelos propostos. Inclua informações abrangentes sobre cada algoritmo implementado, aborde conceitos fundamentais, princípios de funcionamento, vantagens/limitações e justifique a escolha de cada um dos algoritmos. 
+Além da Regressão Logística (que atuou como modelo baseline e cujos detalhes foram discutidos em seções anteriores), foram implementados dois modelos robustos baseados em árvores de decisão. Essa abordagem permite avaliar se a captura de relações não-lineares resulta em ganhos de performance.
 
-Explore aspectos específicos, como o ajuste dos parâmetros livres de cada algoritmo. Lembre-se de experimentar parâmetros diferentes e principalmente, de justificar as escolhas realizadas e registrar todos os experimentos realizados.
+* **Random Forest**:
+
+O Random Forest é um algoritmo de aprendizado supervisionado baseado na técnica de Ensemble Learning, especificamente o método de *Bagging (Bootstrap Aggregating)*.
+
+**Princípio de funcionament**o: O algoritmo constrói múltiplas árvores de decisão independentes durante o treinamento. Cada árvore é treinada com uma amostra aleatória dos dados (com reposição) e um subconjunto aleatório de variáveis (features). A predição final é obtida por meio da votação majoritária (no caso de classificação) das árvores individuais.
+
+**Vantagens e Limitações**: Suas principais vantagens incluem a alta resistência ao overfitting (devido à aleatoriedade na construção das árvores), capacidade de modelar interações complexas não-lineares e a não exigência de escalonamento dos dados. A limitação recai sobre sua natureza "caixa-preta" (black-box), sendo mais difícil de interpretar matematicamente do que uma Regressão Logística, além do maior custo computacional e de memória.
+
+**Justificativa e Ajuste de Parâmetros**: Escolhido por sua robustez e por ser o padrão-ouro em dados tabulares. Na implementação (n_estimators=200, max_depth=10, random_state=42), o número de estimadores garantiu a estabilidade estatística do conjunto (200 árvores), enquanto a profundidade máxima foi limitada a 10 níveis para restringir a complexidade e forçar a generalização do modelo.
+
+---
+
+* **XGBoost (Extreme Gradient Boosting)**:
+
+O XGBoost é uma implementação altamente eficiente da técnica de *Gradient Boosting*.
+
+**Princípio de funcionamento**: Ao contrário do Random Forest (onde as árvores são independentes), o XGBoost constrói árvores de decisão de forma sequencial. Cada nova árvore é treinada para corrigir os erros residuais (gradientes) cometidos pelas árvores anteriores. O algoritmo utiliza regularização L1 e L2 internamente, otimizando uma função de perda de forma iterativa.
+
+**Vantagens e Limitações**: É amplamente reconhecido por apresentar o estado-da-arte em desempenho preditivo para dados tabulares estruturados, lidando extremamente bem com padrões complexos. Contudo, é altamente sensível à hiperparametrização; se não for bem ajustado, tende a decorar os dados de treino (overfitting).
+
+**Justificativa e Ajuste de Parâmetros**: Escolhido por seu poder preditivo superior. Os parâmetros definidos foram n_estimators=200, learning_rate=0.05 e max_depth=6. A taxa de aprendizado reduzida (0.05) garante que cada árvore contribua de forma conservadora para o modelo final, enquanto a profundidade rasa (nível 6) atua como um forte regulador contra o sobreajuste. Utilizou-se a métrica interna *eval_metric='logloss'*.
 
 # Avaliação dos modelos criados
 
