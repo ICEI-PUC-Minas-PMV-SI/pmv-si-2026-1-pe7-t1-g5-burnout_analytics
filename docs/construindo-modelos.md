@@ -508,7 +508,7 @@ Os três modelos avaliados alcançaram desempenho perfeito (Recall=1,0000; Preci
 
 3. Validade externa limitada: Os resultados não devem ser generalizados para populações reais sem validação adicional com dados coletados em ambientes organizacionais reais.
 
-4. Artefatos contraintuitivos: Assim como observado na Regressão Logística, a análise de importância de features do Random Forest provavelmente apresentaria relações que contradizem a literatura (ex: Work_Hours_Per_Day como fator protetivo), o que reforça a natureza artificial do dataset.
+4. Artefatos contraintuitivos: Assim como observado na Regressão Logística, a análise de importância de features do Random Forest provavelmente apresentaria relações que contradizem a literatura (ex: `Work_Hours_Per_Day` como fator protetivo), o que reforça a natureza artificial do dataset.
 
 ### 3.5.2 Comparação qualitativa entre os modelos
 Apesar do empate numérico em todas as métricas, diferenças metodológicas importantes podem ser destacadas:
@@ -551,9 +551,183 @@ A questão de pesquisa original era: "É possível prever o risco de burnout a p
 
 Os resultados indicam que sim, é possível – pelo menos no contexto controlado deste dataset sintético. Os três modelos alcançaram perfeição na separação entre indivíduos com e sem risco de burnout. No entanto, duas ressalvas são fundamentais:
 
-Interpretabilidade vs. Performance: O modelo mais interpretável (Regressão Logística) atingiu a mesma performance que os modelos de caixa-preta (Random Forest e XGBoost). Isso sugere que, para este dataset específico, não houve trade-off entre interpretabilidade e acurácia.
+1. **Interpretabilidade vs. Performance**: O modelo mais interpretável (Regressão Logística) atingiu a mesma performance que os modelos de caixa-preta (Random Forest e XGBoost). Isso sugere que, para este dataset específico, não houve trade-off entre interpretabilidade e acurácia.
 
-Generalização para dados reais: O desempenho perfeito é um artefato da geração sintética dos dados. Em cenários reais, espera-se que modelos mais complexos (XGBoost) superem modelos lineares (Regressão Logística), mas com perda significativa de interpretabilidade.
+2. **Generalização para dados reais**: O desempenho perfeito é um artefato da geração sintética dos dados. Em cenários reais, espera-se que modelos mais complexos (XGBoost) superem modelos lineares (Regressão Logística), mas com perda significativa de interpretabilidade.
 
+# 4. Revisão do pipeline de pesquisa e análise de dados
 
+## 4.1 Avaliação crítica do pipeline da Etapa 3: 
+O pipeline proposto na Etapa 3 apresentou as seguintes características positivas:
+
+| Aspecto |	Avaliação |
+|---|---|
+| Separação treino/teste |	Adequada (80/20 com estratificação) |
+| Isolamento do test set	| Correto (não usado em otimizações) |
+| Validação cruzada |	Implementada (5-folds StratifiedKFold) |
+| Pré-processamento via Pipeline |	Correto (evita data leakage) |
+| Métrica principal justificada |	Recall alinhado ao domínio |
+| Documentação |	Detalhada e reprodutível |
+
+## 4.2. Limitações identificadas:**
+
+**GridSearch fixo para cada modelo**: O código precisava ser replicado para cada novo modelo, gerando repetição e aumento da probabilidade de erros.
+
+**Ausência de função genérica de avaliação**: Não havia um mecanismo reutilizável para adicionar novos modelos rapidamente, dificultando a escalabilidade do pipeline.
+
+**Métrica de otimização fixa**: Embora Recall seja a métrica principal para este problema, o pipeline não permitia trocar facilmente a métrica de otimização para outros contextos de negócio.
+
+**Registro de experimentos**: Não havia salvamento automático dos resultados (melhores parâmetros, métricas) para comparação posterior entre diferentes execuções.
+
+**Pipeline revisado e generalizado**
+Com base nas lições aprendidas na Etapa 4, foi desenvolvida uma função genérica que encapsula todo o fluxo de treinamento, otimização e avaliação de modelos:
+
+```python
+def build_and_evaluate_model(model, param_grid, X_train, y_train, X_test, y_test, 
+                             model_name, scoring='recall', cv_folds=5):
+    """
+    Pipeline genérico para treinar, otimizar e avaliar modelos de ML.
+    
+    Este pipeline implementa as boas práticas de ciência de dados:
+    - Isolamento completo do conjunto de teste
+    - Validação cruzada estratificada no treino
+    - Otimização de hiperparâmetros com GridSearch
+    - Avaliação com múltiplas métricas
+    
+    Parâmetros:
+    -----------
+    model : estimator sklearn
+        Modelo a ser treinado (ex: RandomForestClassifier())
+    param_grid : dict
+        Dicionário com hiperparâmetros para GridSearch
+    X_train, y_train : array-like
+        Dados de treino
+    X_test, y_test : array-like
+        Dados de teste (mantido isolado)
+    model_name : str
+        Nome do modelo para identificação nos logs
+    scoring : str, default='recall'
+        Métrica para otimização (ex: 'recall', 'precision', 'f1')
+    cv_folds : int, default=5
+        Número de folds para validação cruzada
+    
+    Retorna:
+    --------
+    dict
+        Dicionário contendo:
+        - 'model': modelo otimizado
+        - 'metrics': dicionário com métricas de avaliação
+        - 'best_params': melhores hiperparâmetros encontrados
+        - 'cv_score': score médio na validação cruzada
+        - 'model_name': nome do modelo
+    """
+    
+    pipeline = Pipeline([
+        ('prep', preprocessor),
+        ('model', model)
+    ])
+    
+    cv_strategy = StratifiedKFold(n_splits=cv_folds, shuffle=True, random_state=42)
+    
+    grid_search = GridSearchCV(
+        estimator=pipeline,
+        param_grid=param_grid,
+        scoring=scoring,
+        cv=cv_strategy,
+        n_jobs=-1,
+        verbose=0
+    )
+    
+    print(f"Otimizando {model_name} com {scoring}...")
+    grid_search.fit(X_train, y_train)
+    
+    best_model = grid_search.best_estimator_
+    y_pred = best_model.predict(X_test)
+    y_proba = best_model.predict_proba(X_test)[:, 1]
+    
+    metrics = {
+        'Recall': recall_score(y_test, y_pred),
+        'Precision': precision_score(y_test, y_pred),
+        'F1-Score': f1_score(y_test, y_pred),
+        'AUC-ROC': roc_auc_score(y_test, y_proba),
+        'Accuracy': accuracy_score(y_test, y_pred)
+    }
+    
+    print(f" {model_name} - Melhor Recall CV: {grid_search.best_score_:.4f}")
+    print(f"   Melhores parâmetros: {grid_search.best_params_}")
+    
+    return {
+        'model': best_model,
+        'metrics': metrics,
+        'best_params': grid_search.best_params_,
+        'cv_score': grid_search.best_score_,
+        'model_name': model_name
+    }
+```
+
+## 4.3. Estrutura final do pipeline (6 etapas)
+O pipeline revisado contempla, de forma flexível e modular, as principais fases da pesquisa em ciência de dados:
+
+**Etapa	Descrição	Ferramentas/Métodos**
+1. Especificação do problema	Definição da questão de pesquisa, métrica principal e critérios de sucesso	Documentação em markdown
+2. Coleta e preparação dos dados	Carregamento, limpeza, tratamento de missing, encoding, padronização	pandas, ColumnTransformer, Pipeline
+3. Análise exploratória	Distribuições, correlações, análise de desbalanceamento, detecção de outliers	seaborn, matplotlib, pandas
+4. Modelagem e validação	Split treino/teste, validação cruzada, GridSearch, otimização de hiperparâmetros	GridSearchCV, StratifiedKFold
+5. Avaliação	Cálculo de múltiplas métricas, matriz de confusão, curva ROC, comparação entre modelos	sklearn.metrics
+6. Interpretação e documentação	Análise de coeficientes/importância, limitações, recomendações para produção	Coeficientes, Odds Ratio, SHAP (recomendado)
+
+## 4.4 Principais melhorias implementadas
+| Melhoria |	Descrição |	Benefício |
+|---|---|---|
+| Função genérica build_and_evaluate_model | Encapsula treinamento, validação cruzada e avaliação |	Reduz repetição de código; facilita adição de novos modelos |
+| Parâmetro scoring configurável |	Permite trocar a métrica de otimização sem reescrever código	| Flexibilidade para diferentes problemas de negócio |
+| Retorno estruturado |	Dicionário com modelo, métricas, parâmetros e score CV |	Facilita comparação e registro de experimentos |
+| Documentação integrada |	Docstring completa com parâmetros e retornos |	Favorece reuso e replicação por outros pesquisadores |
+| Validação cruzada parametrizável |	Número de folds configurável (cv_folds) |	Adaptável a diferentes tamanhos de dataset |
+
+Exemplo de uso do pipeline generalizado
+```python
+# Definição dos grids para cada modelo
+param_grids = {
+    'RandomForest': {
+        'model__n_estimators': [100, 200],
+        'model__max_depth': [10, 20],
+        'model__min_samples_split': [2, 5],
+        'model__class_weight': ['balanced']
+    },
+    'XGBoost': {
+        'model__n_estimators': [100, 200],
+        'model__learning_rate': [0.01, 0.1],
+        'model__max_depth': [3, 6],
+        'model__subsample': [0.8, 1.0],
+        'model__scale_pos_weight': [scale_pos_weight_calc]
+    }
+}
+
+# Execução para múltiplos modelos
+results = []
+for name, params in param_grids.items():
+    if name == 'RandomForest':
+        model = RandomForestClassifier(random_state=42, n_jobs=-1)
+    elif name == 'XGBoost':
+        model = XGBClassifier(random_state=42, eval_metric='logloss', use_label_encoder=False)
+    
+    result = build_and_evaluate_model(
+        model=model,
+        param_grid=params,
+        X_train=X_train, y_train=y_train,
+        X_test=X_test, y_test=y_test,
+        model_name=name,
+        scoring='recall'
+    )
+    results.append(result)
+
+# Comparação dos resultados
+comparison_df = pd.DataFrame([r['metrics'] for r in results], index=[r['model_name'] for r in results])
+print("\n COMPARAÇÃO FINAL ENTRE MODELOS:")
+print(comparison_df.round(4))
+```
+
+## 4.5. Observações importantes
+Todas as tarefas realizadas nesta etapa foram registradas em formato textual com suas respectivas explicações. Os códigos desenvolvidos encontram-se documentados e disponibilizados integralmente na pasta `src/` do repositório, garantindo transparência, reprodutibilidade e aderência às boas práticas de desenvolvimento em projetos de ciência de dados.
 
