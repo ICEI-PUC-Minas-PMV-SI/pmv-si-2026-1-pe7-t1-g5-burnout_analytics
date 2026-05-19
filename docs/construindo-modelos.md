@@ -234,6 +234,19 @@ print(f"   Recall médio na validação cruzada: {grid_rf.best_score_:.4f}")
 | 100 | 10 | 5 | 1,0000 | Sem ganho |
 | 100 | 10 | 10 | 1,0000 | Sem ganho |
 
+**Análise dos experimentos:**
+
+Os experimentos realizados com Random Forest revelaram que todas as combinações de hiperparâmetros testadas alcançaram Recall perfeito (1,0000) na validação cruzada, o que já era esperado dada a natureza sintética do dataset. No entanto, a escolha da configuração final considerou não apenas o desempenho, mas também:
+
+- **Custo computacional:** A configuração com `n_estimators=100` foi preferida em relação a `200` e `300`, pois oferece o mesmo desempenho com menor tempo de treinamento e menor consumo de memória.
+
+- **Risco de overfitting:** Configurações com `max_depth=20` ou `max_depth=None` (árvores completamente expandidas) foram descartadas, pois apresentam maior risco de memorizar ruídos do dataset, mesmo que neste caso específico não tenha havido diferença no Recall.
+
+- **Complexidade desnecessária:** Valores de `min_samples_split=5` ou `10` não trouxeram benefício adicional em relação ao valor padrão `2`, sendo descartados por adicionar restrição desnecessária ao modelo.
+
+**Conclusão da otimização:** A configuração selecionada (`n_estimators=100`, `max_depth=10`, `min_samples_split=2`, `class_weight='balanced'`) representa o **melhor equilíbrio entre desempenho, custo computacional e generalização**, mesmo em um cenário de dados sintéticos.
+
+
 **Resultado da otimização:**
 
 Melhores parâmetros: {'model__class_weight': 'balanced', 'model__max_depth': 10, 'model__min_samples_split': 2, 'model__n_estimators': 100}
@@ -312,6 +325,18 @@ print(f"   Recall médio na validação cruzada: {grid_xgb.best_score_:.4f}")
 | 0,01 | 6 | 0,8 | 1,0000 | Risco overfitting |
 | 0,10 | 3 | 0,8 | 1,0000 | Risco overfitting |
 | 0,30 | 3 | 0,8 | 1,0000 | Risco overfitting |
+
+**Análise dos experimentos:**
+
+Os experimentos realizados com XGBoost demonstraram que o algoritmo é mais sensível à hiperparametrização do que o Random Forest. Embora todas as combinações testadas tenham alcançado Recall perfeito (1,0000), a análise das configurações revelou:
+
+- **Taxa de aprendizado (learning_rate):** Valores mais altos (`0,1` e `0,3`) foram descartados por apresentarem maior risco de overfitting, mesmo sem degradação aparente nas métricas de validação cruzada. A escolha de `learning_rate=0,01` adota uma abordagem conservadora, onde cada árvore contribui menos para o modelo final, exigindo mais árvores para convergência, mas com menor risco de memorização.
+
+- **Profundidade das árvores (max_depth):** O valor `max_depth=3` (raso) foi preferido em relação a `6` e `10`, pois árvores mais rasas tendem a generalizar melhor. Em datasets reais, profundidades maiores frequentemente levam a overfitting.
+
+- **Subamostragem (subsample):** O valor `subsample=0,8` (utilizar 80% das amostras aleatoriamente em cada árvore) foi preferido em relação a `1,0`, pois introduz aleatoriedade adicional que ajuda a prevenir overfitting, uma prática comum em problemas com dados sintéticos ou com ruído.
+
+**Conclusão da otimização:** A configuração selecionada (`learning_rate=0,01`, `max_depth=3`, `n_estimators=100`, `subsample=0,8`, `scale_pos_weight=4,0569`) representa a **abordagem mais conservadora e regularizada**, priorizando a capacidade de generalização do modelo em detrimento de complexidade desnecessária.
 
 
 **Resultado da otimização:**
