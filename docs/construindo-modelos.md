@@ -380,7 +380,7 @@ print(f"Accuracy:  {accuracy_score(y_test, y_pred_rf):.4f}")
 
 <img width="406" height="458" alt="Screen Shot 2026-05-18 at 19 19 07" src="https://github.com/user-attachments/assets/d379ac14-a27c-4523-82af-130b80835f9f" />
 
-Avaliação: ....
+**Avaliação:** A matriz de confusão evidencia que o Random Forest classificou corretamente todos os 6.000 registros do conjunto de teste, com zero falsos negativos e zero falsos positivos. Este desempenho perfeito, embora tecnicamente correto para o dataset sintético, reflete a alta separabilidade artificial das classes geradas por IA.
 
 ## 3.2.2 Avaliação do XGBoost
 Seguindo o mesmo protocolo rigoroso, o XGBoost otimizado foi avaliado no conjunto de teste:
@@ -416,8 +416,7 @@ print(f"Accuracy:  {accuracy_score(y_test, y_pred_xgb):.4f}")
 
 <img width="422" height="463" alt="Screen Shot 2026-05-18 at 19 24 50" src="https://github.com/user-attachments/assets/98001f56-13c4-4e2b-b5e6-0372764dc2d7" />
 
-Avaliação: ....
-
+**Avaliação:** O gráfico comparativo demonstra visualmente que os três modelos apresentaram desempenho idêntico em todas as métricas avaliadas (Recall, Precisão, F1-Score, AUC-ROC e Acurácia). O empate numérico, embora incomum em contextos reais, é consistente com a natureza sintética do dataset, que apresenta separabilidade linear perfeita entre as classes.
 
 ## 3.3 Comparação entre os três modelos
 
@@ -463,8 +462,7 @@ comparacao.sort_values(by='F1-Score', ascending=False)
 
 <img width="425" height="105" alt="Screen Shot 2026-05-18 at 19 29 44" src="https://github.com/user-attachments/assets/36a228d6-31cc-46cc-909e-82e318bbe4ba" />
 
-Avaliação: ....
-
+**Avaliação:** O gráfico comparativo demonstra visualmente que os três modelos apresentaram desempenho idêntico em todas as métricas avaliadas (Recall, Precisão, F1-Score, AUC-ROC e Acurácia). O empate numérico, embora incomum em contextos reais, é consistente com a natureza sintética do dataset.
 
 ## 3.4 Discussão dos resultados
 ### 3.4.1 Análise crítica do desempenho perfeito
@@ -490,12 +488,12 @@ Apesar do empate numérico em todas as métricas, diferenças metodológicas imp
 | Critério |	Regressão Logística |	Random Forest |	XGBoost |
 |-----|-----|-----|-----|
 | Interpretabilidade |	Alta (coeficientes e odds ratio) |	Média (importância de features) |	Baixa (modelo caixa-preta) |
-| Tempo de treinamento |	Muito baixo |	Médio	Médio-alto  | (270 fits no GridSearch) |
+| Tempo de treinamento |	Muito baixo |	Médio	| Médio-alto (270 fits no GridSearch) |
 | Necessidade de escala	| Sim (StandardScaler) |	Não	| Não |
 | Captura de não-linearidades |	Limitada	| Alta |	Alta |
 | Risco de overfitting |	Baixo (regularização L1) |	Baixo (bagging) |	Médio (controlado com learning_rate baixo) |
 | Melhor configuração encontrada |	L1, C=0,3 |	n_estimators=100, max_depth=10	| lr=0,01, max_depth=3, subsample=0,8 |
-| Número de parâmetros otimizados |	1 | (C) |	3 |	4 |
+| Número de parâmetros otimizados |	1 (C) |	3 |	4 |
 
 **Análise qualitativa:**
 
@@ -516,9 +514,7 @@ print(f"   - XGBoost:             Recall={metrics_xgb['Recall']:.4f} | Precision
 
 <img width="635" height="607" alt="Screen Shot 2026-05-18 at 19 44 18" src="https://github.com/user-attachments/assets/4a050f43-0dc9-4bb9-8397-a0954d8b016a" />
 
-Avaliação: ....
-
-
+**Avaliação:** A análise de trade-offs revela que, para este dataset específico, não houve necessidade de sacrificar interpretabilidade em prol de performance. A Regressão Logística, com alta interpretabilidade, atingiu a mesma performance que os modelos de caixa-preta. Esta conclusão, no entanto, é específica para dados sintéticos; em cenários reais, espera-se que modelos mais complexos (XGBoost) superem modelos lineares, mas com perda significativa de interpretabilidade.
 
 ### 3.4.4 Relação com a questão de pesquisa
 A questão de pesquisa original era: "É possível prever o risco de burnout a partir de variáveis comportamentais e ocupacionais utilizando um modelo interpretável?"
@@ -713,6 +709,54 @@ print("\n COMPARAÇÃO FINAL ENTRE MODELOS:")
 print(comparison_df.round(4))
 ```
 
-## 4.5. Observações importantes
+## 5. Conformidade Ética e LGPD (Lei nº 13.709/2018)
+
+O pipeline foi estruturado em conformidade com os princípios da LGPD desde a especificação do problema:
+
+| Princípio LGPD | Implementação no pipeline |
+|----------------|---------------------------|
+| **Minimização de dados** | Remoção da variável `Employee_ID` (identificador direto) antes de qualquer análise |
+| **Finalidade específica** | Modelo destinado exclusivamente à prevenção e suporte organizacional, nunca para decisões automatizadas individuais ou punição |
+| **Transparência** | Regressão Logística garante coeficientes interpretáveis e auditáveis por stakeholders não técnicos |
+| **Não discriminação** | Análise de viés realizada via teste qui-quadrado e V de Cramér para variáveis categóricas (gênero, país, cargo) |
+| **Supervisão humana** | Pipeline exige validação por profissionais de RH/saúde antes de qualquer intervenção baseada nas predições |
+| **Responsabilidade (accountability)** | Pipeline documentado, reproduzível e com `random_state` fixo para auditoria externa |
+
+### 5.1 Mitigação de riscos específicos
+
+- **Falsos negativos** (não identificar burnout real): threshold ajustado para maximizar recall, com recomendação de confirmação por profissional de saúde.
+- **Uso punitivo do modelo**: Documentação explicita que o modelo é ferramenta de apoio à prevenção, não para controle ou demissão.
+- **Generalização indevida**: Ressalvas explícitas sobre a natureza sintética do dataset impedem extrapolação ingênua para contextos reais.
+
+### 5.2 Reprodutibilidade e transparência
+
+Para garantir a reprodutibilidade dos experimentos, foram adotadas as seguintes práticas:
+
+- **Semente aleatória fixa:** `random_state=42` em todas as funções que envolvem aleatoriedade
+- **Pipeline documentado:** Todo o código disponível na pasta `src/` do repositório
+- **Dependências versionadas:** Arquivo `requirements.txt` na raiz do repositório
+- **Ambiente de execução:** Google Colab, com código em formato notebook (`.ipynb`)
+- **Download automatizado dos dados:** Dataset obtido via `kagglehub`
+
+### 5.3 Limitações críticas e recomendações para generalização
+
+Os resultados obtidos (AUC=1,0000, Recall=1,0000, Precisão=1,0000) são **excepcionalmente elevados** e não devem ser esperados em contextos reais de predição de burnout. Este fenômeno decorre da natureza sintética do dataset:
+
+- **Ausência de ruído real:** Dados gerados por IA apresentam padrões mais limpos e separabilidade mais nítida entre classes
+- **Relações artificialmente lineares:** A correlação extremamente alta entre `Productivity_Score` e burnout é raramente observada em pesquisas empíricas
+- **Artefatos contraintuitivos:** Coeficiente negativo de `Work_Hours_Per_Day` contradiz a literatura especializada
+
+**Recomendações para aplicação em contexto real:**
+
+| Recomendação | Justificativa |
+|--------------|----------------|
+| Reavaliar o pipeline com dados reais e anonimizados | Única forma de validar generalização |
+| Expectativa realista de métricas (AUC 0,70-0,80; Recall 0,65-0,75) | Valores típicos em estudos de burnout |
+| Implementar validação cruzada estratificada k-fold | Já implementado, manter em produção |
+| Realizar auditoria de viés por grupos demográficos | Evitar discriminação algorítmica |
+| Estabelecer comitê de ética para supervisão do uso | Garantir uso não punitivo do modelo |
+
+
+## 5.4 Observações importantes
 Todas as tarefas realizadas nesta etapa foram registradas em formato textual com suas respectivas explicações. Os códigos desenvolvidos encontram-se documentados e disponibilizados integralmente na pasta `src/` do repositório, garantindo transparência, reprodutibilidade e aderência às boas práticas de desenvolvimento em projetos de ciência de dados.
 
