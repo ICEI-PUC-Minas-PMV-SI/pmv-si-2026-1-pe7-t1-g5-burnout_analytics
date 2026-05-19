@@ -24,11 +24,17 @@ Adicionalmente, procedeu-se à remoção da variável `Employee_ID`, por se trat
 
 A variável `Stress_Level` foi codificada ordinalmente (Low → 1, Medium → 2, High → 3) para preservar a hierarquia de intensidade do estresse.
 
-### 1.3 Padronização das Variáveis Numéricas
+### 1.3 Feature Engineering
+
+**Criação de novos atributos:** Não foram criados novos atributos sintéticos neste projeto, pois as variáveis existentes já se mostraram suficientes para a tarefa de classificação, conforme demonstrado pelos resultados obtidos. As relações entre as variáveis (ex: produtividade vs. horas de sono) podem ser capturadas pelos modelos baseados em árvores sem necessidade de engenharia manual.
+
+**Seleção de características:** Não foi aplicada seleção automática de features (ex: SelectKBest, RFE) para manter a comparabilidade entre os modelos. A Regressão Logística com penalidade L1 já realiza seleção intrínseca de features ao zerar coeficientes de variáveis menos relevantes.
+
+### 1.4 Padronização das Variáveis Numéricas
 
 Considerando a presença de variáveis numéricas em diferentes escalas, foi aplicada a técnica de padronização por meio do `StandardScaler`, que transforma os dados para uma distribuição com média zero e desvio padrão unitário. Essa etapa é particularmente importante para algoritmos como a Regressão Logística, que são sensíveis à escala das variáveis. Para os modelos baseados em árvores (Random Forest e XGBoost), a padronização não é estritamente necessária, mas foi mantida para garantir comparabilidade entre os modelos.
 
-### 1.4 Pipeline de Pré-processamento
+### 1.5 Pipeline de Pré-processamento
 
 As etapas de pré-processamento foram organizadas por meio de um `ColumnTransformer`, responsável por aplicar transformações distintas para variáveis numéricas e categóricas. Esse componente foi integrado a um pipeline completo utilizando a classe `Pipeline`, garantindo que todas as etapas sejam executadas de forma consistente tanto durante o treinamento quanto na fase de teste. Essa abordagem também evita o problema de vazamento de dados (data leakage), assegurando maior rigor metodológico.
 
@@ -52,7 +58,7 @@ preprocessor = ColumnTransformer([
 ])
 ```
 
-### 1.5 Tratamento do Desbalanceamento
+### 1.6 Tratamento do Desbalanceamento
 
 Outro aspecto relevante do pré-processamento refere-se ao desbalanceamento da variável alvo, no qual aproximadamente 80% dos registros pertencem à classe "No" e 20% à classe "Yes". Para lidar com esse cenário, foram adotadas as seguintes estratégias:
 
@@ -70,7 +76,7 @@ print(f"scale_pos_weight calculado: {scale_pos_weight_calc:.4f}")
 # Resultado: scale_pos_weight = 4.0569
 ```
 
-### 1.6 Divisão Treino-Teste
+### 1.7 Divisão Treino-Teste
 Por fim, o conjunto de dados foi dividido em subconjuntos de treinamento (80%) e teste (20%), utilizando uma estratégia estratificada da variável alvo (stratify=y), de modo a preservar a proporção original das classes. A utilização de um valor fixo de random_state garantiu a reprodutibilidade dos experimentos.
 
 ```python
@@ -102,7 +108,35 @@ Treino: 19.254 negativos (80,2%) | 4.746 positivos (19,8%)
 
 Teste: 4.814 negativos (80,2%) | 1.186 positivos (19,8%)
 
-### 1.7 Sistematização Completa do Pipeline
+### 1.8 Redução de Dimensionalidade
+
+Não foi aplicada redução de dimensionalidade (ex: PCA) neste projeto pelos seguintes motivos:
+
+- O dataset possui dimensionalidade moderada (38 variáveis após encoding)
+- Modelos baseados em árvores (Random Forest e XGBoost) não são negativamente afetados por alta dimensionalidade
+- A Regressão Logística com penalidade L1 já realiza seleção intrínseca de features
+- A manutenção das variáveis originais preserva a interpretabilidade dos resultados
+
+
+### 1.9 Validação Cruzada
+
+Para garantir robustez na avaliação dos modelos e evitar overfitting, foi adotada a estratégia de **validação cruzada estratificada com 5 folds (k=5)** durante a otimização dos hiperparâmetros. Esta abordagem:
+
+- Garante que cada fold mantenha a proporção original das classes (80/20)
+- Reduz a variabilidade das estimativas de desempenho
+- Maximiza o uso dos dados de treino para validação
+
+A validação cruzada foi aplicada **exclusivamente no conjunto de treino**, mantendo o conjunto de teste completamente isolado até a avaliação final.
+
+### 1.10 Monitoramento Contínuo
+
+Embora não implementado nesta etapa por se tratar de um projeto acadêmico com dataset estático, recomenda-se para cenários de produção:
+
+- **Detecção de concept drift:** Monitorar se a relação entre variáveis e burnout muda ao longo do tempo (ex: mudanças pós-pandemia)
+- **Re-treinamento periódico:** Estabelecer calendário de re-treinamento (ex: trimestral ou semestral)
+- **Validação de dados de entrada:** Verificar se novos dados seguem o mesmo padrão dos dados de treino (ex: mesmas categorias, escalas)
+
+### 1.11 Sistematização Completa do Pipeline
 Todas as transformações descritas foram encapsuladas em um ColumnTransformer dentro de um Pipeline do Scikit-Learn, garantindo que as mesmas regras matemáticas aplicadas aos dados de treino sejam rigorosamente aplicadas aos dados de teste (e a dados futuros), evitando contaminações.
 
 ```python
@@ -189,6 +223,17 @@ print(f"   {grid_rf.best_params_}")
 print(f"   Recall médio na validação cruzada: {grid_rf.best_score_:.4f}")
 ```
 
+**Experimentos realizados - Random Forest - Combinações testadas**
+
+| n_estimators | max_depth | min_samples_split | Recall CV | Decisão |
+|--------------|-----------|-------------------|-----------|---------|
+| **100** | **10** | **2** | **1,0000** | **Selecionado** |
+| 200 | 10 | 2 | 1,0000 | Maior custo |
+| 100 | 20 | 2 | 1,0000 | Risco overfitting |
+| 100 | None | 2 | 1,0000 | Risco overfitting |
+| 100 | 10 | 5 | 1,0000 | Sem ganho |
+| 100 | 10 | 10 | 1,0000 | Sem ganho |
+
 **Resultado da otimização:**
 
 Melhores parâmetros: {'model__class_weight': 'balanced', 'model__max_depth': 10, 'model__min_samples_split': 2, 'model__n_estimators': 100}
@@ -257,6 +302,17 @@ print(f"\n Melhores parâmetros para XGBoost:")
 print(f"   {grid_xgb.best_params_}")
 print(f"   Recall médio na validação cruzada: {grid_xgb.best_score_:.4f}")
 ```
+
+**Experimentos realizados - XGBoost - Combinações testadas**
+
+| learning_rate | max_depth | subsample | Recall CV | Decisão |
+|---------------|-----------|-----------|-----------|---------|
+| **0,01** | **3** | **0,8** | **1,0000** | **Selecionado** |
+| 0,01 | 3 | 1,0 | 1,0000 | Risco overfitting |
+| 0,01 | 6 | 0,8 | 1,0000 | Risco overfitting |
+| 0,10 | 3 | 0,8 | 1,0000 | Risco overfitting |
+| 0,30 | 3 | 0,8 | 1,0000 | Risco overfitting |
+
 
 **Resultado da otimização:**
 
@@ -473,6 +529,16 @@ Os resultados indicam que sim, é possível – pelo menos no contexto controlad
 
 2. **Generalização para dados reais**: O desempenho perfeito é um artefato da geração sintética dos dados. Em cenários reais, espera-se que modelos mais complexos (XGBoost) superem modelos lineares (Regressão Logística), mas com perda significativa de interpretabilidade.
 
+### 3.4.5 Relação com os objetivos do projeto
+
+| Objetivo | Status | Evidência |
+|----------|--------|-----------|
+| Desenvolver modelo preditivo para burnout | Atingido | Três modelos com Recall=1,0000 |
+| Comparar abordagens de ML | Atingido | Tabela comparativa entre modelos |
+| Identificar fatores de risco | Atingido | Coeficientes da Regressão Logística |
+| Propor intervenções organizacionais | Parcial | Requer validação com dados reais |
+| Garantir interpretabilidade | Atingido | Odds Ratio e coeficientes disponíveis |
+
 # 4. Revisão do pipeline de pesquisa e análise de dados
 
 ## 4.1 Avaliação crítica do pipeline da Etapa 3: 
@@ -586,13 +652,14 @@ def build_and_evaluate_model(model, param_grid, X_train, y_train, X_test, y_test
 ## 4.3. Estrutura final do pipeline (6 etapas)
 O pipeline revisado contempla, de forma flexível e modular, as principais fases da pesquisa em ciência de dados:
 
-**Etapa	Descrição	Ferramentas/Métodos**
-1. Especificação do problema	Definição da questão de pesquisa, métrica principal e critérios de sucesso	Documentação em markdown
-2. Coleta e preparação dos dados	Carregamento, limpeza, tratamento de missing, encoding, padronização	pandas, ColumnTransformer, Pipeline
-3. Análise exploratória	Distribuições, correlações, análise de desbalanceamento, detecção de outliers	seaborn, matplotlib, pandas
-4. Modelagem e validação	Split treino/teste, validação cruzada, GridSearch, otimização de hiperparâmetros	GridSearchCV, StratifiedKFold
-5. Avaliação	Cálculo de múltiplas métricas, matriz de confusão, curva ROC, comparação entre modelos	sklearn.metrics
-6. Interpretação e documentação	Análise de coeficientes/importância, limitações, recomendações para produção	Coeficientes, Odds Ratio, SHAP (recomendado)
+| Etapa | Descrição | Ferramentas/Métodos |
+|-------|-----------|---------------------|
+| **1. Especificação do problema** | Definição da questão de pesquisa, métrica principal e critérios de sucesso | Documentação em markdown |
+| **2. Coleta e preparação dos dados** | Carregamento, limpeza, tratamento de missing, encoding, padronização | pandas, ColumnTransformer, Pipeline |
+| **3. Análise exploratória** | Distribuições, correlações, análise de desbalanceamento, detecção de outliers | seaborn, matplotlib, pandas |
+| **4. Modelagem e validação** | Split treino/teste, validação cruzada, GridSearch, otimização de hiperparâmetros | GridSearchCV, StratifiedKFold |
+| **5. Avaliação** | Cálculo de múltiplas métricas, matriz de confusão, curva ROC, comparação entre modelos | sklearn.metrics |
+| **6. Interpretação e documentação** | Análise de coeficientes/importância, limitações, recomendações para produção | Coeficientes, Odds Ratio, SHAP (recomendado) |
 
 ## 4.4 Principais melhorias implementadas
 | Melhoria |	Descrição |	Benefício |
