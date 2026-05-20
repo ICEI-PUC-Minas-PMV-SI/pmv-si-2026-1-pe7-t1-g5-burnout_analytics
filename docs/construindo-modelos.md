@@ -161,7 +161,7 @@ preprocessor = ColumnTransformer([
 ```
 
 ## 2. Descrição dos modelos implementados
-Além da Regressão Logística (que atuou como modelo baseline e cujos detalhes foram discutidos na Etapa 3), foram implementados dois modelos robustos baseados em árvores de decisão. Essa abordagem permite avaliar se a captura de relações não-lineares resulta em ganhos de performance.
+Além da Regressão Logística (que atuou como modelo baseline e cujos detalhes foram discutidos na Etapa 3), foram implementados outros dois modelos robustos baseados em árvores de decisão, nesta Etapa 4. Essa abordagem permite avaliar se a captura de relações não-lineares resulta em ganhos de performance. Os modelos escolhidos foram:
 
 ### 2.1 Random Forest
 O Random Forest é um algoritmo de aprendizado supervisionado baseado na técnica de Ensemble Learning, especificamente o método de Bagging (Bootstrap Aggregating).
