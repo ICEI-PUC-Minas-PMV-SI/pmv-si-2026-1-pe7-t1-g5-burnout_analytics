@@ -172,14 +172,14 @@ O Random Forest é um algoritmo de aprendizado supervisionado baseado na técnic
 
 **Justificativa da escolha**: Escolhido por sua robustez e por ser referência em problemas de classificação com dados tabulares. Sua capacidade de capturar interações complexas sem exigir ajuste fino excessivo o torna ideal como segundo modelo em uma comparação sistemática.
 
-**Hiperparâmetros otimizados:**
+**Teste - Hiperparâmetros otimizados:**
 
-| Hiperparâmetro |	Valores testados |	Melhor valor |	Justificativa |
-|---|---|-----|---|
-| n_estimators |	100, 200, 300	| 100 |	Número de árvores; valores mais altos aumentam estabilidade mas também custo |
-| max_depth |	10, 20, None	| 10 |	Profundidade máxima; limita a complexidade e reduz overfitting |
-| min_samples_split |	2, 5, 10 |	2 |	Número mínimo de amostras para dividir um nó |
-| class_weight |	'balanced' |	'balanced' |	Compensa o desbalanceamento das classes |
+| Hiperparâmetro |	Valores testados |	Justificativa |
+|---|---|---|
+| n_estimators |	100, 200, 300	| Número de árvores; valores mais altos aumentam estabilidade mas também custo |
+| max_depth |	10, 20, None	| Profundidade máxima; limita a complexidade e reduz overfitting |
+| min_samples_split |	2, 5, 10 |	Número mínimo de amostras para dividir um nó |
+| class_weight |	'balanced' |	Compensa o desbalanceamento das classes |
 
 **Implementação do Random Forest:**
 
@@ -262,15 +262,15 @@ O XGBoost é uma implementação altamente eficiente da técnica de Gradient Boo
 
 **Justificativa da escolha:** Escolhido por seu reconhecido poder preditivo superior e por representar uma abordagem diferente (boosting sequencial vs. bagging do Random Forest).
 
-**Hiperparâmetros otimizados:**
+**Teste - Hiperparâmetros otimizados:**
 
-| Hiperparâmetro |	Valores testados |	Melhor valor |	Justificativa |
-|----------------|-------------------|---------------|----------------|
-| n_estimators |	100, 200, 300 |	100 |	Número de árvores (iterações de boosting) |
-| max_depth	| 3, 6, 10 |	3	| Profundidade rasa reduz overfitting |
-| learning_rate |	0.01, 0.1, 0.3 |	0.01 |	Taxa de aprendizado conservadora |
-| subsample |	0.8, 1.0 |	0.8 |	Proporção de amostras por árvore; <1.0 reduz overfitting |
-| scale_pos_weight |	4.0569 |	4.0569 |	Compensa desbalanceamento (fixo baseado no treino) |
+| Hiperparâmetro |	Valores testados |	Justificativa |
+|----------------|-------------------|---------------|
+| n_estimators |	100, 200, 300 |	Número de árvores (iterações de boosting) |
+| max_depth	| 3, 6, 10 |	Profundidade rasa reduz overfitting |
+| learning_rate |	0.01, 0.1, 0.3 |	Taxa de aprendizado conservadora |
+| subsample |	0.8, 1.0 |	Proporção de amostras por árvore; <1.0 reduz overfitting |
+| scale_pos_weight |	4.0569 |	Compensa desbalanceamento (fixo baseado no treino) |
 
 **Implementação do XGBoost:**
 
