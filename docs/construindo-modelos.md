@@ -407,6 +407,12 @@ print(f"Accuracy:  {accuracy_score(y_test, y_pred_rf):.4f}")
 
 **Avaliação:** A matriz de confusão evidencia que o Random Forest classificou corretamente todos os 6.000 registros do conjunto de teste, com zero falsos negativos e zero falsos positivos. Este desempenho perfeito, embora tecnicamente correto para o dataset sintético, reflete a alta separabilidade artificial das classes geradas por IA.
 
+**Curva ROC:**
+
+<img width="737" height="622" alt="Screen Shot 2026-05-20 at 20 19 05" src="https://github.com/user-attachments/assets/47c2ecec-1d04-4579-ad4d-33fad2f5a968" />
+
+**Avaliação:** A curva ROC do Random Forest apresenta AUC = 1,0000, indicando capacidade de discriminação perfeita entre as classes. A curva posiciona-se no canto superior esquerdo do gráfico, demonstrando que o modelo consegue atingir Taxa de Verdadeiros Positivos (Recall) = 1,0 mantendo Taxa de Falsos Positivos = 0. Este desempenho perfeito, embora tecnicamente correto para o dataset sintético, reflete a alta separabilidade artificial das classes geradas por IA. Em contextos reais de predição de burnout, valores típicos de AUC variam entre 0,70 e 0,85.
+
 ## 3.2.2 Avaliação do XGBoost
 Seguindo o mesmo protocolo rigoroso, o XGBoost otimizado foi avaliado no conjunto de teste:
 
@@ -441,7 +447,14 @@ print(f"Accuracy:  {accuracy_score(y_test, y_pred_xgb):.4f}")
 
 <img width="422" height="463" alt="Screen Shot 2026-05-18 at 19 24 50" src="https://github.com/user-attachments/assets/98001f56-13c4-4e2b-b5e6-0372764dc2d7" />
 
-**Avaliação:** O gráfico comparativo demonstra visualmente que os três modelos apresentaram desempenho idêntico em todas as métricas avaliadas (Recall, Precisão, F1-Score, AUC-ROC e Acurácia). O empate numérico, embora incomum em contextos reais, é consistente com a natureza sintética do dataset, que apresenta separabilidade linear perfeita entre as classes.
+**Avaliação:** A matriz de confusão evidencia que o XGBoost classificou corretamente todos os 6.000 registros do conjunto de teste, com zero falsos negativos e zero falsos positivos. Este desempenho perfeito, embora tecnicamente correto para o 
+dataset sintético, reflete a alta separabilidade artificial das classes geradas por IA.
+ 
+**Curva ROC:** 
+
+<img width="734" height="624" alt="Screen Shot 2026-05-20 at 20 25 25" src="https://github.com/user-attachments/assets/13f7b508-0379-4482-924c-ae17465d8770" />
+
+**Avaliação:** A curva ROC do XGBoost apresenta AUC = 1,0000, indicando capacidade de discriminação perfeita entre as classes. A curva posiciona-se no canto superior esquerdo do gráfico, demonstrando que o modelo consegue atingir Taxa de Verdadeiros Positivos (Recall) = 1,0 mantendo Taxa de Falsos Positivos = 0. Este desempenho perfeito, embora tecnicamente correto para o dataset sintético, reflete a alta separabilidade artificial das classes geradas por IA. Em contextos reais de predição de burnout, valores típicos de AUC variam entre 0,70 e 0,85. 
 
 ## 3.3 Comparação entre os três modelos
 
