@@ -741,8 +741,6 @@ Os três modelos convergem para o mesmo padrão: `Productivity_Score` é a featu
 
 **Análise da Proporção:**
 
-Os três modelos apresentam **alta consistência** na seleção das features mais importantes:
-
 1. **Productivity_Score** é, de longe, a feature mais importante em todos os modelos (89-91% de contribuição nos modelos de árvore, e coeficiente extremamente alto na Regressão Logística)
 
 2. **Work_Hours_Per_Day**, **Sleep_Hours**, **Stress_Level** e **Meetings_Per_Day** aparecem consistentemente entre as top 5 features
@@ -791,7 +789,7 @@ O pipeline proposto na Etapa 3 apresentou as seguintes características positiva
 | Métrica principal justificada |	Recall alinhado ao domínio |
 | Documentação |	Detalhada e reprodutível |
 
-## 4.2. Limitações identificadas:**
+## 4.2. Limitações identificadas
 
 **GridSearch fixo para cada modelo**: O código precisava ser replicado para cada novo modelo, gerando repetição e aumento da probabilidade de erros.
 
@@ -801,7 +799,8 @@ O pipeline proposto na Etapa 3 apresentou as seguintes características positiva
 
 **Registro de experimentos**: Não havia salvamento automático dos resultados (melhores parâmetros, métricas) para comparação posterior entre diferentes execuções.
 
-**Pipeline revisado e generalizado**
+## 4.3. Pipeline revisado e generalizado
+
 Com base nas lições aprendidas na Etapa 4, foi desenvolvida uma função genérica que encapsula todo o fluxo de treinamento, otimização e avaliação de modelos:
 
 ```python
@@ -887,7 +886,7 @@ def build_and_evaluate_model(model, param_grid, X_train, y_train, X_test, y_test
     }
 ```
 
-## 4.3. Estrutura final do pipeline (6 etapas)
+## 4.4. Estrutura final do pipeline (6 etapas)
 O pipeline revisado contempla, de forma flexível e modular, as principais fases da pesquisa em ciência de dados:
 
 | Etapa | Descrição | Ferramentas/Métodos |
@@ -899,7 +898,7 @@ O pipeline revisado contempla, de forma flexível e modular, as principais fases
 | **5. Avaliação** | Cálculo de múltiplas métricas, matriz de confusão, curva ROC, comparação entre modelos | sklearn.metrics |
 | **6. Interpretação e documentação** | Análise de coeficientes/importância, limitações, recomendações para produção | Coeficientes, Odds Ratio, SHAP (recomendado) |
 
-## 4.4 Principais melhorias implementadas
+## 4.5 Principais melhorias implementadas
 | Melhoria |	Descrição |	Benefício |
 |---|---|---|
 | Função genérica build_and_evaluate_model | Encapsula treinamento, validação cruzada e avaliação |	Reduz repetição de código; facilita adição de novos modelos |
@@ -908,7 +907,8 @@ O pipeline revisado contempla, de forma flexível e modular, as principais fases
 | Documentação integrada |	Docstring completa com parâmetros e retornos |	Favorece reuso e replicação por outros pesquisadores |
 | Validação cruzada parametrizável |	Número de folds configurável (cv_folds) |	Adaptável a diferentes tamanhos de dataset |
 
-Exemplo de uso do pipeline generalizado
+## 4.6 Exemplo de uso do pipeline generalizado
+
 ```python
 # Definição dos grids para cada modelo
 param_grids = {
@@ -997,7 +997,6 @@ Os resultados obtidos (AUC=1,0000, Recall=1,0000, Precisão=1,0000) são **excep
 | Implementar validação cruzada estratificada k-fold | Já implementado, manter em produção |
 | Realizar auditoria de viés por grupos demográficos | Evitar discriminação algorítmica |
 | Estabelecer comitê de ética para supervisão do uso | Garantir uso não punitivo do modelo |
-
 
 # 6. Observações importantes
 Todas as tarefas realizadas nesta etapa foram registradas em formato textual com suas respectivas explicações. Os códigos desenvolvidos encontram-se documentados e disponibilizados integralmente na pasta `src/` do repositório, garantindo transparência, reprodutibilidade e aderência às boas práticas de desenvolvimento em projetos de ciência de dados.
