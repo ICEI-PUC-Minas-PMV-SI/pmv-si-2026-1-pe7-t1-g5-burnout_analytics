@@ -249,9 +249,11 @@ Os experimentos realizados com Random Forest revelaram que todas as combinaçõe
 
 **Resultado da otimização:**
 
-Melhores parâmetros: {'model__class_weight': 'balanced', 'model__max_depth': 10, 'model__min_samples_split': 2, 'model__n_estimators': 100}
-
-Recall médio na validação cruzada (5-folds): 1,0000
+```
+Melhores parâmetros para Random Forest:
+   {'model__class_weight': 'balanced', 'model__max_depth': 10, 'model__min_samples_split': 2, 'model__n_estimators': 100}
+   Recall médio na validação cruzada (5-folds): 1.0000
+```
 
 ### 2.2 XGBoost (Extreme Gradient Boosting)
 O XGBoost é uma implementação altamente eficiente da técnica de Gradient Boosting.
@@ -308,7 +310,7 @@ grid_xgb = GridSearchCV(
 )
 
 # Treinamento e otimização (somente no conjunto de TREINO)
-print("\n🔍 Iniciando GridSearch para XGBoost...")
+print("\n Iniciando GridSearch para XGBoost...")
 grid_xgb.fit(X_train, y_train)
 
 print(f"\n Melhores parâmetros para XGBoost:")
@@ -341,9 +343,11 @@ Os experimentos realizados com XGBoost demonstraram que o algoritmo é mais sens
 
 **Resultado da otimização:**
 
-Melhores parâmetros: {'model__learning_rate': 0.01, 'model__max_depth': 3, 'model__n_estimators': 100, 'model__scale_pos_weight': 4.056890012642225, 'model__subsample': 0.8}
-
-Recall médio na validação cruzada (5-folds): 1,0000
+```
+Melhores parâmetros para XGBoost:
+   {'model__learning_rate': 0.01, 'model__max_depth': 3, 'model__n_estimators': 100, 'model__scale_pos_weight': np.float64(4.056890012642225), 'model__subsample': 0.8}
+   Recall médio na CV: 1.0000
+```
 
 ## 3. Avaliação dos modelos criados
 ### 3.1 Métricas utilizadas
@@ -555,7 +559,7 @@ print(f"   - XGBoost:             Recall={metrics_xgb['Recall']:.4f} | Precision
 **Avaliação:** A análise de trade-offs revela que, para este dataset específico, não houve necessidade de sacrificar interpretabilidade em prol de performance. A Regressão Logística, com alta interpretabilidade, atingiu a mesma performance que os modelos de caixa-preta. Esta conclusão, no entanto, é específica para dados sintéticos; em cenários reais, espera-se que modelos mais complexos (XGBoost) superem modelos lineares, mas com perda significativa de interpretabilidade.
 
 ### 3.4.4 Relação com a questão de pesquisa
-A questão de pesquisa original era: "É possível prever o risco de burnout a partir de variáveis comportamentais e ocupacionais utilizando um modelo interpretável?"
+A questão de pesquisa original era: "É possível prever o risco de burnout ocupacional utilizando variáveis relacionadas à jornada de trabalho, ambiente profissional, saúde e estilo de vida, por meio de modelos supervisionados de Machine Learning?"
 
 Os resultados indicam que sim, é possível – pelo menos no contexto controlado deste dataset sintético. Os três modelos alcançaram perfeição na separação entre indivíduos com e sem risco de burnout. No entanto, duas ressalvas são fundamentais:
 
