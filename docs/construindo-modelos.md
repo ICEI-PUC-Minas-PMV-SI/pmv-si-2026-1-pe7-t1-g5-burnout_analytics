@@ -570,7 +570,7 @@ comparacao.sort_values(by='F1-Score', ascending=False)
 
 ```
 
-# Gráfico comparativo
+**Gráfico comparativo**
 
 <img width="425" height="105" alt="Screen Shot 2026-05-18 at 19 29 44" src="https://github.com/user-attachments/assets/36a228d6-31cc-46cc-909e-82e318bbe4ba" />
 
@@ -646,6 +646,8 @@ Os resultados indicam que sim, é possível – pelo menos no contexto controlad
 | Identificar fatores de risco | Atingido | Coeficientes da Regressão Logística |
 | Propor intervenções organizacionais | Parcial | Requer validação com dados reais |
 | Garantir interpretabilidade | Atingido | Odds Ratio e coeficientes disponíveis |
+
+## 3.5 Avaliação das Features mais importantes
 
 ### 3.5.1 Análise de Features - Regressão Logística
 
