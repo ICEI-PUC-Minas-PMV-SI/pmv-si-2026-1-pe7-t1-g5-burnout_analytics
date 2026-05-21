@@ -670,16 +670,6 @@ A análise dos coeficientes da Regressão Logística (já apresentada na Etapa 3
 
 O Random Forest fornece importância de features baseada na redução de impureza (Gini importance). As 10 features mais importantes foram:
 
-| Feature | Importância (%) |
-|---------|-----------------|
-| Productivity_Score | 63,39% |
-| Sleep_Hours | 17,33% |
-| Work_Hours_Per_Day | 7,72% |
-| Exercise_Hours_Per_Week | 5,77% |
-| Internet_Speed_Mbps | 2,42% |
-| Meetings_Per_Day | 1,96% |
-| Screen_Time_Hours | 1,07% |
-
 <img width="683" height="281" alt="Screen Shot 2026-05-21 at 12 46 25" src="https://github.com/user-attachments/assets/32c8eeda-bc24-49e7-8fbb-90afb0e8a05c" />
 
 <img width="989" height="590" alt="image" src="https://github.com/user-attachments/assets/4fcb8479-4f85-493f-9a10-fd61a3d3dfd6" />
@@ -689,11 +679,6 @@ O Random Forest fornece importância de features baseada na redução de impurez
 ### 3.5.3 Análise de Features - XGBoost
 
 O XGBoost fornece importância de features baseada no ganho médio ao usar a feature em divisões. As 10 features mais importantes foram:
-
-| Feature | Importância (%) |
-|---------|-----------------|
-| Productivity_Score | 100,00% |
-| Demais features | 0,00% |
 
 <img width="684" height="280" alt="Screen Shot 2026-05-21 at 12 47 58" src="https://github.com/user-attachments/assets/24893c4c-13fb-414a-8022-1c289c9f40a4" />
 
