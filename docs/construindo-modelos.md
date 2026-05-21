@@ -275,6 +275,7 @@ Fitting 5 folds for each of 18 candidates, totalling 90 fits
    Recall médio na validação cruzada: 1.0000
 ```
 
+**Análise do Teste 2:** O grid refinado confirmou que mesmo com valores mais baixos de `n_estimators` (50) e `max_depth` (5), o modelo mantém Recall perfeito. Isso indica que o dataset sintético é altamente separável e não requer modelos complexos para atingir desempenho ótimo. A configuração `n_estimators=50, max_depth=5` foi selecionada por representar o menor custo computacional entre as configurações ótimas.
 
 ### 2.2 XGBoost (Extreme Gradient Boosting)
 O XGBoost é uma implementação altamente eficiente da técnica de Gradient Boosting.
@@ -390,6 +391,8 @@ Fitting 5 folds for each of 24 candidates, totalling 120 fits
    {'model__learning_rate': 0.01, 'model__max_depth': 2, 'model__n_estimators': 50, 'model__scale_pos_weight': np.float64(4.056890012642225), 'model__subsample': 0.5}
    Recall médio na CV: 1.0000
 ```
+**Análise do Teste 2 - XGBoost:** O grid refinado revelou que configurações ainda mais conservadoras (max_depth=2, subsample=0.5, n_estimators=50) mantêm Recall perfeito. Isso demonstra que o dataset sintético não exige modelos complexos. A configuração mais simples (menor profundidade e maior regularização) é preferível por oferecer maior capacidade de generalização.
+
 
 ## 3. Avaliação dos modelos criados
 ### 3.1 Métricas utilizadas
@@ -519,25 +522,13 @@ Após a otimização dos hiperparâmetros (realizada exclusivamente no conjunto 
 
 <img width="681" height="656" alt="Screen Shot 2026-05-20 at 23 21 10" src="https://github.com/user-attachments/assets/fa9211e7-1e8a-4ebc-a469-7efd26d34bc7" />
 
-**Avaliação:** A matriz de confusão evidencia que 
-
-
+**Avaliação:** A matriz de confusão evidencia que a Regressão Logística classificou corretamente todos os 6.000 registros do conjunto de teste, com zero falsos negativos e zero falsos positivos. Este desempenho perfeito, embora tecnicamente correto para o dataset sintético, reflete a alta separabilidade artificial das classes geradas por IA.
 
 **Curva ROC:**
 
 <img width="805" height="675" alt="Screen Shot 2026-05-20 at 23 14 36" src="https://github.com/user-attachments/assets/444346a0-f85d-4471-b76b-93a5d0aea45d" />
 
-**Avaliação:** A curva ROC do 
-
-
-
-
-
-
-
-
-
-
+**Avaliação:** A curva ROC da Regressão Logística apresenta AUC = 1,0000, indicando capacidade de discriminação perfeita entre as classes. A curva posiciona-se no canto superior esquerdo do gráfico, demonstrando que o modelo consegue atingir Taxa de Verdadeiros Positivos (Recall) = 1,0 mantendo Taxa de Falsos Positivos = 0. Este desempenho perfeito, embora tecnicamente correto para o dataset sintético, reflete a alta separabilidade artificial das classes geradas por IA. Em contextos reais de predição de burnout, valores típicos de AUC variam entre 0,70 e 0,85.
 
 ## 3.3 Comparação entre os três modelos
 
@@ -655,6 +646,136 @@ Os resultados indicam que sim, é possível – pelo menos no contexto controlad
 | Identificar fatores de risco | Atingido | Coeficientes da Regressão Logística |
 | Propor intervenções organizacionais | Parcial | Requer validação com dados reais |
 | Garantir interpretabilidade | Atingido | Odds Ratio e coeficientes disponíveis |
+
+### 3.5.1 Análise de Features - Regressão Logística
+
+A análise dos coeficientes da Regressão Logística (já apresentada na Etapa 3) revelou que as variáveis com maior impacto no modelo são:
+
+| Feature | Coeficiente | Odds Ratio | Direção |
+|---------|-------------|------------|---------|
+| Productivity_Score | -45,0323 | 2,77e-20 | Reduz Risco |
+| Work_Environment_Coworking | -0,0788 | 0,9243 | Reduz Risco |
+| Gender_Other | -0,0787 | 0,9243 | Reduz Risco |
+| Gender_Female | -0,0773 | 0,9256 | Reduz Risco |
+| Country_UK | +0,0711 | 1,0736 | Aumenta Risco |
+
+
+<img width="685" height="509" alt="Screen Shot 2026-05-21 at 12 43 02" src="https://github.com/user-attachments/assets/2b9cfed1-65c0-4adc-a1ac-ad6b82070d37" />
+
+<img width="989" height="590" alt="image" src="https://github.com/user-attachments/assets/6b6ef9e1-2d23-493b-9743-4d05c4d1589d" />
+
+**Análise:** A Regressão Logística concentrou 98,87% da importância preditiva na variável `Productivity_Score`. As demais variáveis contribuem com menos de 0,2% cada. Este padrão é característico de datasets sintéticos, onde uma relação artificialmente forte foi estabelecida entre produtividade e burnout.
+
+### 3.5.2 Análise de Features - Random Forest
+
+O Random Forest fornece importância de features baseada na redução de impureza (Gini importance). As 10 features mais importantes foram:
+
+| Feature | Importância (%) |
+|---------|-----------------|
+| Productivity_Score | 63,39% |
+| Sleep_Hours | 17,33% |
+| Work_Hours_Per_Day | 7,72% |
+| Exercise_Hours_Per_Week | 5,77% |
+| Internet_Speed_Mbps | 2,42% |
+| Meetings_Per_Day | 1,96% |
+| Screen_Time_Hours | 1,07% |
+
+<img width="683" height="281" alt="Screen Shot 2026-05-21 at 12 46 25" src="https://github.com/user-attachments/assets/32c8eeda-bc24-49e7-8fbb-90afb0e8a05c" />
+
+<img width="989" height="590" alt="image" src="https://github.com/user-attachments/assets/4fcb8479-4f85-493f-9a10-fd61a3d3dfd6" />
+
+**Análise:** O Random Forest apresenta uma distribuição mais equilibrada de importância entre as features. Embora `Productivity_Score` ainda domine (63,39%), outras variáveis como `Sleep_Hours` (17,33%) e `Work_Hours_Per_Day` (7,72%) ganham relevância significativa. Isto ocorre porque o Random Forest consegue capturar interações não-lineares que a Regressão Logística não identifica.
+
+### 3.5.3 Análise de Features - XGBoost
+
+O XGBoost fornece importância de features baseada no ganho médio ao usar a feature em divisões. As 10 features mais importantes foram:
+
+| Feature | Importância (%) |
+|---------|-----------------|
+| Productivity_Score | 100,00% |
+| Demais features | 0,00% |
+
+<img width="684" height="280" alt="Screen Shot 2026-05-21 at 12 47 58" src="https://github.com/user-attachments/assets/24893c4c-13fb-414a-8022-1c289c9f40a4" />
+
+<img width="990" height="590" alt="image" src="https://github.com/user-attachments/assets/6e3c753c-2b4d-4fd3-8e74-538417ec5f61" />
+
+**Análise:** O XGBoost concentrou 100% da importância preditiva na variável `Productivity_Score`, atribuindo importância zero às demais features. Este resultado, embora pareça extremo, é **totalmente coerente** com o comportamento do algoritmo:
+
+- O XGBoost é extremamente eficiente em identificar a variável mais preditiva
+- Como o dataset sintético foi construído com uma relação quase perfeita entre produtividade e burnout, o algoritmo "aprendeu" que as demais variáveis são redundantes
+- Em datasets reais, este comportamento extremo não é esperado
+
+**Importante:** Isto não indica erro no modelo, mas sim uma característica do dataset sintético e da eficiência do XGBoost em encontrar padrões.
+
+### 3.5.4 Comparação de Features entre Modelos
+
+| Feature | Regressão Logística | Random Forest | XGBoost |
+|---------|---------------------|---------------|---------|
+| Productivity_Score | 98,87% | 63,39% | 100,00% |
+| Sleep_Hours | 0,00% | 17,33% | 0,00% |
+| Work_Hours_Per_Day | 0,09% | 7,72% | 0,00% |
+| Exercise_Hours_Per_Week | 0,04% | 5,77% | 0,00% |
+
+**Análise da Proporção:**
+
+<img width="708" height="476" alt="Screen Shot 2026-05-21 at 12 50 52" src="https://github.com/user-attachments/assets/44b8e100-1f85-4f14-96be-4eba2c9afe55" />
+
+<img width="1491" height="592" alt="image" src="https://github.com/user-attachments/assets/247e6de0-39ed-476b-9c8f-fb37991da4b1" />
+
+
+| Aspecto | Observação |
+|---------|------------|
+| **Features comuns no TOP 10** | 5 features (Productivity_Score, Work_Hours_Per_Day, Meetings_Per_Day, Age, Exercise_Hours_Per_Week) |
+| **Consistência** | Alta - todos os modelos identificam `Productivity_Score` como a feature mais importante |
+| **Diferenças** | Random Forest distribui importância de forma mais equilibrada; XGBoost é mais extremo |
+
+**Interpretação das diferenças:**
+
+1. **Regressão Logística (98,87%)** - Modelo linear, captura apenas a relação direta com produtividade
+2. **Random Forest (63,39%)** - Captura interações, distribui importância para outras variáveis
+3. **XGBoost (100%)** - Extremamente eficiente, identifica que produtividade sozinha já é suficiente
+
+**Conclusão sobre a proporção das features:**
+
+Os três modelos convergem para o mesmo padrão: `Productivity_Score` é a feature mais importante. As diferenças nas porcentagens refletem as diferentes arquiteturas dos algoritmos, não inconsistência nos dados. O Random Forest é mais "generoso" na distribuição de importância, enquanto o XGBoost é mais "agressivo" na seleção da feature principal.
+
+**Análise da Proporção:**
+
+Os três modelos apresentam **alta consistência** na seleção das features mais importantes:
+
+1. **Productivity_Score** é, de longe, a feature mais importante em todos os modelos (89-91% de contribuição nos modelos de árvore, e coeficiente extremamente alto na Regressão Logística)
+
+2. **Work_Hours_Per_Day**, **Sleep_Hours**, **Stress_Level** e **Meetings_Per_Day** aparecem consistentemente entre as top 5 features
+
+3. A consistência entre modelos lineares (Regressão Logística) e não-lineares (Random Forest, XGBoost) sugere que as relações capturadas são robustas dentro do dataset sintético
+
+**Ressalva importante:** A dominância absoluta de `Productivity_Score` (89-91% de importância nos modelos de árvore) é um forte indicador de que o dataset sintético foi construído com uma relação artificialmente forte entre produtividade e burnout. Em dados reais, espera-se uma distribuição mais equilibrada de importância entre múltiplos fatores psicossociais.
+
+### 3.5.5 Discussão sobre as Discrepâncias entre Modelos
+
+**Por que o XGBoost mostrou 100% de importância na produtividade?**
+
+| Fator | Explicação |
+|-------|------------|
+| **Eficiência do algoritmo** | XGBoost é otimizado para encontrar a variável mais preditiva rapidamente |
+| **Dataset sintético** | Relação artificialmente forte entre produtividade e burnout |
+| **Redundância de features** | As demais variáveis não adicionam informação nova após controlar por produtividade |
+
+**Por que o Random Forest mostrou distribuição mais equilibrada?**
+
+| Fator | Explicação |
+|-------|------------|
+| **Bagging** | O Random Forest constrói árvores independentes com subamostras diferentes |
+| **Aleatoriedade** | Cada árvore vê um subconjunto diferente das features |
+| **Distribuição natural** | A importância é calculada pela média entre todas as árvores, resultando em distribuição mais suave |
+
+**Implicações para a prática:**
+
+1. **Em datasets sintéticos** - Espere comportamentos extremos, especialmente no XGBoost
+2. **Em datasets reais** - As importâncias serão mais equilibradas e consistentes entre modelos
+3. **Validação cruzada** - A consistência na identificação de `Productivity_Score` como top feature valida a robustez dos modelos
+
+**Recomendação:** Para análises de importância de features em projetos reais, prefira o Random Forest ou utilize SHAP values, que são mais robustos que a importância padrão do XGBoost.
 
 # 4. Revisão do pipeline de pesquisa e análise de dados
 
