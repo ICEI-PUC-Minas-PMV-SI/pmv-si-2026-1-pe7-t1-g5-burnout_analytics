@@ -172,7 +172,7 @@ O Random Forest é um algoritmo de aprendizado supervisionado baseado na técnic
 
 **Justificativa da escolha**: Escolhido por sua robustez e por ser referência em problemas de classificação com dados tabulares. Sua capacidade de capturar interações complexas sem exigir ajuste fino excessivo o torna ideal como segundo modelo em uma comparação sistemática.
 
-**Teste - Hiperparâmetros otimizados:**
+**Teste 1 - Hiperparâmetros otimizados:**
 
 | Hiperparâmetro |	Valores testados |	Justificativa |
 |---|---|---|
@@ -223,18 +223,18 @@ print(f"   {grid_rf.best_params_}")
 print(f"   Recall médio na validação cruzada: {grid_rf.best_score_:.4f}")
 ```
 
-**Experimentos realizados - Random Forest - Combinações testadas**
+**Experimentos realizados (Teste 1)- Random Forest - Combinações testadas**
 
-| n_estimators | max_depth | min_samples_split | Recall CV | Decisão |
-|--------------|-----------|-------------------|-----------|---------|
-| **100** | **10** | **2** | **1,0000** | **Selecionado** |
-| 200 | 10 | 2 | 1,0000 | Maior custo |
-| 100 | 20 | 2 | 1,0000 | Risco overfitting |
-| 100 | None | 2 | 1,0000 | Risco overfitting |
-| 100 | 10 | 5 | 1,0000 | Sem ganho |
-| 100 | 10 | 10 | 1,0000 | Sem ganho |
+| n_estimators | max_depth | min_samples_split | Recall CV | 
+|--------------|-----------|-------------------|-----------|
+| **100** | **10** | **2** | **1,0000** | 
+| 200 | 10 | 2 | 1,0000 | 
+| 100 | 20 | 2 | 1,0000 | 
+| 100 | None | 2 | 1,0000 | 
+| 100 | 10 | 5 | 1,0000 | 
+| 100 | 10 | 10 | 1,0000 | 
 
-**Análise dos experimentos:**
+**Análise dos experimentos - Teste 1:**
 
 Os experimentos realizados com Random Forest revelaram que todas as combinações de hiperparâmetros testadas alcançaram Recall perfeito (1,0000) na validação cruzada, o que já era esperado dada a natureza sintética do dataset. No entanto, a escolha da configuração final considerou não apenas o desempenho, mas também:
 
@@ -247,13 +247,34 @@ Os experimentos realizados com Random Forest revelaram que todas as combinaçõe
 **Conclusão da otimização:** A configuração selecionada (`n_estimators=100`, `max_depth=10`, `min_samples_split=2`, `class_weight='balanced'`) representa o **melhor equilíbrio entre desempenho, custo computacional e generalização**, mesmo em um cenário de dados sintéticos.
 
 
-**Resultado da otimização:**
+**Resultado da otimização - Teste 1:**
 
 ```
 Melhores parâmetros para Random Forest:
    {'model__class_weight': 'balanced', 'model__max_depth': 10, 'model__min_samples_split': 2, 'model__n_estimators': 100}
    Recall médio na validação cruzada (5-folds): 1.0000
 ```
+
+**Teste 2 - Hiperparâmetros otimizados:**
+
+| Hiperparâmetro |	Valores testados |	Justificativa |
+|---|---|---|
+| n_estimators |	50, 100	| Número de árvores; valores mais altos aumentam estabilidade mas também custo |
+| max_depth |	5, 10, None	| Profundidade máxima; limita a complexidade e reduz overfitting |
+| min_samples_split |	2, 3, 5 |	Número mínimo de amostras para dividir um nó |
+| class_weight |	'balanced' |	Compensa o desbalanceamento das classes |
+
+**Resultado da otimização - Teste 2:**
+
+```
+Iniciando GridSearch para Random Forest...
+Fitting 5 folds for each of 18 candidates, totalling 90 fits
+
+ Melhores parâmetros para Random Forest:
+   {'model__class_weight': 'balanced', 'model__max_depth': 5, 'model__min_samples_split': 2, 'model__n_estimators': 50}
+   Recall médio na validação cruzada: 1.0000
+```
+
 
 ### 2.2 XGBoost (Extreme Gradient Boosting)
 O XGBoost é uma implementação altamente eficiente da técnica de Gradient Boosting.
@@ -264,7 +285,7 @@ O XGBoost é uma implementação altamente eficiente da técnica de Gradient Boo
 
 **Justificativa da escolha:** Escolhido por seu reconhecido poder preditivo superior e por representar uma abordagem diferente (boosting sequencial vs. bagging do Random Forest).
 
-**Teste - Hiperparâmetros otimizados:**
+**Teste 1 - Hiperparâmetros otimizados:**
 
 | Hiperparâmetro |	Valores testados |	Justificativa |
 |----------------|-------------------|---------------|
@@ -318,7 +339,7 @@ print(f"   {grid_xgb.best_params_}")
 print(f"   Recall médio na validação cruzada: {grid_xgb.best_score_:.4f}")
 ```
 
-**Experimentos realizados - XGBoost - Combinações testadas**
+**Experimentos realizados (Teste 1) - XGBoost - Combinações testadas**
 
 | learning_rate | max_depth | subsample | Recall CV | Decisão |
 |---------------|-----------|-----------|-----------|---------|
@@ -341,11 +362,32 @@ Os experimentos realizados com XGBoost demonstraram que o algoritmo é mais sens
 **Conclusão da otimização:** A configuração selecionada (`learning_rate=0,01`, `max_depth=3`, `n_estimators=100`, `subsample=0,8`, `scale_pos_weight=4,0569`) representa a **abordagem mais conservadora e regularizada**, priorizando a capacidade de generalização do modelo em detrimento de complexidade desnecessária.
 
 
-**Resultado da otimização:**
+**Resultado da otimização - Teste 1 - XGBoost:**
 
 ```
 Melhores parâmetros para XGBoost:
    {'model__learning_rate': 0.01, 'model__max_depth': 3, 'model__n_estimators': 100, 'model__scale_pos_weight': np.float64(4.056890012642225), 'model__subsample': 0.8}
+   Recall médio na CV: 1.0000
+```
+
+**Teste 2 - Hiperparâmetros otimizados:**
+
+| Hiperparâmetro |	Valores testados |	Justificativa |
+|----------------|-------------------|---------------|
+| n_estimators |	50, 100 |	Número de árvores (iterações de boosting) |
+| max_depth	| 1, 2, 3 |	Profundidade rasa reduz overfitting |
+| learning_rate |	0.01, 0.1 |	Taxa de aprendizado conservadora |
+| subsample |	0.5, 0.8 |	Proporção de amostras por árvore; <1.0 reduz overfitting |
+| scale_pos_weight |	4.0569 |	Compensa desbalanceamento (fixo baseado no treino) |
+
+**Resultado da otimização - Teste 2 - XGBoost:**
+
+```
+Iniciando GridSearch para XGBoost...
+Fitting 5 folds for each of 24 candidates, totalling 120 fits
+
+ Melhores parâmetros para XGBoost:
+   {'model__learning_rate': 0.01, 'model__max_depth': 2, 'model__n_estimators': 50, 'model__scale_pos_weight': np.float64(4.056890012642225), 'model__subsample': 0.5}
    Recall médio na CV: 1.0000
 ```
 
@@ -459,6 +501,43 @@ dataset sintético, reflete a alta separabilidade artificial das classes geradas
 <img width="734" height="624" alt="Screen Shot 2026-05-20 at 20 25 25" src="https://github.com/user-attachments/assets/13f7b508-0379-4482-924c-ae17465d8770" />
 
 **Avaliação:** A curva ROC do XGBoost apresenta AUC = 1,0000, indicando capacidade de discriminação perfeita entre as classes. A curva posiciona-se no canto superior esquerdo do gráfico, demonstrando que o modelo consegue atingir Taxa de Verdadeiros Positivos (Recall) = 1,0 mantendo Taxa de Falsos Positivos = 0. Este desempenho perfeito, embora tecnicamente correto para o dataset sintético, reflete a alta separabilidade artificial das classes geradas por IA. Em contextos reais de predição de burnout, valores típicos de AUC variam entre 0,70 e 0,85. 
+
+
+### 3.2.3. Avaliação do Regressão Logística
+Após a otimização dos hiperparâmetros (realizada exclusivamente no conjunto de treino com validação cruzada), o modelo final da Regressão Logística foi avaliado uma única vez no conjunto de teste, que permaneceu completamente isolado durante todo o processo de otimização.
+
+**Resultados do Regrassão Logística:**
+
+| Métrica |	Valor |
+|---|---|
+| Recall |	1,0000 | 
+| Precisão |	1,0000 |
+| F1-Score |	1,0000 |
+| AUC-ROC |	1,0000 |
+
+**Matriz de Confusão:**
+
+<img width="681" height="656" alt="Screen Shot 2026-05-20 at 23 21 10" src="https://github.com/user-attachments/assets/fa9211e7-1e8a-4ebc-a469-7efd26d34bc7" />
+
+**Avaliação:** A matriz de confusão evidencia que 
+
+
+
+**Curva ROC:**
+
+<img width="805" height="675" alt="Screen Shot 2026-05-20 at 23 14 36" src="https://github.com/user-attachments/assets/444346a0-f85d-4471-b76b-93a5d0aea45d" />
+
+**Avaliação:** A curva ROC do 
+
+
+
+
+
+
+
+
+
+
 
 ## 3.3 Comparação entre os três modelos
 
