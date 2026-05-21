@@ -712,9 +712,9 @@ O XGBoost fornece importância de features baseada no ganho médio ao usar a fea
 | Feature | Regressão Logística | Random Forest | XGBoost |
 |---------|---------------------|---------------|---------|
 | Productivity_Score | 98,87% | 63,39% | 100,00% |
-| Sleep_Hours | 0,00% | 17,33% | 0,00% |
-| Work_Hours_Per_Day | 0,09% | 7,72% | 0,00% |
-| Exercise_Hours_Per_Week | 0,04% | 5,77% | 0,00% |
+| Work_Environment_Coworking | 0,17% | 17,33% | 0,00% |
+| Gender_Other | 0,17% | 7,72% | 0,00% |
+| Exercise_Hours_Per_Week | 0,04% | 0,02% | 0,00% |
 
 **Análise da Proporção:**
 
