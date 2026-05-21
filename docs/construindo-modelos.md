@@ -514,7 +514,7 @@ Os três modelos avaliados alcançaram desempenho perfeito (Recall=1,0000; Preci
 
 * Relações linearmente separáveis ou com padrões muito limpos
 
-2. Implicações para a pesquisa empírica (H39a): Em contextos reais de predição de burnout (com questionários validados como Maslach Burnout Inventory - MBI), valores típicos de AUC variam entre 0,70 e 0,85. O desempenho AUC=1,0000 não é esperado em cenários reais.
+2. Implicações para a pesquisa empírica: Em contextos reais de predição de burnout (com questionários validados como Maslach Burnout Inventory - MBI), valores típicos de AUC variam entre 0,70 e 0,85. O desempenho AUC=1,0000 não é esperado em cenários reais.
 
 3. Validade externa limitada: Os resultados não devem ser generalizados para populações reais sem validação adicional com dados coletados em ambientes organizacionais reais.
 
@@ -747,7 +747,7 @@ print("\n COMPARAÇÃO FINAL ENTRE MODELOS:")
 print(comparison_df.round(4))
 ```
 
-## 5. Conformidade Ética e LGPD (Lei nº 13.709/2018)
+# 5. Conformidade Ética e LGPD (Lei nº 13.709/2018)
 
 O pipeline foi estruturado em conformidade com os princípios da LGPD desde a especificação do problema:
 
@@ -760,13 +760,13 @@ O pipeline foi estruturado em conformidade com os princípios da LGPD desde a es
 | **Supervisão humana** | Pipeline exige validação por profissionais de RH/saúde antes de qualquer intervenção baseada nas predições |
 | **Responsabilidade (accountability)** | Pipeline documentado, reproduzível e com `random_state` fixo para auditoria externa |
 
-### 5.1 Mitigação de riscos específicos
+## 5.1 Mitigação de riscos específicos
 
 - **Falsos negativos** (não identificar burnout real): threshold ajustado para maximizar recall, com recomendação de confirmação por profissional de saúde.
 - **Uso punitivo do modelo**: Documentação explicita que o modelo é ferramenta de apoio à prevenção, não para controle ou demissão.
 - **Generalização indevida**: Ressalvas explícitas sobre a natureza sintética do dataset impedem extrapolação ingênua para contextos reais.
 
-### 5.2 Reprodutibilidade e transparência
+## 5.2 Reprodutibilidade e transparência
 
 Para garantir a reprodutibilidade dos experimentos, foram adotadas as seguintes práticas:
 
@@ -776,7 +776,7 @@ Para garantir a reprodutibilidade dos experimentos, foram adotadas as seguintes 
 - **Ambiente de execução:** Google Colab, com código em formato notebook (`.ipynb`)
 - **Download automatizado dos dados:** Dataset obtido via `kagglehub`
 
-### 5.3 Limitações críticas e recomendações para generalização
+## 5.3 Limitações críticas e recomendações para generalização
 
 Os resultados obtidos (AUC=1,0000, Recall=1,0000, Precisão=1,0000) são **excepcionalmente elevados** e não devem ser esperados em contextos reais de predição de burnout. Este fenômeno decorre da natureza sintética do dataset:
 
@@ -795,6 +795,6 @@ Os resultados obtidos (AUC=1,0000, Recall=1,0000, Precisão=1,0000) são **excep
 | Estabelecer comitê de ética para supervisão do uso | Garantir uso não punitivo do modelo |
 
 
-## 5.4 Observações importantes
+# 6. Observações importantes
 Todas as tarefas realizadas nesta etapa foram registradas em formato textual com suas respectivas explicações. Os códigos desenvolvidos encontram-se documentados e disponibilizados integralmente na pasta `src/` do repositório, garantindo transparência, reprodutibilidade e aderência às boas práticas de desenvolvimento em projetos de ciência de dados.
 
