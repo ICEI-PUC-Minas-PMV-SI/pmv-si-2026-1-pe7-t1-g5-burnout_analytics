@@ -611,9 +611,9 @@ Apesar do empate numérico em todas as métricas, diferenças metodológicas imp
 
 * **Regressão Logística** mantém-se como modelo mais interpretável e suficiente para o dataset sintético. Seus coeficientes (apresentados na Etapa 3) permitem identificar fatores de risco e proteção – mesmo com resultados contraintuitivos.
 
-* **Random Forest** apresentou a configuração mais simples entre os vencedores (n_estimators=100, max_depth=10), indicando que mesmo com complexidade moderada, o modelo conseguiu separar perfeitamente as classes. O parâmetro min_samples_split=2 (valor padrão) sugere que não foi necessário aumentar a regularização.
+* **Random Forest** apresentou a configuração mais simples entre os vencedores (n_estimators=50, max_depth=5), indicando que mesmo com complexidade moderada, o modelo conseguiu separar perfeitamente as classes. O parâmetro min_samples_split=2 (valor padrão) sugere que não foi necessário aumentar a regularização.
 
-* **XGBoost** exigiu a configuração mais conservadora (learning_rate=0,01 muito baixo, max_depth=3 rasa, subsample=0,8), sugerindo que, sem forte regularização, o modelo tenderia a overfitting. O fato de a melhor configuração ser a mais regularizada é um indicador da alta capacidade do XGBoost de memorizar padrões.
+* **XGBoost** exigiu a configuração mais conservadora (learning_rate=0,01 muito baixo, max_depth=2 rasa, subsample=0,5), sugerindo que, sem forte regularização, o modelo tenderia a overfitting. O fato de a melhor configuração ser a mais regularizada é um indicador da alta capacidade do XGBoost de memorizar padrões.
 
 ### 3.4.3 Análise de trade-offs
 
