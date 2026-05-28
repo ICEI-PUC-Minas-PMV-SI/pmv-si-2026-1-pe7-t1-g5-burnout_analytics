@@ -600,11 +600,11 @@ Apesar do empate numérico em todas as métricas, diferenças metodológicas imp
 | Critério |	Regressão Logística |	Random Forest |	XGBoost |
 |-----|-----|-----|-----|
 | Interpretabilidade |	Alta (coeficientes e odds ratio) |	Média (importância de features) |	Baixa (modelo caixa-preta) |
-| Tempo de treinamento |	Muito baixo |	Médio	| Médio-alto (270 fits no GridSearch) |
+| Tempo de treinamento |	Muito baixo |	Médio	| Médio-alto (90 fits no GridSearch) |
 | Necessidade de escala	| Sim (StandardScaler) |	Não	| Não |
 | Captura de não-linearidades |	Limitada	| Alta |	Alta |
 | Risco de overfitting |	Baixo (regularização L1) |	Baixo (bagging) |	Médio (controlado com learning_rate baixo) |
-| Melhor configuração encontrada |	L1, C=0,3 |	n_estimators=100, max_depth=10	| lr=0,01, max_depth=3, subsample=0,8 |
+| Melhor configuração encontrada |	L1, C=0,3 |	n_estimators=50, max_depth=5	| lr=0,01, max_depth=3, subsample=0,8 |
 | Número de parâmetros otimizados |	1 (C) |	3 |	4 |
 
 **Análise qualitativa:**
