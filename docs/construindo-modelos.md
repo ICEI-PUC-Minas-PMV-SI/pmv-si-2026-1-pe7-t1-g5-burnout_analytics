@@ -730,7 +730,7 @@ Os três modelos convergem para o mesmo padrão: `Productivity_Score` é a featu
 
 1. **Productivity_Score** é, de longe, a feature mais importante em todos os modelos (89-91% de contribuição nos modelos de árvore, e coeficiente extremamente alto na Regressão Logística)
 
-2. **Work_Hours_Per_Day**, **Sleep_Hours**, **Stress_Level** e **Meetings_Per_Day** aparecem consistentemente entre as top 5 features
+2. **Work_Hours_Per_Day**, **Sleep_Hours**, **Stress_Level** e **Meetings_Per_Day** aparecem consistentemente entre as top 5 features, conforme demonstrado no modelo Random Forest. 
 
 3. A consistência entre modelos lineares (Regressão Logística) e não-lineares (Random Forest, XGBoost) sugere que as relações capturadas são robustas dentro do dataset sintético
 
@@ -900,16 +900,16 @@ O pipeline revisado contempla, de forma flexível e modular, as principais fases
 # Definição dos grids para cada modelo
 param_grids = {
     'RandomForest': {
-        'model__n_estimators': [100, 200],
-        'model__max_depth': [10, 20],
-        'model__min_samples_split': [2, 5],
+        'model__n_estimators': [50, 100],
+        'model__max_depth': [5, 10],
+        'model__min_samples_split': [2, 3],
         'model__class_weight': ['balanced']
     },
     'XGBoost': {
-        'model__n_estimators': [100, 200],
+        'model__n_estimators': [50, 100],
         'model__learning_rate': [0.01, 0.1],
-        'model__max_depth': [3, 6],
-        'model__subsample': [0.8, 1.0],
+        'model__max_depth': [1, 2, 3],
+        'model__subsample': [0.5, 0.8],
         'model__scale_pos_weight': [scale_pos_weight_calc]
     }
 }
