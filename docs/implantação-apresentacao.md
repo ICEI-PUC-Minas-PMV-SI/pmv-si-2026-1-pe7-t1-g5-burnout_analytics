@@ -12,6 +12,8 @@ Nesta seção, deve ser produzido um vídeo de até 15 minutos apresentando o es
 * Atualizar o arquivo **CITATION.cff** disponível no diretório raiz do repositório
 * Atualizar as **Instruções de utilização** no arquivo read.me
 
+---
+
 # Implantação da solução
 
 ## Planejamento da Capacidade Operacional
