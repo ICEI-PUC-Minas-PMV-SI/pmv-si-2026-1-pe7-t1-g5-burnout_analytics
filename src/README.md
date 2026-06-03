@@ -35,10 +35,22 @@ O dataset está incluído no link `[Work Productivity & Burnout Risk Dataset](ht
 ## Estrutura do Projeto
 
 ```
-├── src
-  ├── Burnout_Analytics.ipynb
-  ├── requirements.txt
-  └── README.md
+src/
+├── burnout-app/
+│   ├── backend/
+│   │   ├── app.py
+│   │   ├── burnout_predicty.py
+│   │   ├── burnout_model_xgboost.pkl
+│   │   ├── burnout_model_random_forest.pkl
+│   │   └── burnout_model_logistic_regression.pkl
+│   └── frontend/
+│       ├── index.html
+│       └── src/
+│           ├── main.js
+│           └── style.css
+├── Burnout_Analytics.ipynb
+├── requirements.txt
+└── README.md
 ```
 
 ---
@@ -134,6 +146,69 @@ Este projeto envolve saúde ocupacional, o que exige cautela:
 
 ---
 
+## Arquitetura da Solução
+
+A solução foi organizada em duas camadas principais:
+
+**Frontend**
+
+Responsável pela interface de interação com o usuário, permitindo o preenchimento dos dados utilizados na análise do risco de burnout.
+
+Tecnologias utilizadas:
+
+ * HTML5
+ * CSS3
+ * JavaScript
+
+O frontend coleta as informações fornecidas pelo usuário e envia uma requisição para a API responsável pela execução do modelo.
+
+**Backend**
+
+Responsável pelo processamento das requisições e pela execução do modelo de Machine Learning.
+
+Tecnologias utilizadas:
+
+ * Python
+ * Pandas
+ * NumPy
+ * Scikit-Learn
+ * XGBoost, RandomForest, LogisticRegression
+ * Flask
+
+Fluxo de funcionamento:
+
+ * O usuário preenche o formulário na aplicação web;
+ * Os dados são enviados para a API;
+ * O backend realiza o pré-processamento necessário;
+ * O modelo previamente treinado é carregado;
+ * A inferência é executada;
+ * O resultado é retornado ao usuário.
+
+## Empacotamento da Aplicação
+
+Após o treinamento do modelo, os artefatos necessários para a realização das predições foram armazenados para reutilização em produção.
+
+Arquivos utilizados:
+
+ `burnout_model_xgboost.pkl`
+ `burnout_model_random_forest.pkl`
+ `burnout_model_logistic_regression.pkl`
+
+Esses arquivos contêm:
+
+ * Modelo treinado;
+ * Pipeline de pré-processamento;
+ * Configurações necessárias para a inferência.
+
+Além dos artefatos do modelo, o pacote de implantação contém:
+
+ * Código-fonte do backend;
+ * Arquivos do frontend;
+
+Durante a inicialização da aplicação, esses componentes são carregados para memória, permitindo a realização das predições sem necessidade de novo treinamento.
+
+---
+
 ## Conclusão
 
 A análise permite identificar padrões associados ao burnout, mas os resultados devem ser interpretados com cautela devido à natureza sintética dos dados.
@@ -161,3 +236,24 @@ A análise permite identificar padrões associados ao burnout, mas os resultados
 ### [0.1.4] - 27/04/2026
 #### Adicionado
 - Ajustes da implementação do modelo de Regressão Logística (desenvolvimento da etapa 3)
+
+### [0.1.4] - 03/05/2026
+#### Adicionado
+- Implementação do modelo XGBoost e Randon Forest (desenvolvimento da etapa 4)
+
+### [0.1.5] - 06/05/2026
+#### Adicionado
+- Ajustes da implementação do modelo XGBoost e Randon Forest (desenvolvimento da etapa 3)
+
+### [0.1.6] - 07/05/2026
+#### Adicionado
+- Ajustes da implementação do modelo XGBoost e Randon Forest e comparação entre os três modelos (desenvolvimento da etapa 3)
+
+### [0.1.7] - 20/05/2026
+#### Adicionado
+- Ajustes da implementação do modelo XGBoost e Randon Forest e comparação entre os três modelos (desenvolvimento da etapa 3)
+
+### [0.1.8] - 31/05/2026
+#### Adicionado
+- Ajustes nas documentações (desenvolvimento da etapa 3)
+
