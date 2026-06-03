@@ -1,28 +1,31 @@
 cff-version: 1.0.1
 message: Please cite this software using these metadata.
-title:
+title: Burnout Analytics
 authors:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - name-suffix: Professor XXXX
+  - family-names: Gomes Lima
+    given-names: Isabela
+  - family-names: Cordeiro Marra
+    given-names: Odair
+  - family-names: Magalhães Robaina
+    given-names: Patrick
+  - family-names: Pereira
+    given-names: Victor Henrique
+  - name-suffix: Professor Neil Paiva Tizzo
     affiliation: PUC Minas
-    family-names:
-    given-names:
+    family-names: Paiva Tizzo
+    given-names: Neil
 keywords:
-  -
-  -
+  - Inteligência Artificial
+  - Desenvolvimento Web
+  - Python
+  - HTML
+  - JavaScript
+  - CSS
+  - Predição
+  - Burnout
+  - Random Forest
+  - XGBoost
+  - Regressão Linear
 repository-code:
 license: CC-BY-4.0
 version: 1.0.0
