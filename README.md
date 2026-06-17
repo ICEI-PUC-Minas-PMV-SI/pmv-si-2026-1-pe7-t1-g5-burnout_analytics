@@ -32,7 +32,7 @@ Este projeto tem como objetivo desenvolver um modelo preditivo de aprendizado de
 ## Instruções de utilização
 
 Acesso em Produção (quando disponível)
-* URL: https://<seu-dominio>/...
+* URL: https://thankful-desert-0ff6e780f.7.azurestaticapps.net/
 * Status: online/homologação
 
 # Código
