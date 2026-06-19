@@ -6,7 +6,9 @@ Importante!! É fundamental que a aplicação em produção (_deploy_ em nuvem) 
 
 # Apresentação da solução
 
-Nesta seção, deve ser produzido um vídeo de até 15 minutos apresentando o escopo geral do projeto, um resumo das etapas desenvolvidas, a demonstração da solução publicada e as conclusões finais, destacando aprendizados, impacto e possibilidades de melhorias.
+- Vídeo de apresentação: https://drive.google.com/file/d/14tBs7vYNBmULduMnmBe9urmuNPBsV7jc/preview
+
+- Slides: https://drive.google.com/file/d/18UPCI1tMjAsiEVc4Zp8hRHMQwiV_fkrv/view?usp=drive_link
 
 # É IMPRESCINDÍVEL: 
 * Atualizar o arquivo **CITATION.cff** disponível no diretório raiz do repositório
