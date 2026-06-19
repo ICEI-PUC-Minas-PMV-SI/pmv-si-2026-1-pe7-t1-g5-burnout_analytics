@@ -1,3 +1,5 @@
 # Apresentação da Solução
 
-Adicione a esta seção, um resumo de todo o projeto desenvolvido, e inclua, o vídeo de apresentação final entregue.
+- Vídeo de apresentação: https://drive.google.com/file/d/14tBs7vYNBmULduMnmBe9urmuNPBsV7jc/preview
+
+- Slides: https://drive.google.com/file/d/18UPCI1tMjAsiEVc4Zp8hRHMQwiV_fkrv/view?usp=drive_link
